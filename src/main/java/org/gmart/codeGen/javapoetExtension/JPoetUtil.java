@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 
 import javax.lang.model.element.Modifier;
 
-import org.gmart.codeGen.javaGen.fromYaml.javadataclass.model.FormalGroup;
+import org.gmart.codeGen.javaGen.fromYaml.model.FormalGroup;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;

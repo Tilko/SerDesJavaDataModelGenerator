@@ -20,3 +20,4 @@ target/
 
 src/main/java/org/gmart/codeGen/POCs/
 src/main/java/org/gmart/codeGenExample/result/
+src/main/java/org/gmart/codeGenExample/reflexions/

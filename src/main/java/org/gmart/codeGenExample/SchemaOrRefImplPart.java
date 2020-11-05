@@ -18,8 +18,9 @@ package org.gmart.codeGenExample;
 
 import java.util.function.Function;
 
-import org.gmart.codeGen.javaGen.fromYaml.javadataclass.model.DeserialContextOwner;
+import org.gmart.codeGen.javaGen.fromYaml.model.DeserialContextOwner;
 import org.gmart.codeGen.utils.ReflUtil;
+import org.gmart.codeGenExample.result.Person;
 import org.gmart.codeGenExample.result.Schema;
 import org.gmart.codeGenExample.result.SchemaRef;
 
@@ -30,12 +31,14 @@ public interface SchemaOrRefImplPart extends DeserialContextOwner {
 	SchemaRef toSchemaRef();
 	
 	default Schema getSchema() {
+		return getSchema((Person)this.getDeserialContext().getFileRootObject());
+	}
+	default Schema getSchema(Person person) {
 		Schema schema = toSchema();
 		if (schema != null)
 			return schema;
-		return (Schema) makeJsonPathResolver(this.getDeserialContext().getFileRootObject()).apply(toSchemaRef().get$ref());
+		return (Schema) makeJsonPathResolver(person).apply(toSchemaRef().get$ref());
 	}
-	
 	@SuppressWarnings("unchecked")
 	public static <T> Function<String, T> makeJsonPathResolver(Object context){
 		Function<String, T> convertRefToSchema = ref -> {
