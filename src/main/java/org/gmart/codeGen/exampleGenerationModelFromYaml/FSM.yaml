@@ -1,0 +1,12 @@
+org.gmart.codeGen.loadYamlIntoGeneratedModel.FSM:
+  
+  FSM:
+    initialState: ref(states)
+    states: Dict<Transition*>
+    #$repos:
+    #  - states
+    
+  
+  Transition:
+    condition: String
+    target: ref(ancestor:states)# Ref<Transition*>

@@ -1,0 +1,53 @@
+name:
+  empty: true
+  present: false
+vehicle:
+  wheelCard: 4
+  fuel: E85
+  classSpecification:
+    name: Vehicle
+    packageName: org.gmart.codeGen.loadYamlIntoGeneratedModel.result
+    fieldSpecifications:
+     -
+      name: wheelCard
+      type: int
+      optional: false
+     -
+      name: fuel
+      type: String
+      optional: false
+    qualifiedName: org.gmart.codeGen.loadYamlIntoGeneratedModel.result.Vehicle
+    jpoetClassName:
+      annotations: []
+      annotated: false
+      primitive: false
+      boxedPrimitive: false
+preferredNumbers:
+ -
+   - 4
+   - 7
+ -
+   - 0
+   - 1
+classSpecification:
+  name: Person
+  packageName: org.gmart.codeGen.loadYamlIntoGeneratedModel.result
+  fieldSpecifications:
+   -
+    name: name
+    type: String
+    optional: true
+   -
+    name: vehicle
+    type: Vehicle
+    optional: false
+   -
+    name: preferredNumbers
+    type: int
+    arrayDepth: 2
+  qualifiedName: org.gmart.codeGen.loadYamlIntoGeneratedModel.result.Person
+  jpoetClassName:
+    annotations: []
+    annotated: false
+    primitive: false
+    boxedPrimitive: false

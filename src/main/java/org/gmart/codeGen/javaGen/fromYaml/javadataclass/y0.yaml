@@ -1,0 +1,6 @@
+TypeA:
+  champ0: String
+  champs2: int
+TypeB:
+  f0: boolean
+  

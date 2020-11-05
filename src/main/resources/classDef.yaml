@@ -1,0 +1,10 @@
+aze.qsd:
+  Person:
+    name: String?
+    vehicle: Vehicle
+    preferredNumbers: int*
+  
+  Vehicle:
+    wheelCard: int
+    fuel: String
+  

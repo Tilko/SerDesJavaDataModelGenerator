@@ -1,0 +1,30 @@
+name: |- 
+  Albert kljkljkljl
+  kjjljk
+preferredCardType: Spade
+preferredNumbers:
+  - - 4
+    - 7
+  - - 0
+    - 1
+#  - 7
+#  - 0
+vehicle:
+  wheelCard: 4
+  fuel: E85
+  schema:
+    $ref: "#components/schemas/A" #truc: 2 #
+  
+httpMethods:
+  GET:
+    - a
+    - b
+  POST:
+    - c
+    - d
+components:
+  schemas:
+    A: 
+      type: object
+      truc: 7 #"#thepath"
+      machin: 1

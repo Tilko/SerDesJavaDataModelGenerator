@@ -1,0 +1,47 @@
+org.gmart.codeGen.loadYamlIntoGeneratedModel.result:
+  Person:
+    name?: String
+    vehicle: Vehicle
+    preferredNumbers: int**
+    preferredCardType: CardType
+    httpMethods: Map<HttpMethodTypes, String*> #Map<String, Map<CardType, Vehicle**>*>*
+    components: Components
+    #bidule0: org.gmart.codeGen.loadYamlIntoGeneratedModel.result.bidulePackage.Bidule
+    #bla: TypeDontLeSimpleNameEstUniqueInThisPackagesSet
+  Components:
+    schemas: Dict<Schema>
+    
+  SchemaOrRef: oneOf(Schema, SchemaRef) #(SchemaOrRefImpl)   #[SchemaPartTemp.makeSchemaRefResolver]
+  SchemaRef:
+    $ref: String
+  Schema:
+    type: abstract enum(object, integer)
+    truc: int
+  #SchemaType: object, integer
+  
+  ObjectSchema is Schema:
+    type: enum(object)
+    machin: int
+  IntSchema is Schema:
+    type: enum(integer)
+    bidule: String
+    
+  
+  Vehicle:
+    wheelCard: int
+    fuel: String
+    schema: SchemaOrRef
+    
+  CardType: Club, Diamond, Heart, Spade, int
+  HttpMethodTypes: POST, PUT, GET
+
+org.gmart.codeGen.loadYamlIntoGeneratedModel.result.bidulePackage:
+# as bidulePackage1:
+  TypeDontLeSimpleNameEstUniqueInThisPackagesSet:
+    b: String
+  Bidule:
+    a: String
+    
+org.gmart.codeGen.loadYamlIntoGeneratedModel.result.bidulePackage2:
+  Bidule:
+    a: String
