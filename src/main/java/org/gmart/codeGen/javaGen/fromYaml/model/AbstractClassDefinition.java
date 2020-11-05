@@ -36,7 +36,7 @@ import javax.lang.model.element.Modifier;
 import org.gmart.codeGen.javaGen.fromYaml.model.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.fromYaml.model.typeRecognition.isA.EnumSubSpace;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
-import org.gmart.codeGen.javapoetExtension.JPoetUtil;
+import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.gmart.util.functionalProg.properties.OptProperty;
 import org.javatuples.Pair;
 import org.yaml.snakeyaml.Yaml;

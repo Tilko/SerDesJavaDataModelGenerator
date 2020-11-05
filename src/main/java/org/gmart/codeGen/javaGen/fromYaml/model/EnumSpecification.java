@@ -25,8 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
-import org.gmart.codeGen.javapoetExtension.JPoetUtil;
-import org.gmart.codeGen.javapoetExtension.JavaKeywords;
+import org.gmart.codeGen.javaLang.JPoetUtil;
+import org.gmart.codeGen.javaLang.JavaKeywords;
 import org.javatuples.Pair;
 
 import com.squareup.javapoet.MethodSpec;

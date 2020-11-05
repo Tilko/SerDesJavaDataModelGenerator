@@ -27,10 +27,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.gmart.codeGen.javaGen.fromYaml.generate.JavaDataClassGenerator;
-import org.gmart.codeGen.javapoetExtension.JPoetUtil;
+import org.gmart.codeGen.javaLang.JavaPrimitives;
 import org.gmart.util.functionalProg.StreamUtil;
-
-import api_global.logUtility.L;
 
 public class PackageSetSpec {
 	LinkedHashMap<String, PackageDefinition> packages;
@@ -53,8 +51,8 @@ public class PackageSetSpec {
 		qualifiedNameToClassSpec = new HashMap<>();
 		simpleNameInMultiplePackagesOfThisSet = new HashSet<>();
 		packages.forEach(ps -> ps.getTypeDefs().forEach(td->setTypeDef(td, false)));
-		Stream.of(JPoetUtil.primitiveBoxedTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLang, primitiveTypeName), true));
-		Stream.of(JPoetUtil.primitiveTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLang, primitiveTypeName), true));
+		Stream.of(JavaPrimitives.primitiveBoxedTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLang, primitiveTypeName), true));
+		Stream.of(JavaPrimitives.primitiveTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLang, primitiveTypeName), true));
 		setTypeDef(new StringTypeSpec(), true);
 		simpleNameInMultiplePackagesOfThisSet.forEach(simpleName -> simpleNameToClassSpec.remove(simpleName));
 		simpleOrQualifiedNameToClassSpec = new HashMap<>(simpleNameToClassSpec);

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.fromYaml.model;
 
-import org.gmart.codeGen.javapoetExtension.JPoetUtil.Primitive;
+import org.gmart.codeGen.javaLang.JavaPrimitives.Primitive;
 
 public enum FormalGroup {
 	string(true),

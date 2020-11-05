@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
-import org.gmart.codeGen.javapoetExtension.JPoetUtil;
-import org.gmart.codeGen.javapoetExtension.JPoetUtil.Primitive;
+import org.gmart.codeGen.javaLang.JavaPrimitives;
+import org.gmart.codeGen.javaLang.JavaPrimitives.Primitive;
 import org.javatuples.Pair;
 
 import com.squareup.javapoet.TypeName;
@@ -38,7 +38,7 @@ public class PrimitiveTypeSpecification extends TypeDefinition implements String
 	public final Class unboxedClass;
 	public PrimitiveTypeSpecification(PackageDefinition packageDef, String name) {
 		super(packageDef, name);
-		Primitive primitive = JPoetUtil.getPrimitiveFromBoxedOrUnboxedTypeName(name);
+		Primitive primitive = JavaPrimitives.getPrimitiveFromBoxedOrUnboxedTypeName(name);
 		jpoetClassName = primitive.getJPoetTypeName();//JPoetUtil.primitiveTypeStringToTypeName.get(name);
 		jpoetClassNameBoxed = primitive.getJPoetTypeNameBoxed();
 		parser = primitive.getParser();

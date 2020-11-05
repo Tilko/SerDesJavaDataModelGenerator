@@ -32,7 +32,7 @@ import org.gmart.codeGen.javaGen.fromYaml.model.containerTypes.ListContainerType
 import org.gmart.codeGen.javaGen.fromYaml.model.typeRecognition.oneOf.ClassRecognition;
 import org.gmart.codeGen.javaGen.fromYaml.model.typeRecognition.oneOf.TypeRecognizer;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
-import org.gmart.codeGen.javapoetExtension.JPoetUtil;
+import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.javatuples.Pair;
 
 import com.squareup.javapoet.ClassName;

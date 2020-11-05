@@ -15,17 +15,13 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.fromYaml.yamlAppender;
 
-//import java.util.HashSet;
-
-import org.gmart.codeGen.javapoetExtension.JPoetUtil;
-
 public class YamlLang {
 	
 //	private final static HashSet<Class> serializationLeafClass = new HashSet<>();
 //	static {
 //		serializationLeafClass.
 //	}
-	public static boolean isSerializationLeaf(Class<?> nodeClass) {
-		return JPoetUtil.isAutoImportedClass(nodeClass) || nodeClass.isEnum();//serializationLeafClass.contains(nodeClass);
-	}
+//	public static boolean isSerializationLeaf(Class<?> nodeClass) {
+//		return JPoetUtil.isAutoImportedClass(nodeClass) || nodeClass.isEnum();//serializationLeafClass.contains(nodeClass);
+//	}
 }

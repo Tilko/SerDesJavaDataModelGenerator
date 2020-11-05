@@ -17,7 +17,7 @@ package org.gmart.codeGen.javaGen.fromYaml.model.fields;
 
 import javax.lang.model.element.Modifier;
 
-import org.gmart.codeGen.javapoetExtension.JPoetUtil;
+import org.gmart.codeGen.javaLang.JPoetUtil;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;

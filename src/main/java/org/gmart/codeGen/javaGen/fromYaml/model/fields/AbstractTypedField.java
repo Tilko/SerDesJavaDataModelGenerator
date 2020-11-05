@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.gmart.codeGen.javaGen.fromYaml.model.DeserialContext;
 import org.gmart.codeGen.javaGen.fromYaml.model.TypeExpression;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
-import org.gmart.codeGen.javapoetExtension.JPoetUtil;
+import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.javatuples.Pair;
 
 import com.squareup.javapoet.TypeName;
