@@ -19,3 +19,4 @@ target/
 *.odt
 
 src/main/java/org/gmart/codeGen/POCs/
+src/main/java/org/gmart/codeGenExample/result/

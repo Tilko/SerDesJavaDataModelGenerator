@@ -28,6 +28,8 @@ import org.gmart.codeGen.javaGen.fromYaml.javadataclass.yamlAppender.YAppender;
 import org.javatuples.Pair;
 import org.yaml.snakeyaml.Yaml;
 
+import api_global.logUtility.L;
+
 public class ClassDefinition extends AbstractClassDefinition  {
 
 	public ClassDefinition(PackageDefinition packageDef, String className, List<AbstractTypedField> fieldSpecifications) {

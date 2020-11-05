@@ -41,6 +41,7 @@ import org.gmart.util.functionalProg.properties.OptProperty;
 import org.javatuples.Pair;
 import org.yaml.snakeyaml.Yaml;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
@@ -227,7 +228,7 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 				.addSuperinterface(ClassDefinitionOwner.class)
 			    .addFields(() -> jPoetFields.iterator())
 			    .addMethods(()-> methods.iterator());
-		parentClass.ifPresent(parent -> typeSpecBuilder.superclass(parent.getGeneratedClass()));
+		parentClass.ifPresent(parent -> typeSpecBuilder.superclass(ClassName.get(parent.getPackageName(), parent.getName())));
 		
 		MethodSpec.Builder initConstructor = JPoetUtil.initConstructor();
 		typeSpecBuilder.addMethod(initConstructor.build());

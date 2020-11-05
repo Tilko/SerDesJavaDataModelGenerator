@@ -13,26 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.exampleGenerationModelFromYaml;
+package org.gmart.codeGenExample;
 
 import java.io.File;
 
-import org.gmart.codeGen.exampleGenerationModelFromYaml.result.CardType;
-import org.gmart.codeGen.exampleGenerationModelFromYaml.result.HttpMethodTypes;
-import org.gmart.codeGen.exampleGenerationModelFromYaml.result.Person;
-import org.gmart.codeGen.exampleGenerationModelFromYaml.result.Schema;
-import org.gmart.codeGen.exampleGenerationModelFromYaml.result.SchemaRef;
 import org.gmart.codeGen.javaGen.fromYaml.javadataclass.PackagesSetFactory;
 import org.gmart.codeGen.javaGen.fromYaml.javadataclass.model.ClassDefinition;
 import org.gmart.codeGen.javaGen.fromYaml.javadataclass.model.PackageSetSpec;
+import org.gmart.codeGenExample.result.CardType;
+import org.gmart.codeGenExample.result.HttpMethodTypes;
+import org.gmart.codeGenExample.result.Person;
+import org.gmart.codeGenExample.result.Schema;
+import org.gmart.codeGenExample.result.SchemaRef;
+
+import api_global.logUtility.L;
 
 public class Main {
 	
 	public static void main(String[] args) throws Exception {
-		File srcParentDir = new File(".");
-		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(new File(srcParentDir, "\\src\\main\\java\\org\\gmart\\codeGen\\loadYamlIntoGeneratedModel\\classDef.yaml"));
+		File srcParentDir = new File(new File("").getAbsolutePath());
+		L.l("dir:" + new File(srcParentDir, "\\src\\main\\java\\org\\gmart\\codeGenExample\\classDef.yaml"));
+		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(new File(srcParentDir, "\\src\\main\\java\\org\\gmart\\codeGenExample\\classDef.yaml"));
 		
-		if(true) {
+		if(false) {
 			packagesSet.generateJavaSourceFiles_InTheCurrentMavenProject();
 			return;
 		}

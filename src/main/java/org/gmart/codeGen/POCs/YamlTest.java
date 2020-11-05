@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.javadataclass;
+package org.gmart.codeGen.POCs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
