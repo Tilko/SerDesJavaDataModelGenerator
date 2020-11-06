@@ -54,8 +54,6 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 //import com.squareup.javapoet.TypeSpec.Builder;
 
-import api_global.logUtility.L;
-
 
 public abstract class AbstractClassDefinition extends TypeDefinition  {
 	private List<AbstractTypedField> fields;
@@ -69,7 +67,6 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 //			concreteFields_memo = fields.stream().filter(field -> !field.isAbstract()).collect(Collectors.toCollection(ArrayList::new));
 //		return concreteFields_memo;
 //	}
-	
 	
 	LinkedHashMap<String, AbstractTypedField> nameToField;
 	

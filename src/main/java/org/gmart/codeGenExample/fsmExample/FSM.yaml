@@ -9,4 +9,4 @@ org.gmart.codeGen.loadYamlIntoGeneratedModel.FSM:
   
   Transition:
     condition: String
-    target: ref(ancestor:states)# Ref<Transition*>
+    target: ref(ancestor:states)# Ref<Transition*>   TODO

@@ -31,8 +31,6 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
-import api_global.logUtility.L;
-
 public abstract class AbstractMapContainerType extends AbstractContainerType implements MapEntryAppender {
 	public AbstractMapContainerType(TypeExpression contentType) {
 		super(contentType);
@@ -69,11 +67,9 @@ public abstract class AbstractMapContainerType extends AbstractContainerType imp
 	@Override
 	public TypeName getJPoetTypeName(boolean boxPrimitive){
 		//ClassName.get(keyType.getPackageName(), keyType.getName())
-		L.l("this.getKeyTypeSpec:" + this.getKeyTypeSpec());
-		L.l("this.this.contentType:" + this.contentType.getJavaIdentifier());
 		return ParameterizedTypeName.get(mapClassName, this.getKeyTypeSpec().getJPoetTypeName(true), this.contentType.getJPoetTypeName(true));
 	}
-	//protected abstract Map<?, ?> makeMapInstance();
+	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {

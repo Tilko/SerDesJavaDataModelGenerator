@@ -29,6 +29,7 @@ import org.gmart.codeGen.javaGen.fromYaml.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
 import org.javatuples.Pair;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 
 public class ClassDefinition extends AbstractClassDefinition  {
@@ -62,7 +63,9 @@ public class ClassDefinition extends AbstractClassDefinition  {
 		return (T)value1;
 	}
 	private static Object readTree(Reader reader) {
-		Yaml yaml = new Yaml();
+		LoaderOptions loaderOptions = new LoaderOptions();
+		loaderOptions.setAllowDuplicateKeys(false);
+		Yaml yaml = new Yaml(loaderOptions);
 		Object tree = yaml.load(reader);
 		return tree;
 	}

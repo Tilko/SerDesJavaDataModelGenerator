@@ -28,11 +28,12 @@ import org.gmart.codeGenExample.result.SchemaRef;
 
 import api_global.logUtility.L;
 
+
 public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		File srcParentDir = new File(new File("").getAbsolutePath());
-		L.l("dir:" + new File(srcParentDir, "\\src\\main\\java\\org\\gmart\\codeGenExample\\classDef.yaml"));
+		//log("dir:" + new File(srcParentDir, "\\src\\main\\java\\org\\gmart\\codeGenExample\\classDef.yaml"));
 		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(new File(srcParentDir, "\\src\\main\\java\\org\\gmart\\codeGenExample\\classDef.yaml"));
 		
 		if(false) {
@@ -61,8 +62,6 @@ public class Main {
 			Schema schema = person.getVehicle().getSchema().toSchema();
 			log("schema.getTruc():" + schema.getTruc());//.getTruc());
 		}
-		
-		
 		
 		log("person.toYaml():\n" + person.toYaml(false));
 	}

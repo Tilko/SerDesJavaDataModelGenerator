@@ -24,7 +24,6 @@ import org.gmart.codeGenExample.result.Person;
 import org.gmart.codeGenExample.result.Schema;
 import org.gmart.codeGenExample.result.SchemaRef;
 
-import api_global.logUtility.L;
 
 public interface SchemaOrRefImplPart extends DeserialContextOwner {
 	Schema toSchema();
@@ -51,7 +50,6 @@ public interface SchemaOrRefImplPart extends DeserialContextOwner {
 					assert false : "error getting the object at path: " + ref;
 				}
 			}
-			L.l("");
 			assert false : "Only local JSON paths are supported at the moment (path that begins with \"#\".";
 			return null;
 		};

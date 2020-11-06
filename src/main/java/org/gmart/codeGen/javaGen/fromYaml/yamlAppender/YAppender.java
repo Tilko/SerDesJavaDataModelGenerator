@@ -20,13 +20,11 @@ import java.util.Map;
 
 import org.gmart.codeGen.appender.Appender;
 
-import api_global.logUtility.L;
 
 public interface YAppender extends Appender {
 	boolean mustStartNestedSequenceWithNewLine();
 	
 	public static boolean isOnNewLineWhenPropertyValue(Object obj) {
-		L.l("obj:" + obj);
 		if(obj instanceof List  ||  obj instanceof Map)
 			return true;
 //		Boolean isOnNewLineClass = classToIsOnNewLine.get(obj.getClass());

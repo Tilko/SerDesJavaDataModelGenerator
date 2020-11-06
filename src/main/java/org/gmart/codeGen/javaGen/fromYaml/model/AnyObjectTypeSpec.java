@@ -29,8 +29,6 @@ import org.javatuples.Pair;
 
 import com.squareup.javapoet.TypeSpec;
 
-import api_global.logUtility.L;
-
 
 public class AnyObjectTypeSpec extends TypeDefinition {
 
@@ -84,8 +82,6 @@ public class AnyObjectTypeSpec extends TypeDefinition {
 	
 	@Override
 	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
-		L.l("toSerialize:" + toSerialize);
-		L.l("toSerialize cl:" + toSerialize.getClass());
 		return null;//OK null
 	}
 
