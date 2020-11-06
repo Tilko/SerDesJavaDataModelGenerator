@@ -17,9 +17,9 @@ package org.gmart.codeGenExample;
 
 import java.io.File;
 
-import org.gmart.codeGen.javaGen.fromYaml.model.PackageSetSpec;
-import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.ClassDefinition;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.PackagesSetFactory;
+import org.gmart.codeGen.javaGen.model.PackageSetSpec;
+import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinition;
+import org.gmart.codeGen.javaGen.modelExtraction.PackagesSetFactory;
 import org.gmart.codeGenExample.result.CardType;
 import org.gmart.codeGenExample.result.HttpMethodTypes;
 import org.gmart.codeGenExample.result.Person;

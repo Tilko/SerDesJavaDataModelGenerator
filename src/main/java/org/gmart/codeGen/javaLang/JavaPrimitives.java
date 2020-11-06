@@ -22,7 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.gmart.codeGen.javaGen.fromYaml.model.FormalGroup;
+import org.gmart.codeGen.javaGen.model.FormalGroup;
 
 import com.squareup.javapoet.TypeName;
 

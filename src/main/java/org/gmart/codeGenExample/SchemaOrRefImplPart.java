@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2020 GrÃ©goire Martinetti
+ * Copyright 2020 Grégoire Martinetti
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -18,7 +18,7 @@ package org.gmart.codeGenExample;
 
 import java.util.function.Function;
 
-import org.gmart.codeGen.javaGen.fromYaml.model.DeserialContextOwner;
+import org.gmart.codeGen.javaGen.model.DeserialContextOwner;
 import org.gmart.codeGen.utils.ReflUtil;
 import org.gmart.codeGenExample.result.Person;
 import org.gmart.codeGenExample.result.Schema;
