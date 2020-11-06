@@ -15,6 +15,8 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.fromYaml.yamlAppender;
 
+import java.util.List;
+import java.util.Map;
 import org.gmart.codeGen.appender.AppenderImpl;
 
 
@@ -30,4 +32,18 @@ public class YAppenderImpl extends AppenderImpl implements YAppender {
 	}
 	
 	
+//	final static Map<Class<?>, Boolean> classToIsOnNewLine = new HashMap<>();
+//	static {
+//		Stream.of(JavaPrimitives.primitives).forEach(pr -> classToIsOnNewLine.put(pr.getClassBoxed(), false));
+//		
+//		classToIsOnNewLine.put(M.getClassBoxed(), false)
+//	}
+	public static boolean isOnNewLineWhenPropertyValue(Object obj) {
+		if(obj instanceof List  ||  obj instanceof Map)
+			return true;
+//		Boolean isOnNewLineClass = classToIsOnNewLine.get(obj.getClass());
+//		if(isOnNewLineClass != null)
+//			return isOnNewLineClass;
+		return false;
+	}
 }

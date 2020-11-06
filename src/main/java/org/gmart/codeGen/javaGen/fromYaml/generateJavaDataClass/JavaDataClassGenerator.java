@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.generate;
+package org.gmart.codeGen.javaGen.fromYaml.generateJavaDataClass;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +22,9 @@ import java.util.Collection;
 import javax.annotation.processing.Generated;
 import javax.lang.model.element.Modifier;
 
-import org.gmart.codeGen.javaGen.fromYaml.PackagesSetFactory;
 import org.gmart.codeGen.javaGen.fromYaml.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.fromYaml.model.PackageSetSpec;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.PackagesSetFactory;
 
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.JavaFile;

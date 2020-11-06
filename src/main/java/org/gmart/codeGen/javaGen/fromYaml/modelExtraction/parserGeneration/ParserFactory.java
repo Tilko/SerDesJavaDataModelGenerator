@@ -13,8 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.model;
+package org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration;
 
-public interface ClassDefinitionOwner {
-	public AbstractClassDefinition getClassDefinition();
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyLexer;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser;
+
+public class ParserFactory {
+	public static DataTypeHierarchyParser parse(String str){
+		DataTypeHierarchyLexer lexer = new DataTypeHierarchyLexer(CharStreams.fromString(str));
+		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+		return new DataTypeHierarchyParser(tokenStream);
+	}
+	
 }

@@ -71,7 +71,7 @@ public abstract class AbstractContainerType implements ContainerType {
 	}
 	protected abstract Object makeJavaObject_internal(DeserialContext ctx, Object fieldYamlValue);
 	@Override
-	public boolean isInstanceAsPropertyValueOnNewLine() {
+	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
 		return true;
 	}
 }

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.fromYaml.model;
 
-import org.gmart.codeGen.javaGen.fromYaml.generate.JpoetTypeGenerator;
+import org.gmart.codeGen.javaGen.fromYaml.generateJavaDataClass.JpoetTypeGenerator;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;

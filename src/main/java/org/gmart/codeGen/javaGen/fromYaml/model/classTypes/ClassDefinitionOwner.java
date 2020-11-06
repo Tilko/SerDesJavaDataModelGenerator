@@ -13,8 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.model;
+package org.gmart.codeGen.javaGen.fromYaml.model.classTypes;
 
-public interface JavaObjectMaker {
-	Object makeJavaObject(Object fieldYamlValue);
+public interface ClassDefinitionOwner {
+	public AbstractClassDefinition getClassDefinition();
 }

@@ -27,15 +27,24 @@ public class ParserGeneration {
 	 * @param args
 	 * @throws IOException
 	 */
+	///codeGen/src/main/java/org/gmart/codeGen/javaGen/fromYaml/modelExtraction/parserGeneration/DataTypeHierarchy.g4
+	private static final String generatedParserDirName = "generatedParser";
 	private static void generateParser() throws IOException {
-		File currentProjectFolder = new File(".");
-		File currentFolder = new File(currentProjectFolder, "src\\main\\java\\org\\gmart\\codeGen\\javaGen\\fromYaml\\javadataclass\\typedefsExtraction\\typeExpression");
-		String g4SourcePath = new File(currentFolder, "TypeExpressionGrammar.g4").getCanonicalPath();
-		File parserCodeDestDirectory = new File(currentFolder, "parser");
+		//File currentProjectFolder = new File(".");
+		File currentFolder = new File("src/main/java/org/gmart/codeGen/javaGen/fromYaml/modelExtraction/parserGeneration");
+		String g4SourcePath = new File(currentFolder, "DataTypeHierarchy.g4").getCanonicalPath();
+		File parserCodeDestDirectory = new File(currentFolder, generatedParserDirName);
 		String parserCodeDestPath = parserCodeDestDirectory.getCanonicalPath();
 		
 		log(parserCodeDestPath);
-		org.antlr.v4.Tool.main(new String[] {"-o", parserCodeDestPath, "-no-visitor", g4SourcePath, "-package", "org.gmart.codeGen.javaGen.fromYaml.javadataclass.typedefsExtraction.typeExpression.parser"});
+		org.antlr.v4.Tool.main(new String[] {
+			"-o", 
+			parserCodeDestPath, 
+			"-no-visitor", 
+			g4SourcePath, 
+			"-package", 
+			ParserGeneration.class.getPackageName() + "." + generatedParserDirName
+		});
 	}
 	public static void main(String[] args) throws IOException {
 		boolean parserNotAlreadyGenerated = true;

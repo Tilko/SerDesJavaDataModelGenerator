@@ -60,7 +60,7 @@ public class EnumSpecification extends TypeDefinition implements StringToValueCo
 		return possibleValues;
 	}
 	HashMap<String, Integer> valueToIndex;
-	Integer getIndexOfValue(String value){
+	public Integer getIndexOfValue(String value){
 		if(valueToIndex == null) {
 			valueToIndex = new HashMap<>();
 			for(int i = 0; i < possibleValues.size(); i++) {
@@ -127,8 +127,12 @@ public class EnumSpecification extends TypeDefinition implements StringToValueCo
 	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
 		bui.append(((EnumValueFromYaml)toSerialize).toOriginalValue());
 	}
+	
+	public static void appendInstanceToYamlCode_static(YAppender bui, Object toSerialize) {
+		bui.append(((EnumValueFromYaml)toSerialize).toOriginalValue());
+	}
 	@Override
-	public boolean isInstanceAsPropertyValueOnNewLine() {
+	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
 		return false;
 	}
 

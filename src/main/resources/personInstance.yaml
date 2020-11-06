@@ -28,3 +28,13 @@ components:
       type: object
       truc: 7 #"#thepath"
       machin: 1
+bidule0:
+  a: hey
+bla: 
+  b: hey b
+obj: hello
+obj2:
+  g: 1
+  h: 
+    - az
+    - s

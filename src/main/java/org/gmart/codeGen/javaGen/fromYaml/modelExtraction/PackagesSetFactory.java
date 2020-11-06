@@ -13,10 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.generate;
+package org.gmart.codeGen.javaGen.fromYaml.modelExtraction;
 
-import java.util.Map;
+import java.io.File;
+import java.io.FileNotFoundException;
 
-public interface Dict<T> extends Map<String, T> {
+import org.gmart.codeGen.javaGen.fromYaml.model.PackageSetSpec;
 
+public class PackagesSetFactory {
+	public static PackageSetSpec makePackageSet(String yamlFilePath) throws FileNotFoundException {
+		return makePackageSet(new File(yamlFilePath));
+	}
+	public static PackageSetSpec makePackageSet(File yamlFile) throws FileNotFoundException {
+		YamlToModel yamlReader = new YamlToModel();
+		PackageSetSpec packagesSet = yamlReader.read(yamlFile);
+		return packagesSet;
+	}
 }

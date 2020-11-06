@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.gmart.codeGen.javaGen.fromYaml.generate.JavaDataClassGenerator;
+import org.gmart.codeGen.javaGen.fromYaml.generateJavaDataClass.JavaDataClassGenerator;
 import org.gmart.codeGen.javaLang.JavaPrimitives;
 import org.gmart.util.functionalProg.StreamUtil;
 
@@ -54,6 +54,7 @@ public class PackageSetSpec {
 		Stream.of(JavaPrimitives.primitiveBoxedTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLang, primitiveTypeName), true));
 		Stream.of(JavaPrimitives.primitiveTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLang, primitiveTypeName), true));
 		setTypeDef(new StringTypeSpec(), true);
+		setTypeDef(new AnyObjectTypeSpec(), true);
 		simpleNameInMultiplePackagesOfThisSet.forEach(simpleName -> simpleNameToClassSpec.remove(simpleName));
 		simpleOrQualifiedNameToClassSpec = new HashMap<>(simpleNameToClassSpec);
 		simpleOrQualifiedNameToClassSpec.putAll(qualifiedNameToClassSpec);

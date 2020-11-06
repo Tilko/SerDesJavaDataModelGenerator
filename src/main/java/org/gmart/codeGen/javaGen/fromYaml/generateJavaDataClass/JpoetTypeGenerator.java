@@ -13,18 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration;
+package org.gmart.codeGen.javaGen.fromYaml.generateJavaDataClass;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarLexer;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser;
+import java.util.Optional;
 
-public class TypeExpressionParser {
-	public static TypeExpressionGrammarParser parse(String str){
-		TypeExpressionGrammarLexer lexer = new TypeExpressionGrammarLexer(CharStreams.fromString(str));
-		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-		return new TypeExpressionGrammarParser(tokenStream);
-	}
-	
+import com.squareup.javapoet.TypeSpec;
+
+public interface JpoetTypeGenerator {
+	Optional<TypeSpec.Builder> initJPoetTypeSpec();
 }

@@ -13,8 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.model;
+package org.gmart.codeGen.javaGen.fromYaml.model.classTypes;
 
+import org.gmart.codeGen.javaGen.fromYaml.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.SerializableToYaml;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppenderImpl;

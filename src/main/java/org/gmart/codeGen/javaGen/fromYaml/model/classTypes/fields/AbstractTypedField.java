@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.model.fields;
+package org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +25,8 @@ import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.javatuples.Pair;
 
 import com.squareup.javapoet.TypeName;
+
+import api_global.logUtility.L;
 
 public abstract class AbstractTypedField extends AbstractField {
 	
@@ -49,31 +51,40 @@ public abstract class AbstractTypedField extends AbstractField {
 		try {
 			Class<?> toSerialize_Class = generatedClass;//((ClassDefinitionOwner)toSerialize).getClassDefinition().getGeneratedClass(); //toSerialize.getClass();
 			Field field = toSerialize_Class.getDeclaredField(getNameInCode());
-//			Field field = null;
-//			try {
-//				
-//			} catch (NoSuchFieldException e) {
-//				e.printStackTrace();
-//			}
-			
 			field.setAccessible(true);
 			Object childToSerialize = field.get(toSerialize);
 			if(childToSerialize == null) {
 				if(!isOptional())
-					assert false: "A required field has not been filled:" + toString();//no assert: just warning
+					assert false: "A required field has not been filled:" + toString();//TODO or no assert: just warning 
 				else {/* nothing to do */}
 			} else {
-				bui.append(getName());
-				bui.append(": ");
-				bui.indent(()->{
-					if(getTypeExpression().isInstanceAsPropertyValueOnNewLine())
-						bui.n();
-					getTypeExpression().appendInstanceToYamlCode(bui, childToSerialize);
-				});
-				
+				append(bui, getName(), getTypeExpression(), childToSerialize);
 			}
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public static void append(YAppender bui, Object key, TypeExpression childType, Object childToSerialize) {
+		bui.append(key.toString());
+		bui.append(": ");
+		bui.indent(()->{
+			Boolean instanceAsPropertyValueOnNewLine = childType.isInstanceAsPropertyValueOnNewLine_nullable(childToSerialize);
+			if(instanceAsPropertyValueOnNewLine != null ? instanceAsPropertyValueOnNewLine : YAppender.isOnNewLineWhenPropertyValue(childToSerialize))
+				bui.n();
+			childType.appendInstanceToYamlCode(bui, childToSerialize);
+		});
+	}
+
+	public interface YAppendableProperty {
+		String getYAppendablePropertyKey();
+		void appendPropertyValue();
+		default void append(YAppender bui) {
+			bui.append(this.getYAppendablePropertyKey());
+			bui.append(": ");
+			bui.indent(()->{
+				this.appendPropertyValue();
+			});
 		}
 	}
 	//private Field getFieldInAllHier

@@ -23,13 +23,17 @@ import java.util.function.Consumer;
 import org.gmart.codeGen.javaGen.fromYaml.model.DeserialContext;
 import org.gmart.codeGen.javaGen.fromYaml.model.FormalGroup;
 import org.gmart.codeGen.javaGen.fromYaml.model.TypeExpression;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.AbstractTypedField;
+import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.MapEntryAppender;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
-public abstract class AbstractMapContainerType extends AbstractContainerType {
+import api_global.logUtility.L;
+
+public abstract class AbstractMapContainerType extends AbstractContainerType implements MapEntryAppender {
 	public AbstractMapContainerType(TypeExpression contentType) {
 		super(contentType);
 	}
@@ -65,6 +69,8 @@ public abstract class AbstractMapContainerType extends AbstractContainerType {
 	@Override
 	public TypeName getJPoetTypeName(boolean boxPrimitive){
 		//ClassName.get(keyType.getPackageName(), keyType.getName())
+		L.l("this.getKeyTypeSpec:" + this.getKeyTypeSpec());
+		L.l("this.this.contentType:" + this.contentType.getJavaIdentifier());
 		return ParameterizedTypeName.get(mapClassName, this.getKeyTypeSpec().getJPoetTypeName(true), this.contentType.getJPoetTypeName(true));
 	}
 	//protected abstract Map<?, ?> makeMapInstance();
@@ -72,31 +78,26 @@ public abstract class AbstractMapContainerType extends AbstractContainerType {
 	@Override
 	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
 		assert toSerialize instanceof LinkedHashMap;
-		appendMapToYamlCode(bui, (LinkedHashMap)toSerialize);
+		appendMapToYamlCode(bui, (Map)toSerialize);
+	}
+	@SuppressWarnings({ "rawtypes" })
+	private void appendMapToYamlCode(YAppender bui, Map mapToSerialize) {
+		appendMapToYamlCode(bui, mapToSerialize, this);
 	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void appendMapToYamlCode(YAppender bui, LinkedHashMap listToSerialize) {
+	public static void appendMapToYamlCode(YAppender bui, Map mapToSerialize, MapEntryAppender mapEntryAppender) {
 		AtomicBoolean isNotFirst = new AtomicBoolean(false);
-		listToSerialize.forEach((key, value) -> {
+		mapToSerialize.forEach((key, value) -> {
 			if(isNotFirst.get()) {
 				bui.n();
 			} else isNotFirst.set(true);
-			
-			appendElement(bui, key.toString(), value);
+			mapEntryAppender.appendMapEntry(bui, key, value);
+			//appendElement(bui, key.toString(), value);
 		});
 	}
-
-	private void appendElement(YAppender bui, String key, Object elem) {
-		bui.append(key);
-		bui.append(": ");
-		bui.indent(()->{
-//			if(bui.mustStartNestedSequenceWithNewLine() && contentType.isListContainer())
-//				bui.n();
-			if(contentType.isInstanceAsPropertyValueOnNewLine())
-				bui.n();
-			contentType.appendInstanceToYamlCode(bui, elem);
-		});
-		
+	@Override
+	public void appendMapEntry(YAppender bui, Object key, Object elem) {
+		AbstractTypedField.append(bui, key, contentType, elem);
 	}
 	@Override
 	public boolean isListContainer() {

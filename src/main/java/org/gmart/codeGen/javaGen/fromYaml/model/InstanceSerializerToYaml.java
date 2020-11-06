@@ -19,5 +19,9 @@ import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
 
 public interface InstanceSerializerToYaml {
 	void appendInstanceToYamlCode(YAppender bui, Object instanceToSerialize);
-	boolean isInstanceAsPropertyValueOnNewLine();
+	
+	/** 
+	 * if returns null => use the static YAppender.isOnNewLineWhenPropertyValue(Object obj) method
+	 * */
+	Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize);
 }

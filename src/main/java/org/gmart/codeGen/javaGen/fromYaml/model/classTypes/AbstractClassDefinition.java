@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.model;
+package org.gmart.codeGen.javaGen.fromYaml.model.classTypes;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,7 +33,12 @@ import java.util.stream.Stream;
 //import java.lang.reflect.Modifier;
 import javax.lang.model.element.Modifier;
 
-import org.gmart.codeGen.javaGen.fromYaml.model.fields.AbstractTypedField;
+import org.gmart.codeGen.javaGen.fromYaml.model.DeserialContext;
+import org.gmart.codeGen.javaGen.fromYaml.model.FormalGroup;
+import org.gmart.codeGen.javaGen.fromYaml.model.PackageDefinition;
+import org.gmart.codeGen.javaGen.fromYaml.model.PackageSetSpec;
+import org.gmart.codeGen.javaGen.fromYaml.model.TypeDefinition;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.fromYaml.model.typeRecognition.isA.EnumSubSpace;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
 import org.gmart.codeGen.javaLang.JPoetUtil;
@@ -48,6 +53,8 @@ import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 //import com.squareup.javapoet.TypeSpec.Builder;
+
+import api_global.logUtility.L;
 
 
 public abstract class AbstractClassDefinition extends TypeDefinition  {
@@ -210,7 +217,7 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 		return hasField;
 	}
 	@Override
-	public boolean isInstanceAsPropertyValueOnNewLine() {
+	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
 		return true;
 	}
 	private static final String classSpecificationId = "classSpecification";
@@ -252,7 +259,7 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 		initGeneratedClasses(this.getGeneratedClass(), classSpecificationId, this);
 	}
 	@SuppressWarnings("rawtypes")
-	static void initGeneratedClasses(Class jClass, String id, Object that) {
+	public static void initGeneratedClasses(Class jClass, String id, Object that) {
 		try {
 			Field declaredField = jClass.getDeclaredField(id);
 			declaredField.setAccessible(true);

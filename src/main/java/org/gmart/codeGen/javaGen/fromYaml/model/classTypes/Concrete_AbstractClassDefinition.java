@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.model;
+package org.gmart.codeGen.javaGen.fromYaml.model.classTypes;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -22,8 +22,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.gmart.codeGen.javaGen.fromYaml.model.fields.AbstractTypedField;
-import org.gmart.codeGen.javaGen.fromYaml.model.fields.ClassAbstractEnumField;
+import org.gmart.codeGen.javaGen.fromYaml.model.DeserialContext;
+import org.gmart.codeGen.javaGen.fromYaml.model.EnumSpecification;
+import org.gmart.codeGen.javaGen.fromYaml.model.PackageDefinition;
+import org.gmart.codeGen.javaGen.fromYaml.model.TypeExpression;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.AbstractTypedField;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.ClassAbstractEnumField;
 import org.gmart.codeGen.javaGen.fromYaml.model.typeRecognition.isA.EnumSubSpace;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.SerializableToYaml;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
@@ -73,10 +77,10 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 						childClass.removeField(childField);
 						enumSpecification.getPackageDefinition().getTypeDefs().remove(enumSpecification);
 						//((EnumSpecification)typeExpression).packageDefinition.
+					} else {
+						childField.setNameIncode(astractField.getName() + "_" + childClass.getName());
 					}
-				} else {
-					childField.setNameIncode(astractField.getName() + "_" + childClass.getName());
-				}
+				} 
 			});
 		});
 		

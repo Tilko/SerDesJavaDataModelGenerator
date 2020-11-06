@@ -29,36 +29,37 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.gmart.codeGen.javaGen.fromYaml.model.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.fromYaml.model.Concrete_AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.fromYaml.model.EnumSpecification;
 import org.gmart.codeGen.javaGen.fromYaml.model.OneOfSpecification;
 import org.gmart.codeGen.javaGen.fromYaml.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.fromYaml.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.fromYaml.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.fromYaml.model.TypeExpression;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.AbstractClassDefinition;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.Concrete_AbstractClassDefinition;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.AbstractTypedField;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.ClassAbstractEnumField;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.ConcreteFieldDefinition;
 import org.gmart.codeGen.javaGen.fromYaml.model.containerTypes.AbstractContainerType;
 import org.gmart.codeGen.javaGen.fromYaml.model.containerTypes.AbstractMapContainerType;
 import org.gmart.codeGen.javaGen.fromYaml.model.containerTypes.DictContainerType;
 import org.gmart.codeGen.javaGen.fromYaml.model.containerTypes.ListContainerType;
 import org.gmart.codeGen.javaGen.fromYaml.model.containerTypes.MapContainerType;
-import org.gmart.codeGen.javaGen.fromYaml.model.fields.AbstractTypedField;
-import org.gmart.codeGen.javaGen.fromYaml.model.fields.ClassAbstractEnumField;
-import org.gmart.codeGen.javaGen.fromYaml.model.fields.ConcreteFieldDefinition;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.TypeExpressionParser;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.AnonymousEnumFieldContext;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.DiamondOneArgContext;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.DiamondTwoArgContext;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.IdentifierListContext;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.MapTypeExpressionContext;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.OnOneLineTypeDefContext;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.PropertyNamePartContext;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.QualifiedNameContext;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.TypeExpressionContext;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser.TypeExpressionGrammarParser.TypeNamePartContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.ParserFactory;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.AnonymousEnumFieldContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.DiamondOneArgContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.DiamondTwoArgContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.IdentifierListContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.MapTypeExpressionContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.OnOneLineTypeDefContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.PropertyNamePartContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.QualifiedNameContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.TypeExpressionContext;
+import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.TypeNamePartContext;
 import org.javatuples.Pair;
 import org.yaml.snakeyaml.Yaml;
 
+import api_global.logUtility.L;
 import api_global.strUtil.StringFunctions;
 
 
@@ -98,7 +99,7 @@ public class YamlToModel {
 			if(value instanceof String) {
 				return makeEnumOrOneOfSpec(obj.getKey(), (String) value);
 			} else {
-				TypeNamePartContext typeNamePart = TypeExpressionParser.parse(obj.getKey()).typeNamePart();
+				TypeNamePartContext typeNamePart = ParserFactory.parse(obj.getKey()).typeNamePart();
 				
 				AbstractClassDefinition classDef = makeClassSpec(typeNamePart.Identifier().getText(), (Map<String, String>) value);
 				QualifiedNameContext qualifiedName = typeNamePart.qualifiedName();
@@ -117,7 +118,7 @@ public class YamlToModel {
 	List<Runnable> oneOfValidations = new ArrayList<>();
 	 
 	private TypeDefinition makeEnumOrOneOfSpec(String typeName, String possibleValues_str) {
-		OnOneLineTypeDefContext def = TypeExpressionParser.parse(possibleValues_str).onOneLineTypeDef();
+		OnOneLineTypeDefContext def = ParserFactory.parse(possibleValues_str).onOneLineTypeDef();
 		IdentifierListContext identifierList = def.identifierList();
 		if(identifierList != null) {
 //			List<TerminalNode> identifier = identifierList.Identifier();
@@ -145,10 +146,10 @@ public class YamlToModel {
 	
 	private AbstractTypedField makeFieldSpec(String typeName, Entry<String, String> entry) {
 		String typeExprStr = entry.getValue();
-		PropertyNamePartContext keyContext = TypeExpressionParser.parse(entry.getKey()).propertyNamePart();
+		PropertyNamePartContext keyContext = ParserFactory.parse(entry.getKey()).propertyNamePart();
 		String propertyName = keyContext.Identifier().getText();
 		boolean isOptional = keyContext.optionalMark != null;
-		TypeExpressionContext typeExprTree = TypeExpressionParser.parse(typeExprStr).typeExpression();
+		TypeExpressionContext typeExprTree = ParserFactory.parse(typeExprStr).typeExpression();
 		
 		if(typeExprTree.abstractFieldMark != null) {
 			if(typeExprTree.anonymousEnumField() != null) {

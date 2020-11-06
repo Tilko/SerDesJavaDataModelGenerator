@@ -13,21 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml;
+package org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import org.gmart.codeGen.javaGen.fromYaml.model.TypeExpression;
 
-import org.gmart.codeGen.javaGen.fromYaml.model.PackageSetSpec;
-import org.gmart.codeGen.javaGen.fromYaml.modelExtraction.YamlToModel;
+import lombok.Getter;
 
-public class PackagesSetFactory {
-	public static PackageSetSpec makePackageSet(String yamlFilePath) throws FileNotFoundException {
-		return makePackageSet(new File(yamlFilePath));
+public class ConcreteFieldDefinition extends AbstractTypedField {
+	
+	@Getter TypeExpression typeExpression;
+	
+	public ConcreteFieldDefinition(String name, boolean isOptional) {
+		super(name, isOptional);
 	}
-	public static PackageSetSpec makePackageSet(File yamlFile) throws FileNotFoundException {
-		YamlToModel yamlReader = new YamlToModel();
-		PackageSetSpec packagesSet = yamlReader.read(yamlFile);
-		return packagesSet;
+	public ConcreteFieldDefinition(String name, boolean isOptional, TypeExpression typeExpression) {
+		this(name, isOptional);
+		this.typeExpression = typeExpression;
+	}
+	
+	@Override
+	public <T extends TypeExpression> void setTypeExpression(T typeExpression) {
+		this.typeExpression = typeExpression;
+	}
+	@Override
+	public boolean isAbstract() {
+		return false;
 	}
 }

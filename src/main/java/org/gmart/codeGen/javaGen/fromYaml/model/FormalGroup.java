@@ -24,7 +24,8 @@ public enum FormalGroup {
 	decimal(true),
 	integer(true),
 	bool(true), 
-	oneOf()
+	oneOf(),
+	any
 	;
 	Primitive primitive;
 	final boolean isFormalLeaf;

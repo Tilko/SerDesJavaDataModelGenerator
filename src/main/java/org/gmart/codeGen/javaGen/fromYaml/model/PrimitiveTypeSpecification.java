@@ -69,11 +69,15 @@ public class PrimitiveTypeSpecification extends TypeDefinition implements String
 
 	@Override
 	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
-		//maybe something to do here (instead of the "if" in see AbstractFieldSpec appendNonContainerToYamlCode) ...
+		appendInstanceToYamlCode_static(bui, toSerialize);
+	}
+	public static void appendInstanceToYamlCode_static(YAppender bui, Object toSerialize) {
 		bui.append(toSerialize.toString());
 	}
+	
+	
 	@Override
-	public boolean isInstanceAsPropertyValueOnNewLine() {
+	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
 		return false;
 	}
 	@Override

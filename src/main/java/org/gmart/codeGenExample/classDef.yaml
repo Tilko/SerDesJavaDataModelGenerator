@@ -6,8 +6,11 @@ org.gmart.codeGenExample.result:
     preferredCardType: CardType
     httpMethods: Map<HttpMethodTypes, String*> #Map<String, Map<CardType, Vehicle**>*>*
     components: Components
-    #bidule0: org.gmart.codeGen.loadYamlIntoGeneratedModel.result.bidulePackage.Bidule
-    #bla: TypeDontLeSimpleNameEstUniqueInThisPackagesSet
+    bidule0: org.gmart.codeGenExample.result.bidulePackage.Bidule
+    bla: TypeWithAUniqueSimpleNameInThisPackagesSet
+    obj: Object
+    obj2: Object
+    
   Components:
     schemas: Dict<Schema>
     
@@ -37,7 +40,7 @@ org.gmart.codeGenExample.result:
 
 org.gmart.codeGenExample.result.bidulePackage:
 # as bidulePackage1:
-  TypeDontLeSimpleNameEstUniqueInThisPackagesSet:
+  TypeWithAUniqueSimpleNameInThisPackagesSet:
     b: String
   Bidule:
     a: String

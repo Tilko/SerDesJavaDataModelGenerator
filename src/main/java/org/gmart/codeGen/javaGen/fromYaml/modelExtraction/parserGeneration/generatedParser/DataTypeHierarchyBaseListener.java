@@ -1,136 +1,136 @@
-// Generated from C:\Users\marti\workingLowLevel\codeGen\src\main\java\org\gmart\codeGen\javaGen\fromYaml\javadataclass\typedefsExtraction\typeExpression\TypeExpressionGrammar.g4 by ANTLR 4.8
-package org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.parser;
+// Generated from C:\Users\marti\workingLowLevel\codeGen\src\main\java\org\gmart\codeGen\javaGen\fromYaml\modelExtraction\parserGeneration\DataTypeHierarchy.g4 by ANTLR 4.8
+package org.gmart.codeGen.javaGen.fromYaml.modelExtraction.parserGeneration.generatedParser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
- * This class provides an empty implementation of {@link TypeExpressionGrammarListener},
+ * This class provides an empty implementation of {@link DataTypeHierarchyListener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-public class TypeExpressionGrammarBaseListener implements TypeExpressionGrammarListener {
+public class DataTypeHierarchyBaseListener implements DataTypeHierarchyListener {
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeNamePart(TypeExpressionGrammarParser.TypeNamePartContext ctx) { }
+	@Override public void enterTypeNamePart(DataTypeHierarchyParser.TypeNamePartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeNamePart(TypeExpressionGrammarParser.TypeNamePartContext ctx) { }
+	@Override public void exitTypeNamePart(DataTypeHierarchyParser.TypeNamePartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPropertyNamePart(TypeExpressionGrammarParser.PropertyNamePartContext ctx) { }
+	@Override public void enterPropertyNamePart(DataTypeHierarchyParser.PropertyNamePartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPropertyNamePart(TypeExpressionGrammarParser.PropertyNamePartContext ctx) { }
+	@Override public void exitPropertyNamePart(DataTypeHierarchyParser.PropertyNamePartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOnOneLineTypeDef(TypeExpressionGrammarParser.OnOneLineTypeDefContext ctx) { }
+	@Override public void enterOnOneLineTypeDef(DataTypeHierarchyParser.OnOneLineTypeDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOnOneLineTypeDef(TypeExpressionGrammarParser.OnOneLineTypeDefContext ctx) { }
+	@Override public void exitOnOneLineTypeDef(DataTypeHierarchyParser.OnOneLineTypeDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIdentifierList(TypeExpressionGrammarParser.IdentifierListContext ctx) { }
+	@Override public void enterIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIdentifierList(TypeExpressionGrammarParser.IdentifierListContext ctx) { }
+	@Override public void exitIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMapTypeExpression(TypeExpressionGrammarParser.MapTypeExpressionContext ctx) { }
+	@Override public void enterMapTypeExpression(DataTypeHierarchyParser.MapTypeExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMapTypeExpression(TypeExpressionGrammarParser.MapTypeExpressionContext ctx) { }
+	@Override public void exitMapTypeExpression(DataTypeHierarchyParser.MapTypeExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeExpression(TypeExpressionGrammarParser.TypeExpressionContext ctx) { }
+	@Override public void enterTypeExpression(DataTypeHierarchyParser.TypeExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeExpression(TypeExpressionGrammarParser.TypeExpressionContext ctx) { }
+	@Override public void exitTypeExpression(DataTypeHierarchyParser.TypeExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAnonymousEnumField(TypeExpressionGrammarParser.AnonymousEnumFieldContext ctx) { }
+	@Override public void enterAnonymousEnumField(DataTypeHierarchyParser.AnonymousEnumFieldContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAnonymousEnumField(TypeExpressionGrammarParser.AnonymousEnumFieldContext ctx) { }
+	@Override public void exitAnonymousEnumField(DataTypeHierarchyParser.AnonymousEnumFieldContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDiamondOneArg(TypeExpressionGrammarParser.DiamondOneArgContext ctx) { }
+	@Override public void enterDiamondOneArg(DataTypeHierarchyParser.DiamondOneArgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDiamondOneArg(TypeExpressionGrammarParser.DiamondOneArgContext ctx) { }
+	@Override public void exitDiamondOneArg(DataTypeHierarchyParser.DiamondOneArgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDiamondTwoArg(TypeExpressionGrammarParser.DiamondTwoArgContext ctx) { }
+	@Override public void enterDiamondTwoArg(DataTypeHierarchyParser.DiamondTwoArgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDiamondTwoArg(TypeExpressionGrammarParser.DiamondTwoArgContext ctx) { }
+	@Override public void exitDiamondTwoArg(DataTypeHierarchyParser.DiamondTwoArgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterQualifiedName(TypeExpressionGrammarParser.QualifiedNameContext ctx) { }
+	@Override public void enterQualifiedName(DataTypeHierarchyParser.QualifiedNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitQualifiedName(TypeExpressionGrammarParser.QualifiedNameContext ctx) { }
+	@Override public void exitQualifiedName(DataTypeHierarchyParser.QualifiedNameContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

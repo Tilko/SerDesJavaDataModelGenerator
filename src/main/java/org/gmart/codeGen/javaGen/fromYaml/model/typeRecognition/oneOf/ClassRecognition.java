@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
-import org.gmart.codeGen.javaGen.fromYaml.model.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.fromYaml.model.TypeExpression;
-import org.gmart.codeGen.javaGen.fromYaml.model.fields.AbstractTypedField;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.AbstractClassDefinition;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.AbstractTypedField;
 
 public class ClassRecognition {
 	public static TypeRecognizer<Map<String, ?>> makeRecognizerForClassAlternatives(List<AbstractClassDefinition> alternatives) {

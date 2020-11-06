@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.model;
+package org.gmart.codeGen.javaGen.fromYaml.model.classTypes;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,7 +23,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.gmart.codeGen.javaGen.fromYaml.model.fields.AbstractTypedField;
+import org.gmart.codeGen.javaGen.fromYaml.model.DeserialContext;
+import org.gmart.codeGen.javaGen.fromYaml.model.PackageDefinition;
+import org.gmart.codeGen.javaGen.fromYaml.model.PackageSetSpec;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.fromYaml.yamlAppender.YAppender;
 import org.javatuples.Pair;
 import org.yaml.snakeyaml.Yaml;

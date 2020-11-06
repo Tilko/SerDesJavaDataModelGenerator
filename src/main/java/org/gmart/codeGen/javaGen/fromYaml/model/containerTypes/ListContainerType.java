@@ -66,8 +66,8 @@ public class ListContainerType extends AbstractContainerType {
 		assert toSerialize instanceof List;
 		appendListToYamlCode(bui, (List)toSerialize);
 	}
-	@SuppressWarnings("rawtypes")
-	private void appendListToYamlCode(YAppender bui, List listToSerialize) {
+	
+	private void appendListToYamlCode(YAppender bui, List<?> listToSerialize) {
 		int size = listToSerialize.size();
 		if(size != 0) {
 //			if(bui.mustStartNestedSequenceWithNewLine() || previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer())
@@ -89,6 +89,34 @@ public class ListContainerType extends AbstractContainerType {
 			this.contentType.appendInstanceToYamlCode(bui, elem);
 		});
 	}
+	public interface YAppendableList {
+		Consumer<Object> getChildAppender();
+		default void appendListToYamlCode(YAppender bui, List<?> listToSerialize) {
+			int size = listToSerialize.size();
+			if(size != 0) {
+//				if(bui.mustStartNestedSequenceWithNewLine() || previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer())
+//					bui.n();
+				appendElement(bui, listToSerialize.get(0));
+			}
+			for (int i = 1; i < size; i++) {
+				bui.n();
+				appendElement(bui, listToSerialize.get(i));
+			}
+		}
+
+		default void appendElement(YAppender bui, Object elem) {
+			bui.append("- ");
+			bui.indent(() -> {
+				if(elem instanceof List && bui.mustStartNestedSequenceWithNewLine())
+					bui.n();
+				getChildAppender().accept(elem);
+				//this.contentType.appendInstanceToYamlCode(bui, elem);
+			});
+		}
+	}
+	
+	
+	
 	@Override
 	public boolean isListContainer() {
 		return true;

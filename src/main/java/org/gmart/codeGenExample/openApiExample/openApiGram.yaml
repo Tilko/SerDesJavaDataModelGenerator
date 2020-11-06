@@ -1,152 +1,151 @@
-
-OpenApiSpec:
-  paths: Dict[pathTemplate]<Map<HttpMethodWord, HttpMethod>>
-  components: Components
-  $context:
-    - Repo<Schema>: components.schemas
-  $repos:
-    - components.schemas  #default repo for Schema ref
-    - components.schemasBis for paths.parameters.schema #for the path paths.parameters.schema => a particular repo
-
-HttpMethod:
-  tags: String*
-  summary?: String
-  operationId: String
-  parameters: HttpMethodParameter*
-  requestBody?: RequestBody
-  responses: Dict[HttpResponseCode]<Response>
+org.gmart.codeGenExample.openApiExample.result:
+  OpenApiSpec:
+    paths: Dict[pathTemplate]<Map<HttpMethodWord, HttpMethod>>
+    components: Components
+  #  $context:
+  #    - Repo<Schema>: components.schemas
+  #  $repos:
+  #    - components.schemas  #default repo for Schema ref
+  #    - components.schemasBis for paths.parameters.schema #for the path paths.parameters.schema => a particular repo
   
-HttpMethodParameter:
-  name: String
-  in: ParameterLocation
-  description?: String
-  required: boolean           #in == path =>  required must be set to true
-                              #if there is a default value in schema => required == false
-  style?: HttpMethodParameterStyle
-  explode?: boolean
-  schema: SchemaOrRef
-
-ParameterLocation: path query header cookie
-HttpMethodParameterStyle: form simple
-
-RequestBody:
-  description?: String
-  required?: boolean
-  content: Content  #RequestBodyContent
-
-RequestBodyContent:
-  schema: SchemaOrRef
-
-Response:
-  description?: String
-  content: Content
+  HttpMethodWord: post, get, put, patch, delete
   
-HttpResponseCode: BadRequest NotFound | String
-
-Content: Dict[typeMIME]<RequestBodyContent>
- 
-SchemaOrRef: oneOf(Schema, SchemaRef)
-SchemaRef:
-  $ref: String  
-
-Components:
-  schemas: Dict[name]<Schema>  
-  
-Schema:
-  type?: abstract Type
-  description?: String
-  nullable?: boolean
-  default: abstract
+  HttpMethod:
+    tags: String*
+    summary?: String
+    operationId: String
+    parameters: HttpMethodParameter*
+    requestBody?: RequestBody
+    responses: Map<HttpResponseCode, Response>
     
-Type: string, number, integer, boolean, array, object
-
-StringType is Schema:
-  type: Type.string
-  format?: String
-  pattern?: String
-  minLength?: Long
-  maxLength?: Long
-  default?: String
+  HttpMethodParameter:
+    name: String
+    in: ParameterLocation
+    description?: String
+    required: boolean           #in == path =>  required must be set to true
+                                #if there is a default value in schema => required == false
+    style?: HttpMethodParameterStyle
+    explode?: boolean
+    schema: SchemaOrRef
   
-ObjectType is Schema:
-  type: Type.object
-  properties: Dict[name]<SchemaOrRef>
-  required: String*
-  additionalProperties?: SchemaOrRef
-  minProperties?: Long
-  maxProperties?: Long
-  default?: Object
-
-AbstractNumberType is Schema:
-  type: abstract Type.sub(number, integer)
-  minimum?: Long
-  maximum?: Long
+  ParameterLocation: path query header cookie
+  HttpMethodParameterStyle: form simple
   
-NumberType is AbstractNumberType:
-  type: Type.number
-  format?: abstract NumberTypeFormat
-IntegerType is AbstractNumberType:
-  type: Type.integer
-  format?: abstract enum(int32, int64)
-
-NumberTypeFormat: float, double
-
-FloatType is NumberType:
-  format: NumberTypeFormat.float
-  default?: float
-DoubleType is NumberType:
-  format: NumberTypeFormat.double
-  default?: double
-Int32Type is IntegerType:
-  format: int32
-  default?: int
-Int64Type is IntegerType:
-  format: int64
-  default?: long
-
-ArrayType is Schema:
-  type: Type.array
-  items: SchemaOrRef
-  uniqueItems?: boolean
-  minItems?: Long
-  maxItems?: Long
-  default: Object*
-
-FileType is Schema:
-  type: Type.string
-  format: enum(binary, byte)
-  default?: String
+  RequestBody:
+    description?: String
+    required?: boolean
+    content: Dict[typeMIME]<RequestBodyContent> #Content  #RequestBodyContent
   
-#implied:
-#SchemaBase:
-#  type: Type.sub(boolean)?
+  RequestBodyContent:
+    schema: SchemaOrRef
+  
+  Response:
+    description?: String
+    content: Dict[typeMIME]<RequestBodyContent> #Content
+    
+  HttpResponseCode: BadRequest NotFound
+  
+  #Content: Dict[typeMIME]<RequestBodyContent> 
+   
+  SchemaOrRef: oneOf(Schema, SchemaRef)
+  SchemaRef:
+    $ref: String  
+  
+  Components:
+    schemas: Dict[name]<Schema>  
+    
+  Schema:
+    type?: abstract Type
+    description?: String
+    nullable?: boolean
+    #default: abstract
+      
+  Type: string, number, integer, boolean, array, object
+  
+  StringType is Schema:
+    type: enum(string)
+    format?: enum(binary, byte) #not specified => string type, else it's a file type 
+    pattern?: String
+    minLength?: Long
+    maxLength?: Long
+    default?: String
+  
+  ObjectType is Schema:
+    type: enum(object)
+    properties: Dict[name]<SchemaOrRef>
+    required: String*
+    additionalProperties?: SchemaOrRef
+    minProperties?: Long
+    maxProperties?: Long
+    default?: Object
+  
+  AbstractNumberType is Schema:
+    type: abstract enum(number, integer)
+    minimum?: Long
+    maximum?: Long
+    
+  NumberType is AbstractNumberType:
+    type: enum(number)
+    format?: abstract NumberTypeFormat
+  IntegerType is AbstractNumberType:
+    type: enum(integer)
+    format?: abstract enum(int32, int64)
+  
+  NumberTypeFormat: float, double
+  
+  FloatType is NumberType:
+    format: enum(float)
+    default?: float
+  DoubleType is NumberType:
+    format: enum(double)
+    default?: double
+  Int32Type is IntegerType:
+    format: enum(int32)
+    default?: int
+  Int64Type is IntegerType:
+    format: enum(int64)
+    default?: long
+  
+  ArrayType is Schema:
+    type: enum(array)
+    items: SchemaOrRef
+    uniqueItems?: boolean
+    minItems?: Long
+    maxItems?: Long
+    default: Object*
   
   
-Range<suffix>:
-  min<suffix>: 
-  max<suffix>:
-
-#A: Dict[XXX]<YYY>  ou  Map[XXX]<kT, YYY>
-#   => si YYY n'est référencé qu'ici => alors Schema peut avoir un champ "XXX" qui contient la clé du Dict.
-#   => sinon le champ peut aussi être créé, mais il doit être optional.
-# en cas de double référencement en tant que contenu de Container, exemple:
-#A:
-#  prop0: Dict[xxx]<YYY>
-#  prop1: Dict[xxx]<YYY>
-#=> signaler cela comme étant une erreur et qu'il faut soit faire:
-#A:
-#  prop0: Dict[xxx0]<YYY>
-#  prop1: Dict[xxx1]<YYY>
-#soit:
-#A:
-#  prop0: B
-#  prop1: B
-#B: Dict[xxx]<YYY>
-#selon ce que l'on veut réellement faire
-
-#Dict<YYY> => YYY a un champ "id"
-
-##### autre possibilité: si XXX est une propriété de YYY alors remplir --
+    
+  #implied:
+  #SchemaBase:
+  #  type: Type.sub(boolean)?
+    
+    
+  #Range<suffix>:
+  #  min<suffix>: 
+  #  max<suffix>:
+  
+  #A: Dict[XXX]<YYY>  ou  Map[XXX]<kT, YYY>
+  #   => si YYY n'est référencé qu'ici => alors Schema peut avoir un champ "XXX" qui contient la clé du Dict.
+  #   => sinon le champ peut aussi être créé, mais il doit être optional.
+  # en cas de double référencement en tant que contenu de Container, exemple:
+  #A:
+  #  prop0: Dict[xxx]<YYY>
+  #  prop1: Dict[xxx]<YYY>
+  #=> signaler cela comme étant une erreur et qu'il faut soit faire:
+  #A:
+  #  prop0: Dict[xxx0]<YYY>
+  #  prop1: Dict[xxx1]<YYY>
+  #soit:
+  #A:
+  #  prop0: B
+  #  prop1: B
+  #B: Dict[xxx]<YYY>
+  #selon ce que l'on veut réellement faire
+  
+  #Dict<YYY> => YYY a un champ "id"
+  
+  ##### autre possibilité: si XXX est une propriété de YYY alors remplir --
 
 
 

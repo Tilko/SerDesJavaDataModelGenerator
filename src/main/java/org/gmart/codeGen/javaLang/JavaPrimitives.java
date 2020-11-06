@@ -37,8 +37,8 @@ public class JavaPrimitives {
 		@Setter @Getter private String nameBoxed;
 		@Setter @Getter private TypeName jPoetTypeName;
 		@Setter @Getter private TypeName jPoetTypeNameBoxed;
-		@Setter @Getter private Class classBoxed;
-		@Setter @Getter private Class classUnboxed;
+		@Setter @Getter private Class<?> classBoxed;
+		@Setter @Getter private Class<?> classUnboxed;
 		@Setter @Getter private Function<String, Object> parser;
 		
 		@Setter @Getter private FormalGroup formalGroup;

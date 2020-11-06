@@ -1,4 +1,4 @@
-grammar TypeExpressionGrammar;
+grammar DataTypeHierarchy;
 
 // the 3 following rules and the "typeExpression" generate the 4 main rules.
 
@@ -19,8 +19,8 @@ identifierList
 	
 	
 mapTypeExpression
-	:	'Dict' diamondOneArg ArrayMarks? 
-	|   'Map'  diamondTwoArg ArrayMarks? 
+	:	'Dict' ('[' Identifier ']')? diamondOneArg ArrayMarks? 
+	|   'Map'  ('[' Identifier ']')? diamondTwoArg ArrayMarks? 
 	;
 typeExpression
 	:   abstractFieldMark='abstract' (anonymousEnumField | qualifiedName?)

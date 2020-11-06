@@ -13,30 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.model.fields;
+package org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields;
 
+import org.gmart.codeGen.javaGen.fromYaml.model.EnumSpecification;
 import org.gmart.codeGen.javaGen.fromYaml.model.TypeExpression;
 
-import lombok.Getter;
 
-public class ConcreteFieldDefinition extends AbstractTypedField {
-	
-	@Getter TypeExpression typeExpression;
-	
-	public ConcreteFieldDefinition(String name, boolean isOptional) {
-		super(name, isOptional);
+public class ClassAbstractEnumField extends AbstractTypedField {
+	EnumSpecification enumType;
+	@Override
+	public EnumSpecification getTypeExpression() {
+		return enumType;
 	}
-	public ConcreteFieldDefinition(String name, boolean isOptional, TypeExpression typeExpression) {
-		this(name, isOptional);
-		this.typeExpression = typeExpression;
+	public <T extends EnumSpecification> void setTypeExpression(T typeExpression) {
+		this.enumType = typeExpression;
 	}
-	
 	@Override
 	public <T extends TypeExpression> void setTypeExpression(T typeExpression) {
-		this.typeExpression = typeExpression;
+		this.enumType = (EnumSpecification) typeExpression;
 	}
+	public ClassAbstractEnumField(String name, boolean isOptional) {
+		super(name, isOptional);
+	}
+	public ClassAbstractEnumField(String name, boolean isOptional, EnumSpecification typeExpression) {
+		this(name, isOptional);
+		this.enumType = typeExpression;
+	}
+
 	@Override
 	public boolean isAbstract() {
-		return false;
+		return true;
 	}
+	
+	
 }

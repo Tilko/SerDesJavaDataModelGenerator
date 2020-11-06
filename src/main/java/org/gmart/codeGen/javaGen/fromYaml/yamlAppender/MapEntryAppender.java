@@ -1,4 +1,3 @@
-package org.gmart.codeGen.javaGen.fromYaml.model;
 /*******************************************************************************
  * Copyright 2020 Grégoire Martinetti
  * 
@@ -14,10 +13,8 @@ package org.gmart.codeGen.javaGen.fromYaml.model;
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-//package org.gmart.codeGen.javaGen.fromYaml.javadataclass.model;
-//
-//import org.gmart.codeGen.javaGen.fromYaml.javadataclass.regenerateYamlOfInstance.YAppender;
-//
-//public interface YamlValueCodeAppender {
-//	void appendValueToYamlCode(YAppender bui, Object elem);
-//}
+package org.gmart.codeGen.javaGen.fromYaml.yamlAppender;
+
+public interface MapEntryAppender {
+	void appendMapEntry(YAppender bui, Object key, Object value);
+}

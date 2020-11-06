@@ -27,6 +27,9 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.AbstractClassDefinition;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.ClassDefinition;
+import org.gmart.codeGen.javaGen.fromYaml.model.classTypes.ClassSerializationToYamlDefaultImpl;
 import org.gmart.codeGen.javaGen.fromYaml.model.containerTypes.AbstractMapContainerType;
 import org.gmart.codeGen.javaGen.fromYaml.model.containerTypes.ListContainerType;
 import org.gmart.codeGen.javaGen.fromYaml.model.typeRecognition.oneOf.ClassRecognition;
@@ -171,6 +174,9 @@ public class OneOfSpecification extends TypeDefinition {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	static TypeRecognizer<Object> makeTypeRecognizer(Map<FormalGroup, List<TypeExpression>> nonOneOfFormalGroups) {
+		
+		assert !nonOneOfFormalGroups.containsKey(FormalGroup.any) : "the \"Object\" type is not possible here.";
+		
 		List<TypeExpression> empty = new ArrayList<>();
 		TypeRecognizer<Object> typeRecognizer = new TypeRecognizer<>();
 		ArrayList<TypeExpression> stringFormal = nonOneOfFormalGroups.getOrDefault(FormalGroup.string, empty).stream().collect(Collectors.toCollection(ArrayList::new));
@@ -298,8 +304,10 @@ public class OneOfSpecification extends TypeDefinition {
 		resolvedType.appendInstanceToYamlCode(bui, oneOfInstance.getPayload());
 	}
 	@Override
-	public boolean isInstanceAsPropertyValueOnNewLine() {
-		return true;
+	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
+		OneOfInstance oneOfInstance = (OneOfInstance) toSerialize;
+		TypeExpression resolvedType = oneOfInstance.getPayloadType();
+		return resolvedType.isInstanceAsPropertyValueOnNewLine_nullable(oneOfInstance.getPayload());
 	}
 	
 	@Override

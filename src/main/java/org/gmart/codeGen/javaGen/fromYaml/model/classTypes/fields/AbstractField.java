@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.fromYaml.model.fields;
+package org.gmart.codeGen.javaGen.fromYaml.model.classTypes.fields;
 
 import javax.lang.model.element.Modifier;
 
+import org.gmart.codeGen.javaGen.fromYaml.model.EnumSpecification;
 import org.gmart.codeGen.javaLang.JPoetUtil;
 
 import com.squareup.javapoet.FieldSpec;
@@ -30,8 +31,14 @@ public abstract class AbstractField {
 	@Getter String name;
 	@Setter String nameIncode;
 	public String getNameInCode() {
-		return nameIncode == null ? name : nameIncode;
+		return escapeJavaKeyWords(nameIncode == null ? name : nameIncode);
 	}
+	private String escapeJavaKeyWords(String name) {
+		if(EnumSpecification.javaKeyword.contains(name))
+			return name + "_";
+		return name;
+	}
+	
 	@Getter public final boolean isOptional;
 	
 	
