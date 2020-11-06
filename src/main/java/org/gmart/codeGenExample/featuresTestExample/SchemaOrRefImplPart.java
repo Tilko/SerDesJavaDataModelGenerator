@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGenExample;
+package org.gmart.codeGenExample.featuresTestExample;
 
 
 import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.model.DeserialContextOwner;
 import org.gmart.codeGen.utils.ReflUtil;
-import org.gmart.codeGenExample.result.Person;
-import org.gmart.codeGenExample.result.Schema;
-import org.gmart.codeGenExample.result.SchemaRef;
+import org.gmart.codeGenExample.featuresTestExample.result.Person;
+import org.gmart.codeGenExample.featuresTestExample.result.Schema;
+import org.gmart.codeGenExample.featuresTestExample.result.SchemaRef;
 
 
 public interface SchemaOrRefImplPart extends DeserialContextOwner {

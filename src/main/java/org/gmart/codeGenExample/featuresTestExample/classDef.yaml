@@ -1,4 +1,4 @@
-org.gmart.codeGenExample.result:
+org.gmart.codeGenExample.featuresTestExample.result:
   Person:
     name?: String
     vehicle: Vehicle
@@ -6,7 +6,7 @@ org.gmart.codeGenExample.result:
     preferredCardType: CardType
     httpMethods: Map<HttpMethodTypes, String*> #Map<String, Map<CardType, Vehicle**>*>*
     components: Components
-    bidule0: org.gmart.codeGenExample.result.bidulePackage.Bidule
+    bidule0: org.gmart.codeGenExample.featuresTestExample.result.bidulePackage.Bidule
     bla: TypeWithAUniqueSimpleNameInThisPackagesSet
     obj: Object
     obj2: Object
@@ -38,13 +38,13 @@ org.gmart.codeGenExample.result:
   CardType: Club, Diamond, Heart, Spade, int
   HttpMethodTypes: POST, PUT, GET
 
-org.gmart.codeGenExample.result.bidulePackage:
+org.gmart.codeGenExample.featuresTestExample.result.bidulePackage:
 # as bidulePackage1:
   TypeWithAUniqueSimpleNameInThisPackagesSet:
     b: String
   Bidule:
     a: String
     
-org.gmart.codeGenExample.result.bidulePackage2:
+org.gmart.codeGenExample.featuresTestExample.result.bidulePackage2:
   Bidule:
     a: String
