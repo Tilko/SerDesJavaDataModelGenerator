@@ -1,10 +1,11 @@
 
-First, to specify a simple data model, let's write the following file:
+As first input of this tool: a type of data structure definition in a yaml file.
+Here is an example file that demonstrates the syntax and its associated meaning:
 ```yaml
 org.my.example.package1:
   MyTypeName0:
-    myPropertyName0: String                     # or any java primitive type
-    myPropertyName1: Map<KeyType, ValueType>    # KeyType can be String or an enum type 
+    myPropertyName0: String                     # "String" or any Java primitive type
+    myPropertyName1: Map<KeyType, ValueType>    # "KeyType" can be String or an enum type 
                                                 #      (cf. "CardType" example of enum definition)
     myPropertyName1: Dict<ValueType>            # "Dict<T>" is the shorthand for Map<String, T>
     myPropertyName3 ? : int                     # "?" specify that the property is optional
@@ -267,7 +268,7 @@ public static void main2(String[] args) throws Exception {
 	myApiSpec.toYaml(false); //=> return the Yaml code
 }
 ```
-The boolean argument of toYaml ("isStartingNestedSequenceWithNewLine") specify if you want that list look like (false):
+The boolean argument of toYaml ("isStartingNestedSequenceWithNewLine") specify if you want that list look like that (false):
 ```yaml 
 - - e00
   - e01
