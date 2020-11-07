@@ -57,10 +57,10 @@ org.my.example.package.that.demonstrates.some.kind.of.abstract.classes.definitio
   ConcreteTypeName0 is AbstractTypeName0:   # note the "is" clause
     type: enum(aaa, bbb)                    # note that the property name is the same as 
                                             #    the "abstract" one in AbstractTypeName0,
-                                            #    it means that the "type" property discriminates between 
+                                            #    it means that the "type" property discriminates between
                                             #    the concrete types to instantiate, in this case 
                                             #    if type is "aaa" or "bbb", this concrete type will be 
-                                            #    instantiated.  
+                                            #    instantiated.
     otherField: int                         # a field specific to that concrete type
     
   SubAbstractTypeName1 is AbstractTypeName0: # also a AbstractTypeName0 sub-type
@@ -81,9 +81,9 @@ org.my.example.package.that.demonstrates.some.kind.of.abstract.classes.definitio
     someCommonProperty: String
   OtherType: eee, fff, ggg, hhh 
   
-  ### for example, if, among the 3 following classes, there was not ConcreteB2 among the following classes, 
-  #   it would be a valid class hierarchy because any pair of {type0, type1} is never possible in both 
-  #   ConcreteA and ConcreteB. Now if finally there is ConcreteB2, the pair {type0: bbb, type1: eee} is 
+  ### for example, if, among the 3 following classes, there was not ConcreteB2 among the following classes,
+  #   it would be a valid class hierarchy because any pair of {type0, type1} is never possible in both
+  #   ConcreteA and ConcreteB. Now if finally there is ConcreteB2, the pair {type0: bbb, type1: eee} is
   #   problematic it can not discriminate between ConcreteA and ConcreteB2.
   ###
   ConcreteA is OtherAbstractTypeName:
@@ -101,7 +101,31 @@ org.example.of.use.for.oneOf.type:
                                                      #    for example with a JSON reference, 
                                                      #    or an URL to an other yaml or JSON file ...
 ```
-
+#### `oneOf` validation details:
+To ensure the recognition of the right type between all the types alternatives, the different alternatives must be formally non-ambiguous,
+Here are the sufficient validation rules that are checked for you by the tool:
+ - Only one alternative can be:
+   - `String` or an `enum` type
+   - `double` or `float`
+   - `int` or `short` or `long`
+   - `boolean`
+ - Multiple `List` types are possible, but the set formed by all their content types must pass the current validation rules (recursion).
+ - Only one `Map` type (or `Dict`) can be present among the alternatives, and if there is one, no `class` type can be present
+ - Multiple `class` types can be present, but their property names must be enough to recognize which type corresponds to any Yaml instance of one of those classes 
+   (the types of the properties are ignored is this validation). The order of the classes type might matter: 
+     For example: the type expression `oneOf(A, B)` with:
+   ```yaml
+   A:
+     a:...
+     c:... 
+   B:
+     a:...
+     b?:...
+     c:...  
+   ```
+   is valid, but `oneOf(B, A)` will throw a validation error because `B` would always matches any instance that `A` would match (so `A` would never be instantiated).
+   But when `A` is specified first in the alternatives list, `A` will be instantiated when the optional property `b` will be missing.
+   
 ## Now let's take a concrete example:
 If you designed some REST API before you might have heard about
 the OpenAPI specification (formerly called "swagger"), it describes a way to specify a REST API
