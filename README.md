@@ -1,8 +1,4 @@
-Hello,
 
-soon
-
-Example:
 First, to specify a simple data model, let's write the following file:
 ```yaml
 org.my.example.package1:
