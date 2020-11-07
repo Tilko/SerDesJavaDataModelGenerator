@@ -110,7 +110,7 @@ this data structure is described (without a formal syntax) in the OpenAPI docume
 From an OpenAPI API description (written in Yaml) you can generate some scaffold code (client and server side) for the API that you desire.
 The present tool addresses 2 things:
 1) To learn the OpenAPI specification, a more formal specification can be much more efficient (cf. the types definition below).
-2) To have programmatic access (read and write) to your description in order to, for example integrate this description 
+2) To have programmatic access (read and write) to your description in order to, for example, integrate this description 
    in a more global description of your system (for example with the database part ...) (in order to automate more boiler-plate code).
 For that example I wrote data types structures that corresponds to the OpenAPI specification (I omitted a couple of language elements): 
 
@@ -119,7 +119,7 @@ org.gmart.codeGenExample.openApiExample.result:
   OpenApiSpec:
     paths: Dict[pathTemplate]<Map<HttpMethodWord, HttpMethod>>  # the "[pathTemplate]" is not used 
                                                                 # by the tool (it might change later)
-                                                                # now it just give a hopefully meaningful  
+                                                                # now it just gives a hopefully meaningful  
                                                                 # name to the key of the "Dict<>" 
     components: Components
 
@@ -231,16 +231,16 @@ org.gmart.codeGenExample.openApiExample.result:
     default: Object*
 ```
 
-Then, with the following piece of code you can generate the Java classes and enum that 
-that corresponds to the previous type descriptions.
+Then, with the following piece of code you can generate the Java classes and enum that corresponds to the previous type descriptions.
 ```java
 public static void main(String[] args) throws Exception {
 	File srcParentDir = new File(new File("").getAbsolutePath());
-	PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(
+	makeOpenApiPackageSet(srcParentDir).generateJavaSourceFiles_InTheCurrentMavenProject();
+}
+private static PackageSetSpec makeOpenApiPackageSet(File srcParentDir) {
+	return  packagesSet = PackagesSetFactory.makePackageSet(
 			new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml")
 	);
-			
-	packagesSet.generateJavaSourceFiles_InTheCurrentMavenProject();
 }
 ```
 Then, with the following code, you can load your OpenAPI Yaml file into an instance of the "OpenApiSpec" class that has been generated at the previous step:
@@ -248,12 +248,8 @@ Then, with the following code, you can load your OpenAPI Yaml file into an insta
 ```java
 public static void main2(String[] args) throws Exception {
 	File srcParentDir = new File(new File("").getAbsolutePath());
-	PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(
-			new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml")
-	);
-			
 	File myOpenApiFile = new File(srcParentDir, "/src/main/resources/myOpenApiDescriptionInstance.yaml");
-	OpenApiSpec myApiSpec = ClassDefinition.yamlFileToObject(packagesSet, myOpenApiFile, OpenApiSpec.class);
+	OpenApiSpec myApiSpec = makeOpenApiPackageSet(srcParentDir).yamlFileToObject(myOpenApiFile, OpenApiSpec.class);
 }
 ```
 

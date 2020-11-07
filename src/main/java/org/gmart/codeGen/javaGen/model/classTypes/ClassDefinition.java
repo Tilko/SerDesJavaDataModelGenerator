@@ -39,7 +39,10 @@ public class ClassDefinition extends AbstractClassDefinition  {
 	}
 	
 	public static class DeserialContextImpl implements DeserialContext  {
-		Object fileRootObject;
+		private Object fileRootObject;
+		public void setFileRootObject(Object fileRootObject) {
+			this.fileRootObject = fileRootObject;
+		}
 		public DeserialContextImpl() {
 			super();
 		}
@@ -49,26 +52,7 @@ public class ClassDefinition extends AbstractClassDefinition  {
 		}
 	}
 	
-	public static <T> T yamlFileToObject(PackageSetSpec packageSetSpec, String yamlFilePath, Class<T> jCLass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
-		return yamlFileToObject(packageSetSpec, new File(yamlFilePath), jCLass);
-	}
-	@SuppressWarnings({ "unchecked" })
-	public static <T> T yamlFileToObject(PackageSetSpec packageSetSpec, File yamlFile, Class<T> jCLass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
-		Object tree = readTree(new FileReader(yamlFile));
-		DeserialContextImpl ctx = new DeserialContextImpl();
-		Pair<Class<?>, Object> rez = packageSetSpec.getTypeSpecificationForClass(jCLass).yamlToJavaObject(ctx, tree, false);
-		assert jCLass == rez.getValue0();
-		Object value1 = rez.getValue1();
-		ctx.fileRootObject = value1;
-		return (T)value1;
-	}
-	private static Object readTree(Reader reader) {
-		LoaderOptions loaderOptions = new LoaderOptions();
-		loaderOptions.setAllowDuplicateKeys(false);
-		Yaml yaml = new Yaml(loaderOptions);
-		Object tree = yaml.load(reader);
-		return tree;
-	}
+	
 	
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })

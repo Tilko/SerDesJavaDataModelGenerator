@@ -16,7 +16,11 @@
 package org.gmart.codeGen.javaGen.model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,8 +31,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.gmart.codeGen.javaGen.generateJavaDataClass.JavaDataClassGenerator;
+import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinition.DeserialContextImpl;
 import org.gmart.codeGen.javaLang.JavaPrimitives;
 import org.gmart.util.functionalProg.StreamUtil;
+import org.javatuples.Pair;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
 
 public class PackageSetSpec {
 	LinkedHashMap<String, PackageDefinition> packages;
@@ -43,6 +51,29 @@ public class PackageSetSpec {
 		File javaRootDirectory = new File(new File("").getAbsolutePath(), "src");
 		JavaDataClassGenerator.generateJavaSourceFiles(this, javaRootDirectory);
 	}
+	
+	public <T> T yamlFileToObject(String yamlFilePath, Class<T> jCLass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+		return this.yamlFileToObject(new File(yamlFilePath), jCLass);
+	}
+	@SuppressWarnings({ "unchecked" })
+	public <T> T yamlFileToObject(File yamlFile, Class<T> jCLass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+		Object tree = readTree(new FileReader(yamlFile));
+		DeserialContextImpl ctx = new DeserialContextImpl();
+		Pair<Class<?>, Object> rez = this.getTypeSpecificationForClass(jCLass).yamlToJavaObject(ctx, tree, false);
+		assert jCLass == rez.getValue0();
+		Object value1 = rez.getValue1();
+		ctx.setFileRootObject(value1);
+		return (T)value1;
+	}
+	private static Object readTree(Reader reader) {
+		LoaderOptions loaderOptions = new LoaderOptions();
+		loaderOptions.setAllowDuplicateKeys(false);
+		Yaml yaml = new Yaml(loaderOptions);
+		Object tree = yaml.load(reader);
+		return tree;
+	}
+	
+	
 	public PackageSetSpec(List<PackageDefinition> packages) {
 		super();
 		//this.packages = packages.stream().collect(Collectors.toMap(PackageDefinition::getPackageName, v->v, (a,b)->b, LinkedHashMap::new));

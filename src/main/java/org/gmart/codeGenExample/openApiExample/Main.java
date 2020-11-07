@@ -41,7 +41,7 @@ public class Main {
 		packagesSet.initGeneratedClasses();
 		
 //		File myOpenApiFile = new File(srcParentDir, "/src/main/resources/myOpenApiDescriptionInstance.yaml");
-//		OpenApiSpec myApiSpec = ClassDefinition.yamlFileToObject(packagesSet, myOpenApiFile, OpenApiSpec.class);
+//		OpenApiSpec myApiSpec = packagesSet.yamlFileToObject(myOpenApiFile, OpenApiSpec.class);
 //		
 //		person.getVehicle().setWheelCard(7);
 //		person.setPreferredCardType(CardType.Heart);

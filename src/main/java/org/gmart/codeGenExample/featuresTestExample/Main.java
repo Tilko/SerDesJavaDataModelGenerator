@@ -18,7 +18,6 @@ package org.gmart.codeGenExample.featuresTestExample;
 import java.io.File;
 
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinition;
 import org.gmart.codeGen.javaGen.modelExtraction.PackagesSetFactory;
 import org.gmart.codeGenExample.featuresTestExample.result.CardType;
 import org.gmart.codeGenExample.featuresTestExample.result.HttpMethodTypes;
@@ -41,7 +40,7 @@ public class Main {
 		packagesSet.initGeneratedClasses();
 		
 		File personFilePath = new File(srcParentDir, "\\src\\main\\resources\\personInstance.yaml");
-		Person person = ClassDefinition.yamlFileToObject(packagesSet, personFilePath, Person.class);
+		Person person = packagesSet.yamlFileToObject(personFilePath, Person.class);
 		
 		person.getVehicle().setWheelCard(7);
 		person.setPreferredCardType(CardType.Heart);
