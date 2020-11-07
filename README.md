@@ -117,10 +117,10 @@ For that example I wrote data types structures that corresponds to the OpenAPI s
 ```yaml
 org.gmart.codeGenExample.openApiExample.result:
   OpenApiSpec:
-    paths: Dict[pathTemplate]<Map<HttpMethodWord, HttpMethod>>  # the "[pathTemplate]" is not used 
-                                                                # by the tool (it might change later)
-                                                                # now it just gives a hopefully meaningful  
-                                                                # name to the key of the "Dict<>" 
+    paths: Dict[pathTemplate]<Map<HttpMethodWord, HttpMethod>> # the "[pathTemplate]" is not used
+                                                               # by the tool (it might change later)
+                                                               # now it just gives a hopefully meaningful
+                                                               # name to the key of the "Dict<>"
     components: Components
 
 
