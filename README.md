@@ -105,8 +105,129 @@ if you designed some REST API before you might have heard about
 the OpenAPI specification (formerly called "swagger"), it describes a way to specify a REST API
 by writing a Yaml (or JSON) document (it's a data tree), of course this document must respect a particular data structure to be valid, 
 this data structure is described (without a formal syntax) in the OpenAPI documentation (https://swagger.io/docs/specification/about/). 
-From OpenAPI specification (written in Yaml) you can generate some scaffold code (client and server side) for the API that you desire.
-The present tool address 2 things:
+From an OpenAPI API description (written in Yaml) you can generate some scaffold code (client and server side) for the API that you desire.
+The present tool addresses 2 things:
 1) To learn the OpenAPI specification, a more formal specification can be much more efficient (cf. the types definition below).
 2) To have programmatic access (read and write) to your description in order to, for example integrate this description 
    in a more global description of your system (for example with the database part ...) (in order to automate more boiler-plate code).
+For that example I wrote data types structures that corresponds to the OpenAPI specification (I omitted a couple of language elements): 
+
+```yaml
+org.gmart.codeGenExample.openApiExample.result:
+  OpenApiSpec:
+    paths: Dict[pathTemplate]<Map<HttpMethodWord, HttpMethod>>  # the "[pathTemplate]" is not used 
+                                                                # by the tool (it might change later)
+                                                                # now it just give a hopefully meaningful  
+                                                                # name to the key of the "Dict<>" 
+    components: Components
+
+
+  HttpMethodWord: post, get, put, patch, delete
+  
+  HttpMethod:
+    tags: String*
+    summary?: String
+    operationId: String
+    parameters: HttpMethodParameter*
+    requestBody?: RequestBody
+    responses: Map<HttpResponseCode, Response>
+    
+  HttpMethodParameter:
+    name: String
+    in: ParameterLocation
+    description?: String
+    required: boolean           #in == path =>  required must be set to true
+                                #if there is a default value in schema => required == false
+    style?: HttpMethodParameterStyle
+    explode?: boolean
+    schema: SchemaOrRef
+  
+  ParameterLocation: path query header cookie
+  HttpMethodParameterStyle: form simple
+  
+  RequestBody:
+    description?: String
+    required?: boolean
+    content: Dict[typeMIME]<RequestBodyContent> #Content  #RequestBodyContent
+  
+  RequestBodyContent:
+    schema: SchemaOrRef
+  
+  Response:
+    description?: String
+    content: Dict[typeMIME]<RequestBodyContent> #Content
+    
+  HttpResponseCode: BadRequest NotFound
+  
+  #Content: Dict[typeMIME]<RequestBodyContent> 
+   
+  SchemaOrRef: oneOf(Schema, SchemaRef)
+  SchemaRef:
+    $ref: String  
+  
+  Components:
+    schemas: Dict[name]<Schema>  
+    
+  Schema:
+    type?: abstract Type
+    description?: String
+    nullable?: boolean
+    #default: abstract
+      
+  Type: string, number, integer, boolean, array, object
+  
+  StringType is Schema:
+    type: enum(string)
+    format?: enum(binary, byte) #not specified => string type, else it's a file type 
+    pattern?: String
+    minLength?: Long
+    maxLength?: Long
+    default?: String
+  
+  ObjectType is Schema:
+    type: enum(object)
+    properties: Dict[name]<SchemaOrRef>
+    required: String*
+    additionalProperties?: SchemaOrRef
+    minProperties?: Long
+    maxProperties?: Long
+    default?: Object
+  
+  AbstractNumberType is Schema:
+    type: abstract enum(number, integer)
+    minimum?: Long
+    maximum?: Long
+    
+  NumberType is AbstractNumberType:
+    type: enum(number)
+    format?: abstract NumberTypeFormat
+  IntegerType is AbstractNumberType:
+    type: enum(integer)
+    format?: abstract enum(int32, int64)
+  
+  NumberTypeFormat: float, double
+  
+  FloatType is NumberType:
+    format: enum(float)
+    default?: float
+  DoubleType is NumberType:
+    format: enum(double)
+    default?: double
+  Int32Type is IntegerType:
+    format: enum(int32)
+    default?: int
+  Int64Type is IntegerType:
+    format: enum(int64)
+    default?: long
+  
+  ArrayType is Schema:
+    type: enum(array)
+    items: SchemaOrRef
+    uniqueItems?: boolean
+    minItems?: Long
+    maxItems?: Long
+    default: Object*
+```
+
+
+   
