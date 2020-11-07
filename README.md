@@ -234,27 +234,27 @@ org.gmart.codeGenExample.openApiExample.result:
 Then, with the following piece of code you can generate the Java classes and enum that corresponds to the previous type descriptions.
 ```java
 public static void main(String[] args) throws Exception {
-	File srcParentDir = new File(new File("").getAbsolutePath());
-	makeOpenApiPackageSet(srcParentDir).generateJavaSourceFiles_InTheCurrentMavenProject();
+    File srcParentDir = new File(new File("").getAbsolutePath());
+    makeOpenApiPackageSet(srcParentDir).generateJavaSourceFiles_InTheCurrentMavenProject();
 }
 private static PackageSetSpec makeOpenApiPackageSet(File srcParentDir) {
-	return  packagesSet = PackagesSetFactory.makePackageSet(
-			new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml")
-	);
+    return packagesSet = PackagesSetFactory.makePackageSet(
+	     new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml")
+    );
 }
 ```
-Then, with the following code, you can load your OpenAPI Yaml file into an instance of the "OpenApiSpec" class that has been generated at the previous step:
+Then, with the following code, you can load your OpenAPI Yaml file into an instance of the `OpenApiSpec` class that has been generated at the previous step:
 
 ```java
 public static void main2(String[] args) throws Exception {
-	File srcParentDir = new File(new File("").getAbsolutePath());
-	File myOpenApiFile = new File(srcParentDir, "/src/main/resources/myOpenApiDescriptionInstance.yaml");
-	OpenApiSpec myApiSpec = makeOpenApiPackageSet(srcParentDir).yamlFileToObject(myOpenApiFile, OpenApiSpec.class);
+    File srcParentDir = new File(new File("").getAbsolutePath());
+    File myOpenApiFile = new File(srcParentDir, "/src/main/resources/myOpenApiDescriptionInstance.yaml");
+    OpenApiSpec myApiSpec = makeOpenApiPackageSet(srcParentDir).yamlFileToObject(myOpenApiFile, OpenApiSpec.class);
 }
 ```
 
 Then you can programmatically modify this java object (with all the benefit brought by the Java type definition and a modern IDE: the auto-completion, type validations, ...)
-and finally you can serialize your modified or new OpenApiSpec instance back into a Yaml file (JSON might be possible later) with the following code:
+and finally you can serialize your modified or new `OpenApiSpec` instance back into a Yaml file (JSON might be possible later) with the following code:
 
 ```java
 public static void main2(String[] args) throws Exception {
@@ -265,14 +265,14 @@ public static void main2(String[] args) throws Exception {
 	myApiSpec.toYaml(false); //=> returns the Yaml code
 }
 ```
-The boolean argument of toYaml ("isStartingNestedSequenceWithNewLine") specify if you want that list looks like that (false):
+The boolean argument of `toYaml` (`isStartingNestedSequenceWithNewLine`) specify if you want that list looks like that (`false`):
 ```yaml 
 - - e00
   - e01
 - - e10
   - e11
 ```
-or like that (true):
+or like that (`true`):
 ```yaml 
 - 
   - e00
@@ -294,16 +294,16 @@ git clone https://github.com/Tilko/geom1d.git
 Perform those 5 git commands in an Eclipse workspace works fine.
 
 Then, on Eclipse, import each of those cloned directories by:   
-File -> Open Projects from File System...  ->  Directory...
+`File -> Open Projects from File System...  ->  Directory...`
 
-User errors are thrown by Java assertion ("assert" keyword), so, for each "main" function that uses this tool, make sure you enable them by doing:   
-Run -> Run Configurations... -> Arguments -> VM arguments -> in the text field, type: "-ea"
+User errors are thrown by Java assertion (`assert` keyword), so, for each `main` function that uses this tool, make sure you enable them by doing:   
+`Run -> Run Configurations... -> Arguments -> VM arguments -> `in the text field, type: `-ea`
 
 ## Troubleshooting:  
 On eclipse, by default, when the file system is modified, Eclipse won't refresh its package explorer,
 so when you generate code, it won't be taken into account by Eclipse and you have to manually refresh the package explorer
 (with right-click -> refresh). To avoid that pain, just check that eclipse check-box:    
-Window -> Preferences -> General -> Workspace -> Refresh using native hooks or polling
+`Window -> Preferences -> General -> Workspace -> Refresh using native hooks or polling`
 
 
 ## Features/work that might came later:
