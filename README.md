@@ -103,16 +103,16 @@ org.example.of.use.for.oneOf.type:
 ```
 #### `oneOf` validation details:
 To ensure the recognition of the right type between all the types alternatives, the different alternatives must be formally non-ambiguous,
-Here are the sufficient validation rules that are checked for you by the tool:
+Here are the validation rules that are checked for you by the tool:
  - Only one alternative can be:
    - `String` or an `enum` type
    - `double` or `float`
    - `int` or `short` or `long`
    - `boolean`
  - Multiple `List` types are possible, but the set formed by all their content types must pass the current validation rules (recursion).
- - Only one `Map` type (or `Dict`) can be present among the alternatives, and if there is one, no `class` type can be present
- - Multiple `class` types can be present, but their property names must be enough to recognize which type corresponds to any Yaml instance of one of those classes 
-   (the types of the properties are ignored is this validation). The order of the classes type might matter: 
+ - Only one `Map` type (or `Dict`) can be present among the alternatives, and if there is one, no `class` type can be present.
+ - Multiple `class` types can be present, but their property names must be sufficient to recognize which type corresponds to any Yaml instance of one of those classes 
+   (the types of the properties are ignored in this validation). The order of the classes type might matter: 
      For example: the type expression `oneOf(A, B)` with:
    ```yaml
    A:
