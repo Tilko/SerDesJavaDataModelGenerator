@@ -1,5 +1,5 @@
 
-As first input of this tool: a type of data structure definition in a yaml file.
+As first input of this tool: a type of data structure definition in a Yaml file.
 Here is an example file that demonstrates the syntax and its associated meaning:
 ```yaml
 org.my.example.package1:
