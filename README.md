@@ -290,11 +290,11 @@ or like that (true):
 ## Installation:
 
 Some of the code is not in Maven central, the current gitHub repository:
-git clone https://github.com/Tilko/SerDesJavaDataModelGenerator.git # and some personal utility code:
-git clone https://github.com/Tilko/javatuples.git
-git clone https://github.com/Tilko/stringUtility.git
-git clone https://github.com/Tilko/functionalStyle.git
-git clone https://github.com/Tilko/geom1d.git
+git clone https://github.com/Tilko/SerDesJavaDataModelGenerator.git # and some personal utility code:   
+git clone https://github.com/Tilko/javatuples.git   
+git clone https://github.com/Tilko/stringUtility.git   
+git clone https://github.com/Tilko/functionalStyle.git   
+git clone https://github.com/Tilko/geom1d.git   
 Perform those 5 git commands in an Eclipse workspace works for me.
 
 Then, on Eclipse, import each of those cloned directory by:
