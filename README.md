@@ -148,7 +148,7 @@ org.gmart.codeGenExample.openApiExample.result:
   RequestBody:
     description?: String
     required?: boolean
-    content: Dict[typeMIME]<RequestBodyContent> #Content  #RequestBodyContent
+    content: Dict[typeMIME]<RequestBodyContent> #Content
   
   RequestBodyContent:
     schema: SchemaOrRef
@@ -159,8 +159,8 @@ org.gmart.codeGenExample.openApiExample.result:
     
   HttpResponseCode: BadRequest NotFound
   
-  #Content: Dict[typeMIME]<RequestBodyContent> 
-   
+  #Content: Dict[typeMIME]<RequestBodyContent>  
+    
   SchemaOrRef: oneOf(Schema, SchemaRef)
   SchemaRef:
     $ref: String  
@@ -229,5 +229,57 @@ org.gmart.codeGenExample.openApiExample.result:
     default: Object*
 ```
 
+Then, with the following piece of code you can generate the Java classes and enum that 
+that corresponds to the previous type descriptions.
+```java
+public static void main(String[] args) throws Exception {
+	File srcParentDir = new File(new File("").getAbsolutePath());
+	PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(
+			new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml")
+	);
+			
+	packagesSet.generateJavaSourceFiles_InTheCurrentMavenProject();
+}
+```
+then, with the following code, you can load your OpenAPI Yaml file into an instance of the "OpenApiSpec" class that has been generated at the previous step:
 
-   
+```java
+public static void main2(String[] args) throws Exception {
+	File srcParentDir = new File(new File("").getAbsolutePath());
+	PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(
+			new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml")
+	);
+			
+	File myOpenApiFile = new File(srcParentDir, "/src/main/resources/myOpenApiDescriptionInstance.yaml");
+	OpenApiSpec myApiSpec = ClassDefinition.yamlFileToObject(packagesSet, myOpenApiFile, OpenApiSpec.class);
+}
+```
+
+then you can programmatically modify this java object (with all the benefit brought by the Java type definition and a modern IDE: the auto-completion, type validations, ...)
+and finally you can serialize your modify or new OpenApiSpec instance back into a Yaml file (JSON might be possible later) with the following code:
+
+```java
+public static void main2(String[] args) throws Exception {
+	... previous code with:
+	OpenApiSpec myApiSpec = ...
+	... modification code ...
+	
+	myApiSpec.toYaml(false); //=> return the Yaml code
+}
+```
+The boolean argument of toYaml ("isStartingNestedSequenceWithNewLine") specify if you want that list look like (false):
+```yaml 
+- - e00
+  - e01
+- - e10
+  - e11
+```
+or like that (true):
+```yaml 
+- 
+  - e00
+  - e01
+- 
+  - e10
+  - e11
+```
