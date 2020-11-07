@@ -26,25 +26,11 @@ import org.gmart.codeGenExample.featuresTestExample.result.Person;
 import org.gmart.codeGenExample.featuresTestExample.result.Schema;
 import org.gmart.codeGenExample.featuresTestExample.result.SchemaRef;
 
-import api_global.logUtility.L;
 
 public class Main {
-//	public static void main2(String[] args) throws Exception {
-//		File srcParentDir = new File(new File("").getAbsolutePath());
-//		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(
-//				new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml"));
-//		packagesSet.generateJavaSourceFiles_InTheCurrentMavenProject();
-//	}
-//public static void main2(String[] args) throws Exception {
-//	File srcParentDir = new File(new File("").getAbsolutePath());
-//	PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(
-//			new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml"));
-//	File myOpenApiFile = new File(srcParentDir, "/src/main/resources/myOpenApiDescriptionInstance.yaml");
-//	OpenApiSpec myApiSpec = ClassDefinition.yamlFileToObject(packagesSet, myOpenApiFile, OpenApiSpec.class);
-//}
+
 	public static void main(String[] args) throws Exception {
 		File srcParentDir = new File(new File("").getAbsolutePath());
-		L.l("dir:" + new File(srcParentDir, "\\src\\main\\java\\org\\gmart\\codeGenExample\\openApiExample\\openApiGram.yaml"));
 		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml"));
 		
 		if(true) {
