@@ -310,4 +310,7 @@ so when you generate code, it won't be taken into account by Eclipse and you hav
 Window -> Preferences -> General -> Workspace -> Refresh using native hooks or polling
 
 
-
+## Features/work that might came later:
+- JSON as valid input for a generated model instance
+- ability to intercalate custom hand-written classes and interface (with default methods) anywhere into the generated class hierarchy.
+- regression tests for all features
