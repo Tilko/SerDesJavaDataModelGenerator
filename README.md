@@ -1,6 +1,6 @@
 
 ## As first input of this tool: 
-a type of data structure definition in a Yaml file.
+A type of data structure definition in a Yaml file.
 Here is an example file that demonstrates the syntax and its associated meaning:
 ```yaml
 org.my.example.package1:
@@ -243,7 +243,7 @@ public static void main(String[] args) throws Exception {
 	packagesSet.generateJavaSourceFiles_InTheCurrentMavenProject();
 }
 ```
-then, with the following code, you can load your OpenAPI Yaml file into an instance of the "OpenApiSpec" class that has been generated at the previous step:
+Then, with the following code, you can load your OpenAPI Yaml file into an instance of the "OpenApiSpec" class that has been generated at the previous step:
 
 ```java
 public static void main2(String[] args) throws Exception {
@@ -257,8 +257,8 @@ public static void main2(String[] args) throws Exception {
 }
 ```
 
-then you can programmatically modify this java object (with all the benefit brought by the Java type definition and a modern IDE: the auto-completion, type validations, ...)
-and finally you can serialize your modify or new OpenApiSpec instance back into a Yaml file (JSON might be possible later) with the following code:
+Then you can programmatically modify this java object (with all the benefit brought by the Java type definition and a modern IDE: the auto-completion, type validations, ...)
+and finally you can serialize your modified or new OpenApiSpec instance back into a Yaml file (JSON might be possible later) with the following code:
 
 ```java
 public static void main2(String[] args) throws Exception {
@@ -269,7 +269,7 @@ public static void main2(String[] args) throws Exception {
 	myApiSpec.toYaml(false); //=> returns the Yaml code
 }
 ```
-The boolean argument of toYaml ("isStartingNestedSequenceWithNewLine") specify if you want that list look like that (false):
+The boolean argument of toYaml ("isStartingNestedSequenceWithNewLine") specify if you want that list looks like that (false):
 ```yaml 
 - - e00
   - e01
