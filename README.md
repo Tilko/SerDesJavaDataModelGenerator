@@ -238,8 +238,8 @@ public static void main(String[] args) throws Exception {
     makeOpenApiPackageSet(srcParentDir).generateJavaSourceFiles_InTheCurrentMavenProject();
 }
 private static PackageSetSpec makeOpenApiPackageSet(File srcParentDir) {
-    return packagesSet = PackagesSetFactory.makePackageSet(
-	     new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml")
+    return PackagesSetFactory.makePackageSet(
+        new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/openApiExample/openApiGram.yaml")
     );
 }
 ```
@@ -249,7 +249,8 @@ Then, with the following code, you can load your OpenAPI Yaml file into an insta
 public static void main2(String[] args) throws Exception {
     File srcParentDir = new File(new File("").getAbsolutePath());
     File myOpenApiFile = new File(srcParentDir, "/src/main/resources/myOpenApiDescriptionInstance.yaml");
-    OpenApiSpec myApiSpec = makeOpenApiPackageSet(srcParentDir).yamlFileToObject(myOpenApiFile, OpenApiSpec.class);
+    OpenApiSpec myApiSpec = makeOpenApiPackageSet(srcParentDir)
+                                .yamlFileToObject(myOpenApiFile, OpenApiSpec.class);
 }
 ```
 
