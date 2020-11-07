@@ -303,7 +303,7 @@ File -> Open Projects from File System...  ->  Directory...
 User errors are thrown by Java assertion ("assert" keyword), so, for each "main" function that uses this tool, make sure you enable them by doing:   
 Run -> Run Configurations... -> Arguments -> VM arguments -> in the text field, type: "-ea"
 
-##Troubleshooting:  
+## Troubleshooting:  
 On eclipse, by default, when the file system is modified, Eclipse won't refresh its package explorer,
 so when you generate code, it won't be taken into account by Eclipse and you have to manually refresh the package explorer
 (with right-click -> refresh). To avoid that pain, just check that eclipse check-box:    
