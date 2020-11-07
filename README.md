@@ -265,7 +265,7 @@ public static void main2(String[] args) throws Exception {
 	OpenApiSpec myApiSpec = ...
 	... modification code ...
 	
-	myApiSpec.toYaml(false); //=> return the Yaml code
+	myApiSpec.toYaml(false); //=> returns the Yaml code
 }
 ```
 The boolean argument of toYaml ("isStartingNestedSequenceWithNewLine") specify if you want that list look like that (false):
