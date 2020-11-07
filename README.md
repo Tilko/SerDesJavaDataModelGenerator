@@ -103,7 +103,7 @@ org.example.of.use.for.oneOf.type:
 ```
 
 ## Now let's take a concrete example:
-if you designed some REST API before you might have heard about
+If you designed some REST API before you might have heard about
 the OpenAPI specification (formerly called "swagger"), it describes a way to specify a REST API
 by writing a Yaml (or JSON) document (it's a data tree), of course this document must respect a particular data structure to be valid, 
 this data structure is described (without a formal syntax) in the OpenAPI documentation (https://swagger.io/docs/specification/about/). 
@@ -314,3 +314,4 @@ Window -> Preferences -> General -> Workspace -> Refresh using native hooks or p
 - JSON as valid input for a generated model instance
 - ability to intercalate custom hand-written classes and interface (with default methods) anywhere into the generated class hierarchy.
 - regression tests for all features
+- add user error feedbacks
