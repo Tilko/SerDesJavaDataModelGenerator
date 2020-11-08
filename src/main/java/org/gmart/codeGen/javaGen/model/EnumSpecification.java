@@ -124,7 +124,7 @@ public class EnumSpecification extends TypeDefinition implements StringToValueCo
 		String toOriginalValue();
 	}
 	@Override
-	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
+	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
 		bui.append(((EnumValueFromYaml)toSerialize).toOriginalValue());
 	}
 	

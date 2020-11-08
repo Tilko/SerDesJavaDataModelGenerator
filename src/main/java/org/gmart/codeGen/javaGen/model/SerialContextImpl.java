@@ -15,10 +15,23 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
-import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.model.reporting.NonOptionalNotInitializedCollection;
+import java.util.Optional;
 
-public interface DeserialContext extends DeserialRootObjectSupplier {
-	
-	NonOptionalNotInitializedCollection getNonOptionalNotInitializedCollection();
+import org.gmart.codeGen.javaGen.model.reporting.NonOptionalNotInitializedCollection;
+import org.gmart.codeGen.javaGen.yamlAppender.YAppenderImpl;
+
+public class SerialContextImpl extends YAppenderImpl implements SerialContext {
+
+	public SerialContextImpl(int initIndentDepth, String singleIndent, boolean isStartingNestedSequenceWithNewLine) {
+		super(initIndentDepth, singleIndent, isStartingNestedSequenceWithNewLine);
+	}
+
+	NonOptionalNotInitializedCollection nonOptionalNotInitializedCollection = new NonOptionalNotInitializedCollection();
+	@Override
+	public NonOptionalNotInitializedCollection getNonOptionalNotInitializedCollection() {
+		return nonOptionalNotInitializedCollection;
+	}
+	public Optional<String> buildReport() {
+		return nonOptionalNotInitializedCollection.buildReport();
+	}
 }

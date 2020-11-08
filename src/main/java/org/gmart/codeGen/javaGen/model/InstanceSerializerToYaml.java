@@ -18,7 +18,7 @@ package org.gmart.codeGen.javaGen.model;
 import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
 
 public interface InstanceSerializerToYaml {
-	void appendInstanceToYamlCode(YAppender bui, Object instanceToSerialize);
+	void appendInstanceToYamlCode(SerialContext bui, Object instanceToSerialize);
 	
 	/** 
 	 * if returns null => use the static YAppender.isOnNewLineWhenPropertyValue(Object obj) method

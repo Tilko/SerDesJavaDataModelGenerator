@@ -26,6 +26,7 @@ import java.util.List;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
+import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
 import org.javatuples.Pair;
@@ -37,22 +38,6 @@ public class ClassDefinition extends AbstractClassDefinition  {
 	public ClassDefinition(PackageDefinition packageDef, String className, List<AbstractTypedField> fieldSpecifications) {
 		super(packageDef, className, fieldSpecifications);
 	}
-	
-	public static class DeserialContextImpl implements DeserialContext  {
-		private Object fileRootObject;
-		public void setFileRootObject(Object fileRootObject) {
-			this.fileRootObject = fileRootObject;
-		}
-		public DeserialContextImpl() {
-			super();
-		}
-		@Override
-		public Object getFileRootObject() {
-			return fileRootObject;
-		}
-	}
-	
-	
 	
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -68,7 +53,7 @@ public class ClassDefinition extends AbstractClassDefinition  {
 	}
 	
 	@Override
-	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
+	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
 		appendInstanceToYamlCode_abstract(bui, toSerialize);
 	}
 

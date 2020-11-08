@@ -15,6 +15,8 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.yamlAppender;
 
+import org.gmart.codeGen.javaGen.model.SerialContext;
+
 public interface MapEntryAppender {
-	void appendMapEntry(YAppender bui, Object key, Object value);
+	void appendMapEntry(SerialContext bui, Object key, Object value);
 }

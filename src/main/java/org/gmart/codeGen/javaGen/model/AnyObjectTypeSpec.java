@@ -43,11 +43,11 @@ public class AnyObjectTypeSpec extends TypeDefinition {
 
 	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
+	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
 		if(toSerialize instanceof Map) {
 			AbstractMapContainerType.appendMapToYamlCode(bui, (Map) toSerialize, new MapEntryAppender() {
 				@Override
-				public void appendMapEntry(YAppender bui, Object key, Object value) {
+				public void appendMapEntry(SerialContext bui, Object key, Object value) {
 					new AbstractTypedField.YAppendableProperty() {
 						@Override
 						public String getYAppendablePropertyKey() {

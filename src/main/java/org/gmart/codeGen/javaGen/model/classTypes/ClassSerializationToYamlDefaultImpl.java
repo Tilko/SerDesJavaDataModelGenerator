@@ -15,15 +15,17 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model.classTypes;
 
+import org.gmart.codeGen.javaGen.model.SerialContext;
+import org.gmart.codeGen.javaGen.model.SerialContextImpl;
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.yamlAppender.SerializableToYaml;
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
-import org.gmart.codeGen.javaGen.yamlAppender.YAppenderImpl;
+
+import api_global.logUtility.L;
 
 public interface ClassSerializationToYamlDefaultImpl extends SerializableToYaml {
 	TypeDefinition getTypeDefinition();
 	@Override
-	default void appendToYaml(YAppender bui) {
+	default void appendToYaml(SerialContext bui) {
 		getTypeDefinition().appendInstanceToYamlCode(bui, this);
 	}
 	static String defaultIndentString = "  ";
@@ -38,8 +40,9 @@ public interface ClassSerializationToYamlDefaultImpl extends SerializableToYaml 
 		return toYaml(0, defaultIndentString, isStartingNestedSequenceWithNewLine);
 	}
 	default String toYaml(int initIndentDepth, String singleIndent, boolean isStartingNestedSequenceWithNewLine) {
-		YAppender impl = new YAppenderImpl(initIndentDepth, singleIndent, isStartingNestedSequenceWithNewLine);
-		appendToYaml(impl);
-		return impl.toString();
+		SerialContextImpl ctx = new SerialContextImpl(initIndentDepth, singleIndent, isStartingNestedSequenceWithNewLine);
+		appendToYaml(ctx);
+		ctx.buildReport().ifPresent(report -> L.w("During serialization:" + report));
+		return ctx.toString();
 	}
 }

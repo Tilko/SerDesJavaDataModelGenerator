@@ -15,10 +15,6 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
-import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.model.reporting.NonOptionalNotInitializedCollection;
-
-public interface DeserialContext extends DeserialRootObjectSupplier {
-	
-	NonOptionalNotInitializedCollection getNonOptionalNotInitializedCollection();
+public interface DeserialRootObjectSupplier {
+	Object getFileRootObject();
 }

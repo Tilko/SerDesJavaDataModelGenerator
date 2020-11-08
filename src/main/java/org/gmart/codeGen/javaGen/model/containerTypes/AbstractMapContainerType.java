@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
+import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.yamlAppender.MapEntryAppender;
@@ -72,16 +73,16 @@ public abstract class AbstractMapContainerType extends AbstractContainerType imp
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
+	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
 		assert toSerialize instanceof LinkedHashMap;
 		appendMapToYamlCode(bui, (Map)toSerialize);
 	}
 	@SuppressWarnings({ "rawtypes" })
-	private void appendMapToYamlCode(YAppender bui, Map mapToSerialize) {
+	private void appendMapToYamlCode(SerialContext bui, Map mapToSerialize) {
 		appendMapToYamlCode(bui, mapToSerialize, this);
 	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void appendMapToYamlCode(YAppender bui, Map mapToSerialize, MapEntryAppender mapEntryAppender) {
+	public static void appendMapToYamlCode(SerialContext bui, Map mapToSerialize, MapEntryAppender mapEntryAppender) {
 		AtomicBoolean isNotFirst = new AtomicBoolean(false);
 		mapToSerialize.forEach((key, value) -> {
 			if(isNotFirst.get()) {
@@ -92,7 +93,7 @@ public abstract class AbstractMapContainerType extends AbstractContainerType imp
 		});
 	}
 	@Override
-	public void appendMapEntry(YAppender bui, Object key, Object elem) {
+	public void appendMapEntry(SerialContext bui, Object key, Object elem) {
 		AbstractTypedField.append(bui, key, contentType, elem);
 	}
 	@Override

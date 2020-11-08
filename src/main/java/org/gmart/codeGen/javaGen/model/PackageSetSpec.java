@@ -31,12 +31,13 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.gmart.codeGen.javaGen.generateJavaDataClass.JavaDataClassGenerator;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinition.DeserialContextImpl;
 import org.gmart.codeGen.javaLang.JavaPrimitives;
 import org.gmart.util.functionalProg.StreamUtil;
 import org.javatuples.Pair;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+
+import api_global.logUtility.L;
 
 public class PackageSetSpec {
 	LinkedHashMap<String, PackageDefinition> packages;
@@ -60,6 +61,7 @@ public class PackageSetSpec {
 		Object tree = readTree(new FileReader(yamlFile));
 		DeserialContextImpl ctx = new DeserialContextImpl();
 		Pair<Class<?>, Object> rez = this.getTypeSpecificationForClass(jCLass).yamlToJavaObject(ctx, tree, false);
+		ctx.buildReport().ifPresent(report -> L.w("During deserialization:" + report));
 		assert jCLass == rez.getValue0();
 		Object value1 = rez.getValue1();
 		ctx.setFileRootObject(value1);

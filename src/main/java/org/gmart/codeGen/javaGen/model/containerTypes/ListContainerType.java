@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
+import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
 
@@ -62,12 +63,12 @@ public class ListContainerType extends AbstractContainerType {
 	}
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
+	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
 		assert toSerialize instanceof List;
 		appendListToYamlCode(bui, (List)toSerialize);
 	}
 	
-	private void appendListToYamlCode(YAppender bui, List<?> listToSerialize) {
+	private void appendListToYamlCode(SerialContext bui, List<?> listToSerialize) {
 		int size = listToSerialize.size();
 		if(size != 0) {
 //			if(bui.mustStartNestedSequenceWithNewLine() || previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer())
@@ -80,7 +81,7 @@ public class ListContainerType extends AbstractContainerType {
 		}
 	}
 
-	private void appendElement(YAppender bui, Object elem) {
+	private void appendElement(SerialContext bui, Object elem) {
 		bui.append("- ");
 		bui.indent(() -> {
 			//|| previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer()

@@ -1,7 +1,7 @@
 name: |- 
   Albert kljkljkljl
   kjjljk
-preferredCardType: Spade
+#preferredCardType: Spade
 preferredNumbers:
   - - 4
     - 7

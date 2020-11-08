@@ -298,7 +298,7 @@ public class OneOfSpecification extends TypeDefinition {
 	
 	
 	@Override
-	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
+	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
 		OneOfInstance oneOfInstance = (OneOfInstance) toSerialize;
 		TypeExpression resolvedType = oneOfInstance.getPayloadType();
 		resolvedType.appendInstanceToYamlCode(bui, oneOfInstance.getPayload());

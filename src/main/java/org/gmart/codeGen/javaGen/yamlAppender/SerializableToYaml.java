@@ -15,8 +15,10 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.yamlAppender;
 
+import org.gmart.codeGen.javaGen.model.SerialContext;
+
 public interface SerializableToYaml {
 
-	void appendToYaml(YAppender bui);
+	void appendToYaml(SerialContext bui);
 	
 }

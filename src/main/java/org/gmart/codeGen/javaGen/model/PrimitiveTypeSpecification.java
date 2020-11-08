@@ -68,7 +68,7 @@ public class PrimitiveTypeSpecification extends TypeDefinition implements String
 	}
 
 	@Override
-	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
+	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
 		appendInstanceToYamlCode_static(bui, toSerialize);
 	}
 	public static void appendInstanceToYamlCode_static(YAppender bui, Object toSerialize) {

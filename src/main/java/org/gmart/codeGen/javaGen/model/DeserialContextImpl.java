@@ -15,10 +15,37 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.reporting.NonOptionalNotInitializedCollection;
 
-public interface DeserialContext extends DeserialRootObjectSupplier {
+import api_global.logUtility.L;
+
+public class DeserialContextImpl implements DeserialContext  {
+	private Object fileRootObject;
+	public void setFileRootObject(Object fileRootObject) {
+		this.fileRootObject = fileRootObject;
+	}
+	public DeserialContextImpl() {
+		super();
+	}
+	@Override
+	public Object getFileRootObject() {
+		return fileRootObject;
+	}
 	
-	NonOptionalNotInitializedCollection getNonOptionalNotInitializedCollection();
+	
+	NonOptionalNotInitializedCollection nonOptionalNotInitializedCollection = new NonOptionalNotInitializedCollection();
+	@Override
+	public NonOptionalNotInitializedCollection getNonOptionalNotInitializedCollection() {
+		return nonOptionalNotInitializedCollection;
+	}
+	public Optional<String> buildReport() {
+		return nonOptionalNotInitializedCollection.buildReport();
+	}
+	
 }

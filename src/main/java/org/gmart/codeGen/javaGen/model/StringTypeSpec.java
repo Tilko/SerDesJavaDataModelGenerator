@@ -37,7 +37,7 @@ public class StringTypeSpec extends TypeDefinition {
 	}
 
 	@Override
-	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
+	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
 //			if(stringToSerialize.contains("#")) {
 //			Consumer<String> c = (content) -> {
 //				bui.append("\"");

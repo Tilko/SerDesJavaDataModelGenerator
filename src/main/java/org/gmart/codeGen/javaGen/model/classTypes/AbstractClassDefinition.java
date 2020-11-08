@@ -34,9 +34,11 @@ import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
+import org.gmart.codeGen.javaGen.model.DeserialContextImpl;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
+import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
@@ -117,30 +119,6 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 	public FormalGroup formalGroup() {
 		return FormalGroup.map;
 	}
-
-	public static <T> T yamlFileToObject(PackageSetSpec packageSetSpec, String yamlFilePath, Class<T> jCLass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
-		return yamlFileToObject(packageSetSpec, new File(yamlFilePath), jCLass);
-	}
-	public static class DeserialContextImpl implements DeserialContext  {
-		Object fileRootObject;
-		public DeserialContextImpl() {
-			super();
-		}
-		@Override
-		public Object getFileRootObject() {
-			return fileRootObject;
-		}
-	}
-	@SuppressWarnings({ "unchecked" })
-	public static <T> T yamlFileToObject(PackageSetSpec packageSetSpec, File yamlFile, Class<T> jCLass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
-		Object tree = readTree(new FileReader(yamlFile));
-		DeserialContextImpl ctx = new DeserialContextImpl();
-		Pair<Class<?>, Object> rez = packageSetSpec.getTypeSpecificationForClass(jCLass).yamlToJavaObject(ctx, tree, false);
-		assert jCLass == rez.getValue0();
-		Object value1 = rez.getValue1();
-		ctx.fileRootObject = value1;
-		return (T)value1;
-	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -178,6 +156,7 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 				javaObjectFieldVal = remainingYamlProps.remove(fieldSpec.getName());
 			}
 			try {
+				ctx.getNonOptionalNotInitializedCollection().setCurrentClass(this);
 				fieldSpec.initJavaObjectField(ctx, newInstance, javaObjectFieldVal);
 			} catch (NoSuchMethodException | SecurityException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
 				e.printStackTrace();
@@ -189,7 +168,7 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 		Object tree = yaml.load(reader);
 		return tree;
 	}
-	protected boolean appendInstanceToYamlCode_abstract(YAppender bui, Object toSerialize) {
+	protected boolean appendInstanceToYamlCode_abstract(SerialContext bui, Object toSerialize) {
 		boolean parentHasField = this.parentClass.map(parent -> {
 			return parent.appendInstanceToYamlCode_abstract(bui, toSerialize);
 			//bui.n();
@@ -197,11 +176,12 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 		boolean hasInternalFields = appendInternalFieldsInstanceToYamlCode(bui, toSerialize, parentHasField, getFields()); //parentHasField ? getConcreteFields() : 
 		return parentHasField || hasInternalFields;
 	}
-	private boolean appendInternalFieldsInstanceToYamlCode(YAppender bui, Object toSerialize, boolean parentHasField, List<AbstractTypedField> fields) {
+	private boolean appendInternalFieldsInstanceToYamlCode(SerialContext bui, Object toSerialize, boolean parentHasField, List<AbstractTypedField> fields) {
 		int size = fields.size();
 		boolean hasField = size != 0;
 //		bui.n();
 		Class<?> generatedClass = this.getGeneratedClass();
+		bui.getNonOptionalNotInitializedCollection().setCurrentClass(this);
 		if(hasField) {
 			if(parentHasField)
 				bui.n();

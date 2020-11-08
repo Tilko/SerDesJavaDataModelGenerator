@@ -22,10 +22,10 @@ org.my.example.package1:
   MyTypeName1:
     myPropertyName8: enum(bla, bli, blu)        #an anonymous enum type for that property only	
   
-  MyPolymorphicType0: oneOf(String, MyTypeName0, ...) # a type that of object that can be one of the 
-                                                      # specified types, there is a validation that 
-                                                      # check that types are formally non-ambiguous
-                                                      # (cf. details below)
+  MyPolymorphicType0: oneOf(String, MyTypeName0, ...) # a type of object that can be one of the 
+                                                      # specified types, the tool checks that 
+                                                      # types are formally non-ambiguous
+                                                      # between them (cf. details below)
                                                       
 org.my.example.package2:                        # an other package
   MyTypeName2:
@@ -290,7 +290,7 @@ public static void main2(String[] args) throws Exception {
 	myApiSpec.toYaml(false); //=> returns the Yaml code
 }
 ```
-The boolean argument of `toYaml` (`isStartingNestedSequenceWithNewLine`) specify if you want that list looks like that (`false`):
+The boolean argument of `toYaml` (`isStartingNestedSequenceWithNewLine`) specify if you want that lists looks like that (`false`):
 ```yaml 
 - - e00
   - e01
@@ -310,12 +310,14 @@ or like that (`true`):
 
 ## Installation:
 
-Some of the code is not in Maven central, the current gitHub repository:   
+Some of the code is not in Maven central, the current gitHub repository:
+```bash   
 git clone https://github.com/Tilko/SerDesJavaDataModelGenerator.git # and some personal utility code:   
 git clone https://github.com/Tilko/javatuples.git   
 git clone https://github.com/Tilko/stringUtility.git   
 git clone https://github.com/Tilko/functionalStyle.git   
-git clone https://github.com/Tilko/geom1d.git   
+git clone https://github.com/Tilko/geom1d.git  
+```
 Perform those 5 git commands in an Eclipse workspace works fine.
 
 Then, on Eclipse, import each of those cloned directories by:   
@@ -335,4 +337,4 @@ so when you generate code, it won't be taken into account by Eclipse and you hav
 - JSON as valid input to build a generated model instance
 - ability to intercalate custom hand-written classes and interface (with default methods) anywhere into the generated class hierarchy.
 - regression tests for all features
-- add user error feedbacks
+- add some user error feedbacks

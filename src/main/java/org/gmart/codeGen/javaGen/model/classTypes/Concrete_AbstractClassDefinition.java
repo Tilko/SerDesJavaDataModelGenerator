@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.EnumSpecification;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
+import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.ClassAbstractEnumField;
@@ -55,7 +56,7 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 	}
 
 	@Override
-	public void appendInstanceToYamlCode(YAppender bui, Object toSerialize) {
+	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
 		((SerializableToYaml) toSerialize).appendToYaml(bui);
 	}
 

@@ -19,12 +19,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
+import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
 import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.javatuples.Pair;
 
 import com.squareup.javapoet.TypeName;
+
+import api_global.logUtility.L;
 
 public abstract class AbstractTypedField extends AbstractField {
 	
@@ -38,12 +41,15 @@ public abstract class AbstractTypedField extends AbstractField {
 		if(fieldYamlValue == null) {
 			if(isOptional()) {
 				return;
+			} else {
+				ctx.getNonOptionalNotInitializedCollection().addNonOptionalFieldNonInitialized(this.getName());
+				return;
 			}
 		}
 		Pair<Class<?>, Object> rez = getTypeExpression().yamlToJavaObject(ctx, fieldYamlValue, false);//.initObjectFromYamlInput(fieldYamlValue);
 		newInstance.getClass().getMethod(JPoetUtil.makeSetterName(this.getNameInCode()), rez.getValue0()).invoke(newInstance, rez.getValue1());		
 	}
-	public void appendKeyValueToYamlCode(YAppender bui, Class<?> generatedClass, Object toSerialize)  {
+	public void appendKeyValueToYamlCode(SerialContext ctx, Class<?> generatedClass, Object toSerialize)  {
 		if(this.isDiscriminant())
 			return;
 		try {
@@ -53,17 +59,18 @@ public abstract class AbstractTypedField extends AbstractField {
 			Object childToSerialize = field.get(toSerialize);
 			if(childToSerialize == null) {
 				if(!isOptional())
-					assert false: "A required field has not been filled:" + toString();//TODO or no assert: just warning 
+					ctx.getNonOptionalNotInitializedCollection().addNonOptionalFieldNonInitialized(this.getName());
+					//assert false: "A required field has not been filled:" + toString();//TODO or no assert: just warning 
 				else {/* nothing to do */}
 			} else {
-				append(bui, getName(), getTypeExpression(), childToSerialize);
+				append(ctx, getName(), getTypeExpression(), childToSerialize);
 			}
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void append(YAppender bui, Object key, TypeExpression childType, Object childToSerialize) {
+	public static void append(SerialContext bui, Object key, TypeExpression childType, Object childToSerialize) {
 		bui.append(key.toString());
 		bui.append(": ");
 		bui.indent(()->{
@@ -77,7 +84,7 @@ public abstract class AbstractTypedField extends AbstractField {
 	public interface YAppendableProperty {
 		String getYAppendablePropertyKey();
 		void appendPropertyValue();
-		default void append(YAppender bui) {
+		default void append(SerialContext bui) {
 			bui.append(this.getYAppendablePropertyKey());
 			bui.append(": ");
 			bui.indent(()->{
