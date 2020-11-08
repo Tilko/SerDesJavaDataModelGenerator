@@ -20,11 +20,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -52,6 +56,7 @@ import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParse
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.IdentifierListContext;
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.MapTypeExpressionContext;
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.OnOneLineTypeDefContext;
+import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.OnOneLineTypeNameContext;
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.PropertyNamePartContext;
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.QualifiedNameContext;
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.TypeExpressionContext;
@@ -76,31 +81,55 @@ public class YamlToModel {
 	}
 	
 	PackageDefinition currentPackage;
-	@SuppressWarnings("unchecked")
+	String rootPackage;
+	String rootPackageForGeneratedFiles;
+	public final static String generatedFilesDirName = "generatedFiles";
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private List<PackageDefinition> read(Reader reader) {
 		Yaml yaml = new Yaml();
-		
-		Map<String, Map<String, Object>> yamlClassSpecifications = 
-				(Map<String, Map<String, Object>>) yaml.load(reader);
-		
-		return yamlClassSpecifications.entrySet().stream().map((e) -> {
-				currentPackage = new PackageDefinition(e.getKey());
-				currentPackage.addAllTypeDefs(createClassSpecificationsFrom(e.getKey(), e.getValue()));
+		LinkedHashMap<String, Object> yamlClassSpecifications = (LinkedHashMap<String, Object>) yaml.load(reader);
+		HashMap<String, String> leadingKeyValues = getLeadingKeyValues(yamlClassSpecifications.entrySet());
+		String rootPackage = leadingKeyValues.get("rootPackage");
+		assert rootPackage != null : "The \"rootPackage\" leading key-value pair is missing, format: point-separated java identifier as a Java package.";
+		assert rootPackage != "" : "The \"rootPackage\" cannot be an empty string";
+		this.rootPackage = rootPackage;
+		this.rootPackageForGeneratedFiles = rootPackage + "." + generatedFilesDirName;
+		LinkedHashMap<String, Map<String, Object>> yamlClassSpecifications2 = (LinkedHashMap)yamlClassSpecifications;
+
+		return yamlClassSpecifications2.entrySet().stream().map((e) -> {
+				String relativePackageName_MaybeBeginingWithDot = e.getKey();
+				String relativePackageName = relativePackageName_MaybeBeginingWithDot.startsWith(".") ? relativePackageName_MaybeBeginingWithDot.substring(1) : relativePackageName_MaybeBeginingWithDot;
+				String absolutePackageName = rootPackageForGeneratedFiles + (relativePackageName.equals("")?"":".") + relativePackageName;
+				currentPackage = new PackageDefinition(absolutePackageName);
+				currentPackage.addAllTypeDefs(createClassSpecificationsFrom(e.getValue()));
 				return currentPackage;
 			}).collect(Collectors.toCollection(ArrayList::new));
 	}
+	private HashMap<String, String> getLeadingKeyValues(Set<Entry<String, Object>> keyValues){
+		HashMap<String, String> leadingKeyValues = new HashMap<>();
+		Iterator<Entry<String, Object>> iterator = keyValues.iterator();	//https://stackoverflow.com/questions/1190083/does-entryset-in-a-linkedhashmap-also-guarantee-order
+		while(iterator.hasNext()) {											// => yes, order is respected
+			Entry<String, Object> next = iterator.next();
+			if(next.getValue() instanceof String) {
+				leadingKeyValues.put(next.getKey(), (String)next.getValue());
+				iterator.remove();
+			} else break;
+		}
+		return leadingKeyValues;
+	}
 
+	
 	LinkedHashSet<Concrete_AbstractClassDefinition> abstractClassToInitialize = new LinkedHashSet<>();
 	@SuppressWarnings("unchecked")
-	private ArrayList<TypeDefinition> createClassSpecificationsFrom(String packageName, Map<String, Object> yamlClassSpecifications) {
+	private ArrayList<TypeDefinition> createClassSpecificationsFrom(Map<String, Object> yamlClassSpecifications) {
 		return yamlClassSpecifications.entrySet().stream().map(obj -> {
 			Object value = obj.getValue();
 			if(value instanceof String) {
-				return makeEnumOrOneOfSpec(obj.getKey(), (String) value);
+				OnOneLineTypeNameContext onOneLineTypeName = ParserFactory.parse(obj.getKey()).onOneLineTypeName();
+				return makeEnumOrOneOfSpec(onOneLineTypeName, (String) value);
 			} else {
 				TypeNamePartContext typeNamePart = ParserFactory.parse(obj.getKey()).typeNamePart();
-				
-				AbstractClassDefinition classDef = makeClassSpec(typeNamePart.Identifier().getText(), (Map<String, String>) value);
+				AbstractClassDefinition classDef = makeClassSpec(typeNamePart.Identifier().getText(), typeNamePart.stubbedMark != null, (Map<String, String>) value);
 				QualifiedNameContext qualifiedName = typeNamePart.qualifiedName();
 				if(qualifiedName != null)
 					addTypeExpressionSetter(parentClass -> {
@@ -116,17 +145,18 @@ public class YamlToModel {
 	}
 	List<Runnable> oneOfValidations = new ArrayList<>();
 	 
-	private TypeDefinition makeEnumOrOneOfSpec(String typeName, String possibleValues_str) {
+	private TypeDefinition makeEnumOrOneOfSpec(OnOneLineTypeNameContext onOneLineTypeName, String possibleValues_str) {
 		OnOneLineTypeDefContext def = ParserFactory.parse(possibleValues_str).onOneLineTypeDef();
 		IdentifierListContext identifierList = def.identifierList();
 		if(identifierList != null) {
+			assert onOneLineTypeName.stubbedMark == null : "The \"stubbed\" keyword is not usable as enum modifier, line:" + onOneLineTypeName.start.getLine();
 //			List<TerminalNode> identifier = identifierList.Identifier();
 //			List<String> ids = identifier.stream().map(tok -> tok.getText()).collect(Collectors.toCollection(ArrayList::new));
-			return makeEnumSpecification(typeName, identifierList);//new EnumSpecification(packageName, typeName, ids);
+			return makeEnumSpecification(onOneLineTypeName.Identifier().getText(), identifierList);//new EnumSpecification(packageName, typeName, ids);
 		} else {
 			ArrayList<TypeExpression> types = new ArrayList<>();
 			def.typeExpression().forEach(tec -> setTypeExpression(tec, type -> types.add(type)));
-			OneOfSpecification oneOfSpecification = new OneOfSpecification(currentPackage, typeName, types);
+			OneOfSpecification oneOfSpecification = new OneOfSpecification(currentPackage, onOneLineTypeName.Identifier().getText(), onOneLineTypeName.stubbedMark != null, types);
 			oneOfValidations.add(oneOfSpecification::compile);
 			return oneOfSpecification;
 		}
@@ -136,10 +166,10 @@ public class YamlToModel {
 		List<String> ids = identifier.stream().map(tok -> tok.getText()).collect(Collectors.toCollection(ArrayList::new));
 		return new EnumSpecification(currentPackage, typeName, ids);
 	}
-	private AbstractClassDefinition makeClassSpec(String typeName, Map<String, String> propertiesDef) {
+	private AbstractClassDefinition makeClassSpec(String typeName, boolean isStubbed, Map<String, String> propertiesDef) {
 		//if (propertiesDef == null) return new ArrayList<>();
 		assert propertiesDef != null;
-		return AbstractClassDefinition.makeInstance(currentPackage, typeName, propertiesDef.entrySet().stream()
+		return AbstractClassDefinition.makeInstance(currentPackage, typeName, isStubbed, propertiesDef.entrySet().stream()
 				.map(e -> makeFieldSpec(typeName, e)).collect(Collectors.toCollection(ArrayList::new)));
 	}
 	
@@ -187,8 +217,10 @@ public class YamlToModel {
 		Runnable r = () -> {
 			TypeDefinition typeDef = packageSetSpec.getTypeSpecFromSimpleOrQualifiedName(qualifiedName);
 			if(typeDef == null) {
-				//TODO error message
-				assert false : "no type definition has been found for the name: " + qualifiedName;
+				typeDef = packageSetSpec.getTypeSpecFromSimpleOrQualifiedName(rootPackageForGeneratedFiles + "." + qualifiedName);
+				if(typeDef == null) {
+					assert false : "no type definition has been found for the name: " + qualifiedName;
+				}
 			}
 			typeExpressionOwnerSetter.accept(typeDef);
 		};

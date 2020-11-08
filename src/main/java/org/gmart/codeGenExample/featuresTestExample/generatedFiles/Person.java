@@ -1,16 +1,17 @@
-package org.gmart.codeGenExample.featuresTestExample.result;
+package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
+import java.lang.Integer;
+import java.lang.Object;
+import java.lang.String;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
-import org.gmart.codeGenExample.featuresTestExample.result.bidulePackage.Bidule;
-import org.gmart.codeGenExample.featuresTestExample.result.bidulePackage.TypeWithAUniqueSimpleNameInThisPackagesSet;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.bidulePackage.Bidule;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.bidulePackage.TypeWithAUniqueSimpleNameInThisPackagesSet;
 
 @Generated("")
 public class Person implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {

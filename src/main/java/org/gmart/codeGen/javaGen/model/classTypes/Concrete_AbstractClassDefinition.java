@@ -49,8 +49,8 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 	public List<ClassAbstractEnumField> getAbstractEnumFields() {
 		return abstractEnumFields;
 	}
-	public Concrete_AbstractClassDefinition(PackageDefinition packageDef, String className, List<AbstractTypedField> fields) {
-		super(packageDef, className, fields);
+	public Concrete_AbstractClassDefinition(PackageDefinition packageDef, String className, boolean isStubbed, List<AbstractTypedField> fields) {
+		super(packageDef, className, isStubbed, fields);
 		this.abstractEnumFields = fields.stream().filter(e-> e instanceof ClassAbstractEnumField).map(e->(ClassAbstractEnumField)e).collect(Collectors.toCollection(ArrayList::new));
 	}
 

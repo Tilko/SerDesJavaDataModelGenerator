@@ -3,7 +3,8 @@
 A type of data structure definition in a Yaml file.
 Here is an example file that demonstrates the syntax and its associated meaning:
 ```yaml
-org.my.example.package1:
+rootPackage: org.my.example   # root for all generated files 
+package1:                     # then packages are defined relatively to that root
   MyTypeName0:
     myPropertyName0: String                     # "String" or any Java primitive type
     myPropertyName1: Map<KeyType, ValueType>    # "KeyType" can be String or an enum type 
@@ -27,19 +28,19 @@ org.my.example.package1:
                                                       # types are formally non-ambiguous
                                                       # between them (cf. details below)
                                                       
-org.my.example.package2:                        # an other package
+.:                        # an other package, at the root
   MyTypeName2:
     myPropertyName9: MyTypeName0                # you can reference "MyTypeName0" with its simple name 
                                                 # because it's a unique name in this file
-    myPropertyName10: org.my.example.package3.MyTypeName2   # else give its fully qualified name 
+    myPropertyName10: package3.MyTypeName2      # else give its relative fully qualified name 
                                                             #    (with package, cf. next package)
-org.my.example.package3:                        # package to demonstrate the previous point
+package3:                                       # package to demonstrate the previous point
    MyTypeName2:
     myPropertyName11: double
     
     
     
-org.my.example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
+example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
   
   MyTypeThatHaveAFieldWithAnAbstractType:
     myField0: AbstractTypeName0     # cf. the following type to see how this type is defined
@@ -96,7 +97,7 @@ org.my.example.package.that.demonstrates.some.kind.of.abstract.classes.definitio
     type0: enum(bbb, ccc)
     type1: enum(eee)  
     
-org.example.of.use.for.oneOf.type:
+example.of.use.for.oneOf.type:
   MyTypeOrAReferenceToMyType: oneOf(MyType, String)  # the String can be resolved to a "MyType" object
                                                      #    for example with a JSON reference, 
                                                      #    or an URL to an other yaml or JSON file ...
@@ -335,6 +336,6 @@ so when you generate code, it won't be taken into account by Eclipse and you hav
 
 ## Features/work that might came later:
 - JSON as valid input to build a generated model instance
-- ability to intercalate custom hand-written classes and interface (with default methods) anywhere into the generated class hierarchy.
+- the ability to intercalate custom hand-written classes and interface (with default methods) anywhere into the generated class hierarchy.
 - regression tests for all features
 - add some user error feedbacks

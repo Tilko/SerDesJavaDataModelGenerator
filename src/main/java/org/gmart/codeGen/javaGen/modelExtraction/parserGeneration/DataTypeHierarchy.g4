@@ -1,12 +1,16 @@
 grammar DataTypeHierarchy;
 
-// the 3 following rules and the "typeExpression" generate the 4 main rules.
+// the 4 following rules and the "typeExpression" generate the main rules (input rules).
+
 
 typeNamePart
-	:	Identifier ('is' qualifiedName)?
+	:	stubbedMark='stubbed'? Identifier ('is' qualifiedName)?
 	;
 propertyNamePart
 	:	Identifier optionalMark='?'?
+	;
+onOneLineTypeName
+	: 	stubbedMark='stubbed'? Identifier
 	;
 onOneLineTypeDef
 	:	'oneOf' '(' typeExpression (',' typeExpression)* ')'

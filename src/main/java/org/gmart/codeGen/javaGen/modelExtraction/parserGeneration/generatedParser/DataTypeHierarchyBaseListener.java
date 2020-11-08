@@ -1,4 +1,4 @@
-// Generated from C:\Users\marti\workingLowLevel\codeGen\src\main\java\org\gmart\codeGen\javaGen\fromYaml\modelExtraction\parserGeneration\DataTypeHierarchy.g4 by ANTLR 4.8
+// Generated from C:\Users\marti\workingLowLevel\codeGen\src\main\java\org\gmart\codeGen\javaGen\modelExtraction\parserGeneration\DataTypeHierarchy.g4 by ANTLR 4.8
 package org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -35,6 +35,18 @@ public class DataTypeHierarchyBaseListener implements DataTypeHierarchyListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPropertyNamePart(DataTypeHierarchyParser.PropertyNamePartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOnOneLineTypeName(DataTypeHierarchyParser.OnOneLineTypeNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOnOneLineTypeName(DataTypeHierarchyParser.OnOneLineTypeNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

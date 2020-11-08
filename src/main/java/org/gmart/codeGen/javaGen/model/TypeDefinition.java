@@ -15,10 +15,19 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import javax.annotation.processing.Generated;
+import javax.lang.model.element.Modifier;
+
 import org.gmart.codeGen.javaGen.generateJavaDataClass.JpoetTypeGenerator;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 
 import lombok.Getter;
 
@@ -71,6 +80,14 @@ public abstract class TypeDefinition implements JpoetTypeGenerator, TypeExpressi
 		return generatedClass;
 	}
 	public abstract void initGeneratedClasses();
-
-	
+	protected abstract Optional<TypeSpec.Builder> initJPoetTypeSpec();
+	protected JavaFile finalizeTypeSpecBuilderProps(TypeSpec.Builder typeBuilder) {
+		typeBuilder.addModifiers(Modifier.PUBLIC);
+		typeBuilder.addAnnotation(AnnotationSpec.builder(Generated.class).addMember("value", "$S", "").build());
+		return JavaFile.builder(this.getPackageName(), typeBuilder.build()).indent("    ").build();
+	}
+	@Override
+	public Stream<JavaFile> makeJavaFiles() {
+		return initJPoetTypeSpec().map(typeSpec -> finalizeTypeSpecBuilderProps(typeSpec)).stream();
+	}
 }

@@ -13,12 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.generateJavaDataClass;
+package org.gmart.codeGenExample.featuresTestExample.generatedJavaFilesStubs;
 
-import java.util.stream.Stream;
+import org.gmart.codeGen.javaGen.model.DeserialContext;
 
-import com.squareup.javapoet.JavaFile;
+public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
 
-public interface JpoetTypeGenerator {
-	Stream<JavaFile> makeJavaFiles();
+	public SchemaOrRef(DeserialContext deserialContext) {
+		super(deserialContext);
+	}
+
+	
 }

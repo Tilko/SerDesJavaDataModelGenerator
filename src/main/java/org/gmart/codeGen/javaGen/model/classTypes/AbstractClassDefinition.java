@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model.classTypes;
 
+import java.io.File;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -44,6 +45,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeName;
@@ -97,15 +99,22 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 		return enumSubSpace;
 	}
 	
-	public AbstractClassDefinition(PackageDefinition packageDef, String className, List<AbstractTypedField> fieldSpecifications) {
+	private final boolean isStubbed;
+	public boolean isStubbed() {
+		return isStubbed;
+	}
+	public AbstractClassDefinition(PackageDefinition packageDef, String className, boolean isStubbed, List<AbstractTypedField> fieldSpecifications) {
 		super(packageDef, className);
+		this.isStubbed = isStubbed;
 		this.fields = fieldSpecifications;
 	}
-	public static AbstractClassDefinition makeInstance(PackageDefinition packageDef, String typeName, ArrayList<AbstractTypedField> fields) {
+	public static AbstractClassDefinition makeInstance(PackageDefinition packageDef, String typeName, boolean isStubbed, ArrayList<AbstractTypedField> fields) {
 		if(fields.stream().anyMatch(AbstractTypedField::isAbstract)) {
-			return new Concrete_AbstractClassDefinition(packageDef, typeName, fields);
+//			if(isStubbed) 
+//				throw new Exception("The \"stubbed\" keyword is not usable on absract classes");
+			return new Concrete_AbstractClassDefinition(packageDef, typeName, isStubbed, fields);
 		} else {
-			return new ClassDefinition(packageDef, typeName, fields);
+			return new ClassDefinition(packageDef, typeName, isStubbed, fields);
 		}
 	}
 	
@@ -240,4 +249,19 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 		}
 	}
 	
+	@Override
+	public Stream<JavaFile> makeJavaFiles() {
+		Stream.Builder<JavaFile> builder = Stream.builder();
+		super.makeJavaFiles().forEach(builder::accept);
+		//builder.accept(t);
+		return builder.build();
+	}
+	private Optional<JavaFile> makeStub(){
+		if(this.isStubbed() && !getStubFile().exists()) {
+			return null;
+		} else return Optional.empty();
+	}
+	private File getStubFile() {
+		return null;
+	}
 }

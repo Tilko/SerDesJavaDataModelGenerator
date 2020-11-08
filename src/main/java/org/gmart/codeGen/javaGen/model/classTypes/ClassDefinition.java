@@ -27,8 +27,8 @@ import org.javatuples.Pair;
 
 public class ClassDefinition extends AbstractClassDefinition  {
 
-	public ClassDefinition(PackageDefinition packageDef, String className, List<AbstractTypedField> fieldSpecifications) {
-		super(packageDef, className, fieldSpecifications);
+	public ClassDefinition(PackageDefinition packageDef, String className, boolean isStubbed, List<AbstractTypedField> fieldSpecifications) {
+		super(packageDef, className, isStubbed, fieldSpecifications);
 	}
 	
 	@Override

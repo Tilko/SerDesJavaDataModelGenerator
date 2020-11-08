@@ -19,15 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
-import javax.annotation.processing.Generated;
-import javax.lang.model.element.Modifier;
-
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.modelExtraction.PackagesSetFactory;
-
-import com.squareup.javapoet.AnnotationSpec;
-import com.squareup.javapoet.JavaFile;
 
 
 public class JavaDataClassGenerator {
@@ -42,10 +36,7 @@ public class JavaDataClassGenerator {
 		Collection<PackageDefinition> packages = packagesSet.getPackages();
 		packages.forEach(packageDef -> {
 			packageDef.getTypeDefs().forEach(typeDef -> {
-				typeDef.initJPoetTypeSpec().ifPresent(typeSpecBuilder -> {
-					typeSpecBuilder.addModifiers(Modifier.PUBLIC);
-					typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Generated.class).addMember("value", "$S", "").build());
-					JavaFile javaFile = JavaFile.builder(typeDef.getPackageName(), typeSpecBuilder.build()).indent("    ").build();
+				typeDef.makeJavaFiles().forEach(javaFile ->{
 					try {
 						//javaFile.writeTo(System.out);
 						javaFile.writeTo(outputDirectory);

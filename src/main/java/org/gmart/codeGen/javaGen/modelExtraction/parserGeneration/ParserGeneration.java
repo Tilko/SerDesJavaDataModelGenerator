@@ -31,7 +31,7 @@ public class ParserGeneration {
 	private static final String generatedParserDirName = "generatedParser";
 	private static void generateParser() throws IOException {
 		//File currentProjectFolder = new File(".");
-		File currentFolder = new File("src/main/java/org/gmart/codeGen/javaGen/fromYaml/modelExtraction/parserGeneration");
+		File currentFolder = new File("src/main/java/org/gmart/codeGen/javaGen/modelExtraction/parserGeneration");
 		String g4SourcePath = new File(currentFolder, "DataTypeHierarchy.g4").getCanonicalPath();
 		File parserCodeDestDirectory = new File(currentFolder, generatedParserDirName);
 		String parserCodeDestPath = parserCodeDestDirectory.getCanonicalPath();

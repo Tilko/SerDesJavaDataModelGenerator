@@ -49,8 +49,10 @@ import api_global.strUtil.StringFunctions;
 
 public class OneOfSpecification extends TypeDefinition {
 	List<TypeExpression> alternatives;
-	public OneOfSpecification(PackageDefinition packageDef, String name, List<TypeExpression> alternatives) {
+	boolean isStubbed;
+	public OneOfSpecification(PackageDefinition packageDef, String name, boolean isStubbed, List<TypeExpression> alternatives) {
 		super(packageDef, name);
+		this.isStubbed = isStubbed;
 		this.alternatives = alternatives;
 		
 	}

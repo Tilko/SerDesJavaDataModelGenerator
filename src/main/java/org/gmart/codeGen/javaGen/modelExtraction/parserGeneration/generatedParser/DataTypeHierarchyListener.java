@@ -1,4 +1,4 @@
-// Generated from C:\Users\marti\workingLowLevel\codeGen\src\main\java\org\gmart\codeGen\javaGen\fromYaml\modelExtraction\parserGeneration\DataTypeHierarchy.g4 by ANTLR 4.8
+// Generated from C:\Users\marti\workingLowLevel\codeGen\src\main\java\org\gmart\codeGen\javaGen\modelExtraction\parserGeneration\DataTypeHierarchy.g4 by ANTLR 4.8
 package org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -27,6 +27,16 @@ public interface DataTypeHierarchyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPropertyNamePart(DataTypeHierarchyParser.PropertyNamePartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#onOneLineTypeName}.
+	 * @param ctx the parse tree
+	 */
+	void enterOnOneLineTypeName(DataTypeHierarchyParser.OnOneLineTypeNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DataTypeHierarchyParser#onOneLineTypeName}.
+	 * @param ctx the parse tree
+	 */
+	void exitOnOneLineTypeName(DataTypeHierarchyParser.OnOneLineTypeNameContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#onOneLineTypeDef}.
 	 * @param ctx the parse tree

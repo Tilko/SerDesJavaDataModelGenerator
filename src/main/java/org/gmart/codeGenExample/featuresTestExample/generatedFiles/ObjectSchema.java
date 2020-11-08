@@ -1,27 +1,26 @@
-package org.gmart.codeGenExample.featuresTestExample.result.bidulePackage2;
+package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 
 @Generated("")
-public class Bidule implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class ObjectSchema extends Schema implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
     private static AbstractClassDefinition classSpecification;
 
-    private String a;
+    private int machin;
 
-    public Bidule() {
+    public ObjectSchema() {
     }
 
-    public String getA() {
-        return a;
+    public int getMachin() {
+        return machin;
     }
 
-    public void setA(String a) {
-        this.a = a;
+    public void setMachin(int machin) {
+        this.machin = machin;
     }
 
     public AbstractClassDefinition getClassDefinition() {

@@ -20,9 +20,9 @@ import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.model.DeserialContextOwner;
 import org.gmart.codeGen.utils.ReflUtil;
-import org.gmart.codeGenExample.featuresTestExample.result.Person;
-import org.gmart.codeGenExample.featuresTestExample.result.Schema;
-import org.gmart.codeGenExample.featuresTestExample.result.SchemaRef;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Person;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Schema;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaRef;
 
 
 public interface SchemaOrRefImplPart extends DeserialContextOwner {
