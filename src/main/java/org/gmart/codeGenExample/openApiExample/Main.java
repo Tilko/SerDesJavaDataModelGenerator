@@ -18,13 +18,7 @@ package org.gmart.codeGenExample.openApiExample;
 import java.io.File;
 
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinition;
 import org.gmart.codeGen.javaGen.modelExtraction.PackagesSetFactory;
-import org.gmart.codeGenExample.featuresTestExample.result.CardType;
-import org.gmart.codeGenExample.featuresTestExample.result.HttpMethodTypes;
-import org.gmart.codeGenExample.featuresTestExample.result.Person;
-import org.gmart.codeGenExample.featuresTestExample.result.Schema;
-import org.gmart.codeGenExample.featuresTestExample.result.SchemaRef;
 
 
 public class Main {

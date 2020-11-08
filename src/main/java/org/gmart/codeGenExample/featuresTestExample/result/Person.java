@@ -1,11 +1,10 @@
 package org.gmart.codeGenExample.featuresTestExample.result;
 
-import java.lang.Integer;
-import java.lang.Object;
-import java.lang.String;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.processing.Generated;
+
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;

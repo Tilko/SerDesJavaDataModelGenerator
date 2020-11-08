@@ -15,23 +15,15 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model.classTypes;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
-import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
 import org.javatuples.Pair;
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
 
 public class ClassDefinition extends AbstractClassDefinition  {
 

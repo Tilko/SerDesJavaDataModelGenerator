@@ -15,8 +15,6 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
-
 public interface InstanceSerializerToYaml {
 	void appendInstanceToYamlCode(SerialContext bui, Object instanceToSerialize);
 	

@@ -27,8 +27,6 @@ import org.javatuples.Pair;
 
 import com.squareup.javapoet.TypeName;
 
-import api_global.logUtility.L;
-
 public abstract class AbstractTypedField extends AbstractField {
 	
 	public abstract TypeExpression getTypeExpression();

@@ -15,15 +15,9 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.reporting.NonOptionalNotInitializedCollection;
-
-import api_global.logUtility.L;
 
 public class DeserialContextImpl implements DeserialContext  {
 	private Object fileRootObject;

@@ -31,7 +31,6 @@ import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.ClassAbstractEnumField;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
 import org.gmart.codeGen.javaGen.yamlAppender.SerializableToYaml;
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
 import org.javatuples.Pair;
 
 import api_global.strUtil.StringFunctions;

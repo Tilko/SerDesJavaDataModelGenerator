@@ -1,7 +1,7 @@
 package org.gmart.codeGenExample.featuresTestExample.result;
 
-import java.lang.String;
 import javax.annotation.processing.Generated;
+
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;

@@ -34,7 +34,6 @@ import org.gmart.codeGen.javaGen.model.containerTypes.AbstractMapContainerType;
 import org.gmart.codeGen.javaGen.model.containerTypes.ListContainerType;
 import org.gmart.codeGen.javaGen.model.typeRecognition.oneOf.ClassRecognition;
 import org.gmart.codeGen.javaGen.model.typeRecognition.oneOf.TypeRecognizer;
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
 import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.javatuples.Pair;
 
