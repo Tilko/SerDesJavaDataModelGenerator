@@ -15,6 +15,11 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
+import java.util.stream.Stream;
+
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
+
 import lombok.Getter;
 
 public abstract class TypeDefinitionForPrimitives extends TypeDefinition {
@@ -23,5 +28,15 @@ public abstract class TypeDefinitionForPrimitives extends TypeDefinition {
 		super(name);
 		this.packageName = packageName;
 	}
-
+	public Class<?> getReferenceClass() {
+		return getGeneratedClass();
+	}
+	@Override
+	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive) {
+		return ClassName.get(getPackageName(), getName());
+	}
+	@Override
+	protected Stream<String> getAllQualifiedNames(){
+		return Stream.of(this.getQualifiedName());
+	}
 }

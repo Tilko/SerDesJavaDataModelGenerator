@@ -35,7 +35,7 @@ public abstract class AbstractTypedField extends AbstractField {
 		super(name, isOptional);
 	}
 
-	public void initJavaObjectField(DeserialContext ctx, Object newInstance, Object fieldYamlValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+	public void initJavaObjectField(DeserialContext ctx, Class<?> newInstanceGeneratedClass, Object newInstance, Object fieldYamlValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		if(fieldYamlValue == null) {
 			if(isOptional()) {
 				return;
@@ -45,7 +45,7 @@ public abstract class AbstractTypedField extends AbstractField {
 			}
 		}
 		Pair<Class<?>, Object> rez = getTypeExpression().yamlToJavaObject(ctx, fieldYamlValue, false);//.initObjectFromYamlInput(fieldYamlValue);
-		newInstance.getClass().getMethod(JPoetUtil.makeSetterName(this.getNameInCode()), rez.getValue0()).invoke(newInstance, rez.getValue1());		
+		newInstanceGeneratedClass.getMethod(JPoetUtil.makeSetterName(this.getNameInCode()), rez.getValue0()).invoke(newInstance, rez.getValue1());		
 	}
 	public void appendKeyValueToYamlCode(SerialContext ctx, Class<?> generatedClass, Object toSerialize)  {
 		if(this.isDiscriminant())
@@ -93,8 +93,8 @@ public abstract class AbstractTypedField extends AbstractField {
 	//private Field getFieldInAllHier
 	
 	@Override
-	public TypeName getJPoetType(boolean boxPrimitive){
-		return getTypeExpression().getJPoetTypeName(boxPrimitive);
+	public TypeName getReferenceJPoetType(boolean boxPrimitive){
+		return getTypeExpression().getReferenceJPoetTypeName(boxPrimitive);
 	}
 
 	public abstract boolean isAbstract();

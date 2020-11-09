@@ -33,8 +33,8 @@ public class PackageDefinition {
 	public void addTypeDefs(TypeDefinitionForNonPrimitives typeDefs) {
 		this.typeDefs.add(typeDefs);
 	}
-	@Getter private String rootPackage;
-	private String relativePackage;
+	@Getter private final String rootPackage;
+	@Getter private final String relativePackage;
 	@Getter private final String packageName;
 	public final LazySupplier<String> packageNameForStubs = new LazySupplier<>(()-> getPackageName(true));
 	public PackageDefinition(String rootPackage, String relativePackage) {
@@ -43,7 +43,7 @@ public class PackageDefinition {
 		this.relativePackage = relativePackage;
 		this.packageName = getPackageName(false);
 	}
-	private String getPackageName(boolean forStub) {
+	public String getPackageName(boolean forStub) {
 		String subRootDir = forStub ? YamlToModel.generatedFilesCustomizationStubsDirName : YamlToModel.generatedFilesDirName;
 		return rootPackage + "." + subRootDir + getRelativePackageNameWithOptionalPointPrefix();
 	}

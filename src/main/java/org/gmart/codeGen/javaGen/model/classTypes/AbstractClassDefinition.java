@@ -15,7 +15,6 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model.classTypes;
 
-import java.io.File;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +34,6 @@ import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.SerialContext;
-import org.gmart.codeGen.javaGen.model.TypeDefinitionForNonPrimitives;
 import org.gmart.codeGen.javaGen.model.TypeDefinitionForStubbable;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
@@ -46,7 +44,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeName;
@@ -156,7 +153,8 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 			}
 			try {
 				ctx.getNonOptionalNotInitializedCollection().setCurrentClass(this);
-				fieldSpec.initJavaObjectField(ctx, newInstance, javaObjectFieldVal);
+				Class<?> newInstanceClass = newInstance.getClass();
+				fieldSpec.initJavaObjectField(ctx, this.isStubbed() ? newInstanceClass.getSuperclass() : newInstanceClass, newInstance, javaObjectFieldVal);
 			} catch (NoSuchMethodException | SecurityException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
 				e.printStackTrace();
 			}			

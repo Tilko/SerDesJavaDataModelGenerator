@@ -23,6 +23,7 @@ import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 public abstract class TypeDefinitionForStubbable extends TypeDefinitionForNonPrimitives {
@@ -34,15 +35,41 @@ public abstract class TypeDefinitionForStubbable extends TypeDefinitionForNonPri
 		super(packageDef, name);
 		this.isStubbed = isStubbed;
 	}
-
+	
+	private Class<?> stubClass_memo;
+	private Class<?> getStubClass() {
+		if(stubClass_memo == null)
+			try {
+				stubClass_memo = Class.forName(getQualifiedName(true));
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				return null;
+			}
+		return stubClass_memo;
+	}
+//	@Override
+//	public TypeName getJPoetTypeName(boolean boxPrimitive) {
+//		return ClassName.get(getPackageName(this.isStubbed()), getName());
+//	}
+	@Override
+	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive) {
+		return ClassName.get(getPackageName(this.isStubbed()), getName());
+	}
+	@Override
+	public Class<?> getReferenceClass() {
+		return getInstanciationClass();
+	}
+	protected Class<?> getInstanciationClass() {
+		return this.isStubbed() ? getStubClass() : getGeneratedClass();
+	}
 	@Override
 	public Stream<JavaFile> makeJavaFiles() {
 		return Stream.concat(super.makeJavaFiles(), makeStub().stream());
 	}
 	private Optional<JavaFile> makeStub(){
 		if(this.isStubbed()) {
-			String packageNameForStub = getPackageNameForStub();
-			if(!getStubFile(packageNameForStub).exists()) {
+			String packageNameForStub = this.getPackageDefinition().getPackageName(true);
+			if(!getStubFile(packageNameForStub + "." + this.getName()).exists()) {
 				TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(getName());
 				typeBuilder.addModifiers(Modifier.PUBLIC);
 				typeBuilder.superclass(ClassName.get(this.getPackageName(), getName()));
@@ -52,10 +79,7 @@ public abstract class TypeDefinitionForStubbable extends TypeDefinitionForNonPri
 		}
 		return Optional.empty();
 	}
-	private String getPackageNameForStub() {
-		return this.getPackageDefinition().packageNameForStubs.get();
-	}
 	private File getStubFile(String packageNameForStub) {
-		return new File(new File("").getAbsolutePath(), "src/main/java/" + packageNameForStub.replaceAll("\\.", "/"));
+		return new File(new File("").getAbsolutePath(), "src/main/java/" + packageNameForStub.replaceAll("\\.", "/") + ".java");
 	}
 }

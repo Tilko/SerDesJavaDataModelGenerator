@@ -15,6 +15,8 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
+import java.util.stream.Stream;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
@@ -27,10 +29,6 @@ public abstract class TypeDefinition implements TypeExpression {
 	@Override
 	public String getJavaIdentifier() {
 		return name;
-	}
-	@Override
-	public TypeName getJPoetTypeName(boolean boxPrimitive) {
-		return ClassName.get(getPackageName(), getName());
 	}
 	
 	public abstract String getPackageName();
@@ -57,6 +55,9 @@ public abstract class TypeDefinition implements TypeExpression {
 		return generatedClass_memo;
 	}
 	
+	public abstract Class<?> getReferenceClass();
+
+	protected abstract Stream<String> getAllQualifiedNames();
 	
 	
 }

@@ -19,7 +19,8 @@ import com.squareup.javapoet.TypeName;
 
 public interface TypeExpression extends InstanceDeserializerFromYaml, InstanceSerializerToYaml {
 
-	TypeName getJPoetTypeName(boolean boxPrimitive);
+	//TypeName getJPoetTypeName(boolean boxPrimitive);
+	TypeName getReferenceJPoetTypeName(boolean boxPrimitive);
 	
 	default boolean isListContainer() {
 		return false;

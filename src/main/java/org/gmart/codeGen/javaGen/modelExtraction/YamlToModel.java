@@ -104,7 +104,6 @@ public class YamlToModel {
 				String relativePackageName = relativePackageName_MaybeBeginingWithDot.startsWith(".") ? relativePackageName_MaybeBeginingWithDot.substring(1) : relativePackageName_MaybeBeginingWithDot;
 				//String absolutePackageName = rootPackageForGeneratedFiles + (relativePackageName.equals("")?"":".") + relativePackageName;
 				currentPackage = new PackageDefinition(rootPackage, relativePackageName);
-				L.l("currentPackage:" + currentPackage.getPackageName());
 				currentPackage.addAllTypeDefs(createClassSpecificationsFrom(e.getValue()));
 				return currentPackage;
 			}).collect(Collectors.toCollection(ArrayList::new));
@@ -134,7 +133,6 @@ public class YamlToModel {
 			} else {
 				TypeNamePartContext typeNamePart = ParserFactory.parse(obj.getKey()).typeNamePart();
 				AbstractClassDefinition classDef = makeClassSpec(typeNamePart.Identifier().getText(), typeNamePart.stubbedMark != null, (Map<String, String>) value);
-				L.l("classDef.getQualifiedName():" + classDef.getQualifiedName());
 				QualifiedNameContext qualifiedName = typeNamePart.qualifiedName();
 				if(qualifiedName != null)
 					addTypeExpressionSetter(parentClass -> {

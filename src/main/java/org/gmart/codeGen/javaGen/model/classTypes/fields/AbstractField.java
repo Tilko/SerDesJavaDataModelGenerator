@@ -49,17 +49,17 @@ public abstract class AbstractField {
 	}
 
 	
-	public abstract TypeName getJPoetType(boolean boxPrimitive);
-	public TypeName getJPoetType(){
-		return getJPoetType(false);
+	public abstract TypeName getReferenceJPoetType(boolean boxPrimitive);
+	public TypeName getReferenceJPoetType(){
+		return getReferenceJPoetType(false);
 	}
 	public FieldSpec.Builder toJPoetField(){
-		return FieldSpec.builder(getJPoetType(), getNameInCode(), Modifier.PRIVATE);
+		return FieldSpec.builder(getReferenceJPoetType(), getNameInCode(), Modifier.PRIVATE);
 	}
 	public MethodSpec.Builder toJPoetGetter(){
-		return JPoetUtil.initGetter(getJPoetType(), getNameInCode());
+		return JPoetUtil.initGetter(getReferenceJPoetType(), getNameInCode());
 	}
 	public MethodSpec.Builder toJPoetSetter(){
-		return JPoetUtil.initSetter(getJPoetType(), getNameInCode());
+		return JPoetUtil.initSetter(getReferenceJPoetType(), getNameInCode());
 	}
 }

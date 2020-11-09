@@ -54,8 +54,8 @@ public class ListContainerType extends AbstractContainerType {
 	}
 	private final static ClassName listClassName = ClassName.get(List.class);
 	@Override
-	public TypeName getJPoetTypeName(boolean boxPrimitive){
-		return ParameterizedTypeName.get(listClassName, contentType.getJPoetTypeName(true));
+	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive){
+		return ParameterizedTypeName.get(listClassName, contentType.getReferenceJPoetTypeName(true));
 	}
 	@Override
 	public Class<?> getContainerClass() {

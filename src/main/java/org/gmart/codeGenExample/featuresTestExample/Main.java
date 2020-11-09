@@ -21,7 +21,7 @@ import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.modelExtraction.PackagesSetFactory;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.CardType;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.HttpMethodTypes;
-import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Person;
+import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Person;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Schema;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaRef;
 
@@ -34,7 +34,7 @@ public class Main {
 		File srcParentDir = new File(new File("").getAbsolutePath());
 		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(new File(srcParentDir, "\\src\\main\\java\\org\\gmart\\codeGenExample\\featuresTestExample\\classDef.yaml"));
 		
-		if(true) {
+		if(false) {
 			packagesSet.generateJavaSourceFiles_InTheCurrentMavenProject();
 			L.l("files generated");
 			return;
@@ -57,6 +57,8 @@ public class Main {
 		try {
 			SchemaRef schema = person.getVehicle().getSchema().toSchemaRef();
 			log("schema.get$ref():" + schema.get$ref());//.getTruc());
+			Schema schema2 = person.getVehicle().getSchema().getSchema(person);
+			L.l("schema2.getTruc():" + schema2.getTruc());
 		} catch(Exception e) {
 			Schema schema = person.getVehicle().getSchema().toSchema();
 			log("schema.getTruc():" + schema.getTruc());//.getTruc());

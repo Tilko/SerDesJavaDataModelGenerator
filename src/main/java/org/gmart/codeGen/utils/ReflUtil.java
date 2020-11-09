@@ -17,6 +17,8 @@ package org.gmart.codeGen.utils;
 
 import java.lang.reflect.Field;
 
+import api_global.logUtility.L;
+
 public class ReflUtil {
 	public static Object getDeepFieldValue(Object context, String[] path) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		if(path.length == 0) {
@@ -26,13 +28,29 @@ public class ReflUtil {
 		}
 	}
 	private static Object getDeepFieldValue(Object context, String[] path, int index) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = context.getClass().getField(path[index]);
+		L.l("path[index]:" + "|" + path[index] + "|");
+		Field field = getDeclaredFieldIncludingAncestors_FromInstance(context, path[index]);
 		field.setAccessible(true);
 		Object newContext = field.get(context);
 		if(index != path.length - 1) {
 			return getDeepFieldValue(newContext, path, index + 1);
 		} else {
 			return newContext;
+		}
+	}
+	private static Field getDeclaredFieldIncludingAncestors_FromInstance(Object fromInstance, String name) throws NoSuchFieldException, SecurityException {
+		return getDeclaredFieldIncludingAncestors(fromInstance.getClass(), name);
+	}
+	private static Field getDeclaredFieldIncludingAncestors(Class<?> fromClass, String name) throws NoSuchFieldException, SecurityException {
+		try {
+			return fromClass.getDeclaredField(name);
+		} catch (NoSuchFieldException | SecurityException e) {
+			Class<?> superclass = fromClass.getSuperclass();
+			if(superclass != null) {
+				return getDeclaredFieldIncludingAncestors(superclass, name);
+			} else {
+				throw e;
+			}
 		}
 	}
 }

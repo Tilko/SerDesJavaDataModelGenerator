@@ -29,32 +29,38 @@ public interface SchemaOrRefImplPart extends DeserialContextOwner {
 	Schema toSchema();
 	SchemaRef toSchemaRef();
 	
-	default Schema getSchema() {
-		return getSchema((Person)this.getDeserialContext().getFileRootObject());
-	}
-	default Schema getSchema(Person person) {
-		Schema schema = toSchema();
-		if (schema != null)
-			return schema;
-		return (Schema) makeJsonPathResolver(person).apply(toSchemaRef().get$ref());
-	}
-	@SuppressWarnings("unchecked")
-	public static <T> Function<String, T> makeJsonPathResolver(Object context){
-		Function<String, T> convertRefToSchema = ref -> {
-			if(ref.startsWith("#")) {
-				String[] path = ref.substring(0).split("[/\\\\]");
-				try {
-					return (T) ReflUtil.getDeepFieldValue(context, path);
-				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-					e.printStackTrace();
-					assert false : "error getting the object at path: " + ref;
-				}
-			}
-			assert false : "Only local JSON paths are supported at the moment (path that begins with \"#\".";
-			return null;
-		};
-		return convertRefToSchema;
-	}
+//	default Schema getSchema() {
+//		return getSchema((Person)this.getDeserialContext().getFileRootObject());
+//	}
+//	default Schema getSchema(Person person) {
+//		Schema schema = toSchema();
+//		if (schema != null)
+//			return schema;
+//		return (Schema) makeJsonPathResolver(person).apply(toSchemaRef().get$ref());
+//	}
+//	@SuppressWarnings("unchecked")
+//	public static <T> Function<String, T> makeJsonPathResolver(Object context){
+//		Function<String, T> convertRefToSchema = ref -> {
+//			if(ref.startsWith("#")) {
+//				String[] path = ref.substring(0).split("[/\\\\]");
+//				try {
+//					return (T) ReflUtil.getDeepFieldValue(context, path);
+//				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+//					e.printStackTrace();
+//					assert false : "error getting the object at path: " + ref;
+//				}
+//			}
+//			assert false : "Only local JSON paths are supported at the moment (path that begins with \"#\".";
+//			return null;
+//		};
+//		return convertRefToSchema;
+//	}
+	
+	
+	
+	
+	
+	
 	
 //	public static class SchemaRefResolver implements ConverterFactory<SchemaRef, Schema> {
 //		@Override

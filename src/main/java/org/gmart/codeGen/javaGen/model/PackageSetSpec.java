@@ -57,12 +57,14 @@ public class PackageSetSpec {
 		return this.yamlFileToObject(new File(yamlFilePath), jCLass);
 	}
 	@SuppressWarnings({ "unchecked" })
-	public <T> T yamlFileToObject(File yamlFile, Class<T> jCLass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+	public <T> T yamlFileToObject(File yamlFile, Class<T> jClass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
 		Object tree = readTree(new FileReader(yamlFile));
 		DeserialContextImpl ctx = new DeserialContextImpl();
-		Pair<Class<?>, Object> rez = this.getTypeSpecificationForClass(jCLass).yamlToJavaObject(ctx, tree, false);
+		TypeDefinition typeSpecificationForClass = this.getTypeSpecificationForClass(jClass);
+		assert typeSpecificationForClass != null : "No type definition has been found for the class: " + jClass.getCanonicalName();
+		Pair<Class<?>, Object> rez = typeSpecificationForClass.yamlToJavaObject(ctx, tree, false);
 		ctx.buildReport().ifPresent(report -> L.w("During deserialization:" + report));
-		assert jCLass == rez.getValue0();
+		assert jClass == rez.getValue0();// : "The class that you specified as second argument of \"yamlFileToObject\" to specify the return-type must b";
 		Object value1 = rez.getValue1();
 		ctx.setFileRootObject(value1);
 		return (T)value1;
@@ -98,7 +100,7 @@ public class PackageSetSpec {
 	}
 	private void setTypeDef(TypeDefinition typedef, boolean primitive) {
 		String name = typedef.getName();
-		qualifiedNameToClassSpec.put(typedef.getQualifiedName(), typedef);
+		typedef.getAllQualifiedNames().forEach(qualifiedName -> qualifiedNameToClassSpec.put(qualifiedName, typedef));
 		if(simpleNameToClassSpec.get(name) != null) {
 			simpleNameInMultiplePackagesOfThisSet.add(name);
 		}

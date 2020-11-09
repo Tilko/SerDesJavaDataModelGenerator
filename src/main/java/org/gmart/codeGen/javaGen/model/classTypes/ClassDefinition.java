@@ -34,10 +34,11 @@ public class ClassDefinition extends AbstractClassDefinition  {
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Pair<Class<?>, Object> yamlToJavaObjectFromSubClassesOrThisLeaf(DeserialContext ctx, LinkedHashMap<String, ?> yamlProps, LinkedHashMap<String, ?> remainingYamlProps, boolean boxedPrimitive){
-		Class jClass = this.getGeneratedClass();
+		Class instanciatedClass = this.getInstanciationClass();
+		
 		try {
-			Object newInstance = jClass.getConstructor().newInstance();//jCLass.getConstructor(ClassDefinition.class).newInstance(this);
-			return Pair.with(jClass, newInstance);
+			Object newInstance = instanciatedClass.getConstructor().newInstance();//jCLass.getConstructor(ClassDefinition.class).newInstance(this);
+			return Pair.with(instanciatedClass, newInstance);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 			return null;

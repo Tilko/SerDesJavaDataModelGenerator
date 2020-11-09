@@ -65,9 +65,9 @@ public abstract class AbstractMapContainerType extends AbstractContainerType imp
 	}
 	private final static ClassName mapClassName = ClassName.get(Map.class);
 	@Override
-	public TypeName getJPoetTypeName(boolean boxPrimitive){
+	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive){
 		//ClassName.get(keyType.getPackageName(), keyType.getName())
-		return ParameterizedTypeName.get(mapClassName, this.getKeyTypeSpec().getJPoetTypeName(true), this.contentType.getJPoetTypeName(true));
+		return ParameterizedTypeName.get(mapClassName, this.getKeyTypeSpec().getReferenceJPoetTypeName(true), this.contentType.getReferenceJPoetTypeName(true));
 	}
 	
 	@SuppressWarnings("rawtypes")

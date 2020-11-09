@@ -29,6 +29,7 @@ import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.gmart.codeGen.javaLang.JavaKeywords;
 import org.javatuples.Pair;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.ParameterSpec;
@@ -92,7 +93,14 @@ public class EnumSpecification extends TypeDefinitionForNonPrimitives implements
 		}).collect(Collectors.toList());
 		hasEscapedValue = hasEscapedValueTemp.get();
 	}
-
+	@Override
+	public Class<?> getReferenceClass() {
+		return getGeneratedClass();
+	}
+	@Override
+	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive) {
+		return ClassName.get(getPackageName(), getName());
+	}
 
 	@Override
 	public Optional<TypeSpec.Builder> initJPoetTypeSpec() {

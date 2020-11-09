@@ -102,12 +102,12 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 			if(formalGroup.isFormalLeaf()) {
 				TypeDefinition typeDefinition = (TypeDefinition)types.get(0);
 				String alternativeTypeName = typeDefinition.getName();
-				Class returnType = typeDefinition.getGeneratedClass();
+				Class returnType = typeDefinition.getReferenceClass();
 				addConverterMethod(classBuilder, alternativeTypeName, TypeName.get(returnType));
 			} else {
 				types.forEach(type -> {
 					//MethodSpec.Builder meth = makeTypeDefinitionConverterMethodBuilder(type);
-					addConverterMethod(classBuilder, type.getJavaIdentifier(), type.getJPoetTypeName(true));
+					addConverterMethod(classBuilder, type.getJavaIdentifier(), type.getReferenceJPoetTypeName(true));
 				});
 			}
 		});
@@ -139,18 +139,19 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, Object fieldYamlValue, boolean boxedPrimitive) {
-		Class jClass = this.getGeneratedClass();
+		Class instanciatedClass = this.getInstanciationClass();
 		try {
-			Object newInstance = jClass.getConstructor(DeserialContext.class).newInstance(ctx);//jClass.getConstructor(OneOfSpecification.class).newInstance(this);
+			Object newInstance = instanciatedClass.getConstructor(DeserialContext.class).newInstance(ctx);//jClass.getConstructor(OneOfSpecification.class).newInstance(this);
 			Pair<TypeExpression, Object> payload = makePayloadFromYamlObject(ctx, fieldYamlValue);
 			TypeExpression resolvedType = payload.getValue0();
 			Object resolvedInstance = payload.getValue1();
-			Field payloadField = newInstance.getClass().getDeclaredField(payloadId);
+			Class classWithPayload = isStubbed() ? instanciatedClass.getSuperclass() : instanciatedClass;
+			Field payloadField = classWithPayload.getDeclaredField(payloadId);
 			payloadField.setAccessible(true);
 			payloadField.set(newInstance, resolvedInstance);
 			//newInstance.getClass().getMethod(JPoetUtil.makeSetterName(payloadId), Object.class).invoke(newInstance, resolvedInstance);
-			newInstance.getClass().getMethod(JPoetUtil.makeSetterName(payloadTypeId), TypeExpression.class).invoke(newInstance, resolvedType);
-			return Pair.with(jClass, newInstance);
+			classWithPayload.getMethod(JPoetUtil.makeSetterName(payloadTypeId), TypeExpression.class).invoke(newInstance, resolvedType);
+			return Pair.with(instanciatedClass, newInstance);
 		} catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException e) {
 			e.printStackTrace();
 			return null;

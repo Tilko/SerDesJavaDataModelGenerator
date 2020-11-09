@@ -39,6 +39,17 @@ public abstract class TypeDefinitionForNonPrimitives extends TypeDefinition impl
 	public String getPackageName() {
 		return packageDefinition.getPackageName();
 	}
+	
+	protected String getPackageName(boolean forStub) {
+		return packageDefinition.getPackageName(forStub);
+	}
+	public String getQualifiedName(boolean forStub) {
+		return getPackageName(forStub) + "." + getName();
+	}
+	@Override
+	protected Stream<String> getAllQualifiedNames(){
+		return Stream.of(this.getQualifiedName(true), this.getQualifiedName(false));
+	}
 	public abstract void initGeneratedClasses();
 	protected abstract Optional<TypeSpec.Builder> initJPoetTypeSpec();
 	@Override

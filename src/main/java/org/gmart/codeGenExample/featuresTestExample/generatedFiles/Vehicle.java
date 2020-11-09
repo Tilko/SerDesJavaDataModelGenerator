@@ -6,6 +6,7 @@ import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
+import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.SchemaOrRef;
 
 @Generated("")
 public class Vehicle implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {

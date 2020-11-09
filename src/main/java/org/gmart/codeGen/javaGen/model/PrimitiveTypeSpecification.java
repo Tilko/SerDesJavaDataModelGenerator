@@ -56,7 +56,7 @@ public class PrimitiveTypeSpecification extends TypeDefinitionForPrimitives impl
 		return boxedClass;
 	}
 	@Override
-	public TypeName getJPoetTypeName(boolean boxPrimitive) {
+	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive) {
 		return boxPrimitive ? jpoetClassNameBoxed : jpoetClassName;// ClassName.get(getPackageName(), getName());
 	}
 
