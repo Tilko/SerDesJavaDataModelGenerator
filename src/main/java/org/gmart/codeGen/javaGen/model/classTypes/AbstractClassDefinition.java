@@ -28,6 +28,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.processing.Generated;
 //import java.lang.reflect.Modifier;
 import javax.lang.model.element.Modifier;
 
@@ -36,6 +37,7 @@ import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
+import org.gmart.codeGen.javaGen.model.TypeDefinitionForNonPrimitives;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
 import org.gmart.codeGen.javaLang.JPoetUtil;
@@ -43,6 +45,7 @@ import org.gmart.util.functionalProg.properties.OptProperty;
 import org.javatuples.Pair;
 import org.yaml.snakeyaml.Yaml;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -53,7 +56,7 @@ import com.squareup.javapoet.TypeSpec;
 //import com.squareup.javapoet.TypeSpec.Builder;
 
 
-public abstract class AbstractClassDefinition extends TypeDefinition  {
+public abstract class AbstractClassDefinition extends TypeDefinitionForNonPrimitives  {
 	private List<AbstractTypedField> fields;
 	
 	public List<AbstractTypedField> getFields() {
@@ -253,15 +256,26 @@ public abstract class AbstractClassDefinition extends TypeDefinition  {
 	public Stream<JavaFile> makeJavaFiles() {
 		Stream.Builder<JavaFile> builder = Stream.builder();
 		super.makeJavaFiles().forEach(builder::accept);
-		//builder.accept(t);
+		makeStub().ifPresent(builder::accept);
 		return builder.build();
 	}
 	private Optional<JavaFile> makeStub(){
-		if(this.isStubbed() && !getStubFile().exists()) {
-			return null;
-		} else return Optional.empty();
+		if(this.isStubbed()) {
+			String packageNameForStub = getPackageNameForStub();
+			if(!getStubFile(packageNameForStub).exists()) {
+				TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(getName());
+				typeBuilder.addModifiers(Modifier.PUBLIC);
+				typeBuilder.superclass(ClassName.get(this.getPackageName(), getName()));
+				
+				return Optional.of(JavaFile.builder(packageNameForStub, typeBuilder.build()).indent("    ").build());
+			}
+		}
+		return Optional.empty();
 	}
-	private File getStubFile() {
-		return null;
+	private String getPackageNameForStub() {
+		return this.getPackageDefinition().packageNameForStubs.get();
+	}
+	private File getStubFile(String packageNameForStub) {
+		return new File(new File("").getAbsolutePath(), "src/main/java/" + packageNameForStub.replaceAll("\\.", "/"));
 	}
 }

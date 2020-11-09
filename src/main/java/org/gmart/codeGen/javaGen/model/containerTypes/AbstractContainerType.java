@@ -31,10 +31,8 @@ public abstract class AbstractContainerType implements ContainerType {
 	public abstract String getContainerTypeName();
 	@Override
 	public String getJavaIdentifier() {
-		// TODO Auto-generated method stub
 		return getContainerTypeName() + "Of" + contentType.getJavaIdentifier();
 	}
-	//protected ContainerTypeOrLeaf nextJavaObjectMaker;
 	protected TypeExpression previousJavaObjectMaker_nullable;
 	public <T extends TypeExpression> AbstractContainerType(Consumer<Consumer<T>> contentTypeSpecSetterConsumer){
 		contentTypeSpecSetterConsumer.accept(contentType -> {
@@ -56,13 +54,7 @@ public abstract class AbstractContainerType implements ContainerType {
 			this.contentType = contentType;
 		});
 	}
-//	public void setPreviousContainerTypeOrLeaf(ContainerTypeOrLeaf previousJavaObjectMaker) {
-//		this.previousJavaObjectMaker_nullable = previousJavaObjectMaker;
-//	}
-//	public Object makeJavaObject(Object fieldYamlValue) {
-//		assert getContainerClass().isInstance(fieldYamlValue);
-//		return makeJavaObject_internal(fieldYamlValue);
-//	}
+
 	@Override
 	public Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, Object yamlValue, boolean boxedPrimitive) {
 		Class<? extends Object> class1 = yamlValue.getClass();

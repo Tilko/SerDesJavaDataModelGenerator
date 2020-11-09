@@ -1,4 +1,3 @@
-package org.gmart.codeGen.javaGen.model.containerTypes;
 /*******************************************************************************
  * Copyright 2020 Grégoire Martinetti
  * 
@@ -14,15 +13,27 @@ package org.gmart.codeGen.javaGen.model.containerTypes;
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-//package org.gmart.codeGen.javaGen.fromYaml.javadataclass.model.containerTypes;
-//
-//import org.gmart.codeGen.javaGen.fromYaml.javadataclass.model.TypeExpression;
-//
-//
-//public interface ContainerTypeOrLeaf extends TypeExpression {
-//
-//
-//	boolean isListContainer();
-//	
-//	
-//}
+package org.gmart.codeGen.javaGen.model;
+
+import java.util.Optional;
+
+import com.squareup.javapoet.TypeSpec;
+
+import lombok.Getter;
+
+public abstract class TypeDefinitionForPrimitives extends TypeDefinition {
+	@Getter private final String packageName;
+	public TypeDefinitionForPrimitives(String packageName, String name) {
+		super(name);
+		this.packageName = packageName;
+	}
+
+	@Override
+	public Optional<TypeSpec.Builder> initJPoetTypeSpec() {
+		return Optional.empty();
+	}
+	@Override
+	public void initGeneratedClasses() {
+		//nothing to do
+	}
+}

@@ -13,12 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.model.containerTypes;
+package org.gmart.codeGenExample.featuresTestExample.generatedJavaFilesStubs;
 
-import org.gmart.codeGen.javaGen.model.TypeExpression;
+import org.gmart.codeGen.javaGen.model.DeserialContext;
 
-public interface ContainerType extends TypeExpression {
+public class SchemaOrRef2 extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
 
-	Class<?> getContainerClass();
+	public SchemaOrRef2(DeserialContext deserialContext) {
+		super(deserialContext);
+	}
 
+	
 }

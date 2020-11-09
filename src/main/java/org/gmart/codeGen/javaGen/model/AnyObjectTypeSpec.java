@@ -17,7 +17,6 @@ package org.gmart.codeGen.javaGen.model;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
@@ -27,18 +26,12 @@ import org.gmart.codeGen.javaGen.yamlAppender.MapEntryAppender;
 import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
 import org.javatuples.Pair;
 
-import com.squareup.javapoet.TypeSpec;
 
 
-public class AnyObjectTypeSpec extends TypeDefinition {
+public class AnyObjectTypeSpec extends TypeDefinitionForPrimitives {
 
 	public AnyObjectTypeSpec() {
-		super(PackageDefinition.javaLang, "Object");
-	}
-
-	@Override
-	public Optional<TypeSpec.Builder> initJPoetTypeSpec() {
-		return Optional.empty();
+		super(PackageDefinition.javaLangPackageName, "Object");
 	}
 
 	@SuppressWarnings({ "rawtypes" })
@@ -95,9 +88,6 @@ public class AnyObjectTypeSpec extends TypeDefinition {
 		return FormalGroup.any;
 	}
 
-	@Override
-	public void initGeneratedClasses() {
-		//nothing to do
-	}
+
 
 }

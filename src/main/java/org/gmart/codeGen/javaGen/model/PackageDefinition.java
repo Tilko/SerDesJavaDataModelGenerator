@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.gmart.codeGen.javaGen.modelExtraction.YamlToModel;
+import org.gmart.util.functionalProg.LazySupplier;
+
 import lombok.Getter;
 
 public class PackageDefinition {
-	@Getter private String packageName;
+	//@Getter private final String packageName;
 	@Getter private List<TypeDefinition> typeDefs = new ArrayList<>();
 	public void addAllTypeDefs(List<TypeDefinition> typeDefs) {
 		this.typeDefs.addAll(typeDefs);
@@ -30,14 +33,28 @@ public class PackageDefinition {
 	public void addTypeDefs(TypeDefinition typeDefs) {
 		this.typeDefs.add(typeDefs);
 	}
-	public PackageDefinition(String packageName) {
+	@Getter private String rootPackage;
+	private String relativePackage;
+	@Getter private final String packageName;
+	public final LazySupplier<String> packageNameForStubs = new LazySupplier<>(()-> getPackageName(true));
+	public PackageDefinition(String rootPackage, String relativePackage) {
 		super();
-		this.packageName = packageName;
+		this.rootPackage = rootPackage;
+		this.relativePackage = relativePackage;
+		this.packageName = getPackageName(false);
+	}
+	private String getPackageName(boolean forStub) {
+		String subRootDir = forStub ? YamlToModel.generatedFilesCustomizationStubsDirName : YamlToModel.generatedFilesDirName;
+		return rootPackage + "." + subRootDir + getRelativePackageNameWithOptionalPointPrefix();
+	}
+	private String getRelativePackageNameWithOptionalPointPrefix() {
+		return (relativePackage.equals("")?"":".") + relativePackage;
 	}
 	public void validateTypeDefs() {
 		assert typeDefs.stream().allMatch(new HashSet<>()::add) : "Error: All class names in a package must be distinct.";
 	}
 	
-	public final static PackageDefinition javaLang = new PackageDefinition("java.lang");
+	public final static String javaLangPackageName = "java.lang";
+	//public final static PackageDefinition javaLang = new PackageDefinition("", );
 	 
 }

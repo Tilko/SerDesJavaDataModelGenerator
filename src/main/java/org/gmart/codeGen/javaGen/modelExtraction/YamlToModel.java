@@ -64,6 +64,7 @@ import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParse
 import org.javatuples.Pair;
 import org.yaml.snakeyaml.Yaml;
 
+import api_global.logUtility.L;
 import api_global.strUtil.StringFunctions;
 
 
@@ -84,6 +85,7 @@ public class YamlToModel {
 	String rootPackage;
 	String rootPackageForGeneratedFiles;
 	public final static String generatedFilesDirName = "generatedFiles";
+	public final static String generatedFilesCustomizationStubsDirName = "generatedFilesCustomizationStubs";
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private List<PackageDefinition> read(Reader reader) {
 		Yaml yaml = new Yaml();
@@ -99,8 +101,9 @@ public class YamlToModel {
 		return yamlClassSpecifications2.entrySet().stream().map((e) -> {
 				String relativePackageName_MaybeBeginingWithDot = e.getKey();
 				String relativePackageName = relativePackageName_MaybeBeginingWithDot.startsWith(".") ? relativePackageName_MaybeBeginingWithDot.substring(1) : relativePackageName_MaybeBeginingWithDot;
-				String absolutePackageName = rootPackageForGeneratedFiles + (relativePackageName.equals("")?"":".") + relativePackageName;
-				currentPackage = new PackageDefinition(absolutePackageName);
+				//String absolutePackageName = rootPackageForGeneratedFiles + (relativePackageName.equals("")?"":".") + relativePackageName;
+				currentPackage = new PackageDefinition(rootPackage, relativePackageName);
+				L.l("currentPackage:" + currentPackage.getPackageName());
 				currentPackage.addAllTypeDefs(createClassSpecificationsFrom(e.getValue()));
 				return currentPackage;
 			}).collect(Collectors.toCollection(ArrayList::new));
@@ -130,6 +133,7 @@ public class YamlToModel {
 			} else {
 				TypeNamePartContext typeNamePart = ParserFactory.parse(obj.getKey()).typeNamePart();
 				AbstractClassDefinition classDef = makeClassSpec(typeNamePart.Identifier().getText(), typeNamePart.stubbedMark != null, (Map<String, String>) value);
+				L.l("classDef.getQualifiedName():" + classDef.getQualifiedName());
 				QualifiedNameContext qualifiedName = typeNamePart.qualifiedName();
 				if(qualifiedName != null)
 					addTypeExpressionSetter(parentClass -> {
@@ -219,6 +223,7 @@ public class YamlToModel {
 			if(typeDef == null) {
 				typeDef = packageSetSpec.getTypeSpecFromSimpleOrQualifiedName(rootPackageForGeneratedFiles + "." + qualifiedName);
 				if(typeDef == null) {
+					L.l("rootPackageForGeneratedFiles + \".\" + qualifiedName:" + rootPackageForGeneratedFiles + "." + qualifiedName);
 					assert false : "no type definition has been found for the name: " + qualifiedName;
 				}
 			}

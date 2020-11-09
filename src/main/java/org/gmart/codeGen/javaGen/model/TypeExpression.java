@@ -25,8 +25,6 @@ public interface TypeExpression extends InstanceDeserializerFromYaml, InstanceSe
 		return false;
 	}
 	
-	//String getName();
-	
 	FormalGroup formalGroup();
 
 	String getJavaIdentifier();

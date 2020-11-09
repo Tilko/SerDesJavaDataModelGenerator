@@ -25,15 +25,10 @@ import com.squareup.javapoet.TypeSpec;
 
 import api_global.strUtil.StringRecog;
 
-public class StringTypeSpec extends TypeDefinition {
+public class StringTypeSpec extends TypeDefinitionForPrimitives {
 
 	public StringTypeSpec() {
-		super(PackageDefinition.javaLang, "String");
-	}
-
-	@Override
-	public Optional<TypeSpec.Builder> initJPoetTypeSpec() {
-		return Optional.empty();
+		super(PackageDefinition.javaLangPackageName, "String");
 	}
 
 	@Override
@@ -99,9 +94,5 @@ public class StringTypeSpec extends TypeDefinition {
 		return FormalGroup.string;
 	}
 
-	@Override
-	public void initGeneratedClasses() {
-		//nothing to do
-	}
-
+	
 }

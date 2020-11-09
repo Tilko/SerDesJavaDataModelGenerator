@@ -13,15 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGenExample.featuresTestExample.generatedJavaFilesStubs;
+package org.gmart.codeGen.javaGen.model;
 
-import org.gmart.codeGen.javaGen.model.DeserialContext;
+import lombok.Getter;
 
-public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
-
-	public SchemaOrRef(DeserialContext deserialContext) {
-		super(deserialContext);
+public abstract class TypeDefinitionForNonPrimitives extends TypeDefinition {
+	@Getter private PackageDefinition packageDefinition;
+	public TypeDefinitionForNonPrimitives(PackageDefinition packageDef, String name) {
+		super(name);
+		this.packageDefinition = packageDef;
+	}
+	@Override
+	public String getPackageName() {
+		return packageDefinition.getPackageName();
 	}
 
-	
 }

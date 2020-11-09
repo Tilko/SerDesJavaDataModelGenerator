@@ -19,11 +19,11 @@ import java.io.File;
 
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.modelExtraction.PackagesSetFactory;
-//import org.gmart.codeGenExample.featuresTestExample.generatedFiles.CardType;
-//import org.gmart.codeGenExample.featuresTestExample.generatedFiles.HttpMethodTypes;
-//import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Person;
-//import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Schema;
-//import org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaRef;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.CardType;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.HttpMethodTypes;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Person;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Schema;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaRef;
 
 import api_global.logUtility.L;
 
@@ -40,29 +40,29 @@ public class Main {
 			return;
 		}
 		
-//		packagesSet.initGeneratedClasses();
-//		
-//		File personFilePath = new File(srcParentDir, "\\src\\main\\resources\\personInstance.yaml");
-//		Person person = packagesSet.yamlFileToObject(personFilePath, Person.class);
-//		
-//		person.getVehicle().setWheelCard(7);
-//		person.setPreferredCardType(CardType.Heart);
-//		person.getHttpMethods().get(HttpMethodTypes.GET).add("etVoilà");
-//		
-//		
-//		//schema.toRef().setRef("#pathBis");
-////		log("schema.toRef().getRef():" + schema.toRef().getRef());
-//		//schema.setTruc(schema..getTruc()+1);
-//		
-//		try {
-//			SchemaRef schema = person.getVehicle().getSchema().toSchemaRef();
-//			log("schema.get$ref():" + schema.get$ref());//.getTruc());
-//		} catch(Exception e) {
-//			Schema schema = person.getVehicle().getSchema().toSchema();
-//			log("schema.getTruc():" + schema.getTruc());//.getTruc());
-//		}
-//		
-//		log("person.toYaml():\n" + person.toYaml(false));
+		packagesSet.initGeneratedClasses();
+		
+		File personFilePath = new File(srcParentDir, "\\src\\main\\resources\\personInstance.yaml");
+		Person person = packagesSet.yamlFileToObject(personFilePath, Person.class);
+		
+		person.getVehicle().setWheelCard(7);
+		person.setPreferredCardType(CardType.Heart);
+		person.getHttpMethods().get(HttpMethodTypes.GET).add("etVoilà");
+		
+		
+		//schema.toRef().setRef("#pathBis");
+//		log("schema.toRef().getRef():" + schema.toRef().getRef());
+		//schema.setTruc(schema..getTruc()+1);
+		
+		try {
+			SchemaRef schema = person.getVehicle().getSchema().toSchemaRef();
+			log("schema.get$ref():" + schema.get$ref());//.getTruc());
+		} catch(Exception e) {
+			Schema schema = person.getVehicle().getSchema().toSchema();
+			log("schema.getTruc():" + schema.getTruc());//.getTruc());
+		}
+		
+		log("person.toYaml():\n" + person.toYaml(false));
 	}
 	
 //	Main() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException, JsonGenerationException, JsonMappingException, IOException{

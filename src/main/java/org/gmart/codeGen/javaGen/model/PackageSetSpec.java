@@ -83,9 +83,9 @@ public class PackageSetSpec {
 		simpleNameToClassSpec = new HashMap<>();
 		qualifiedNameToClassSpec = new HashMap<>();
 		simpleNameInMultiplePackagesOfThisSet = new HashSet<>();
-		packages.forEach(ps -> ps.getTypeDefs().forEach(td->setTypeDef(td, false)));
-		Stream.of(JavaPrimitives.primitiveBoxedTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLang, primitiveTypeName), true));
-		Stream.of(JavaPrimitives.primitiveTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLang, primitiveTypeName), true));
+		packages.forEach(ps -> ps.getTypeDefs().forEach(td -> setTypeDef(td, false)));
+		Stream.of(JavaPrimitives.primitiveBoxedTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLangPackageName, primitiveTypeName), true));
+		Stream.of(JavaPrimitives.primitiveTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLangPackageName, primitiveTypeName), true));
 		setTypeDef(new StringTypeSpec(), true);
 		setTypeDef(new AnyObjectTypeSpec(), true);
 		simpleNameInMultiplePackagesOfThisSet.forEach(simpleName -> simpleNameToClassSpec.remove(simpleName));

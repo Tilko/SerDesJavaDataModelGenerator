@@ -1,13 +1,13 @@
 rootPackage: org.gmart.codeGenExample.featuresTestExample
 .:
-  Person:
+  stubbed Person:
     name?: String
     vehicle: Vehicle
     preferredNumbers: int**
     preferredCardType: CardType
     httpMethods: Map<HttpMethodTypes, String*> #Map<String, Map<CardType, Vehicle**>*>*
     components: Components
-    bidule0: org.gmart.codeGenExample.featuresTestExample.generatedFiles.bidulePackage.Bidule
+    bidule0: bidulePackage.Bidule
     bla: TypeWithAUniqueSimpleNameInThisPackagesSet
     obj: Object
     obj2: Object

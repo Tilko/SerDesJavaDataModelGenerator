@@ -28,7 +28,7 @@ import com.squareup.javapoet.TypeSpec.Builder;
 
 
 
-public class PrimitiveTypeSpecification extends TypeDefinition implements StringToValueConverter {
+public class PrimitiveTypeSpecification extends TypeDefinitionForPrimitives implements StringToValueConverter {
 	TypeName jpoetClassName;
 	TypeName jpoetClassNameBoxed;
 	Function<String, Object> parser;
@@ -36,8 +36,8 @@ public class PrimitiveTypeSpecification extends TypeDefinition implements String
 	public final Class boxedClass;
 	@SuppressWarnings("rawtypes")
 	public final Class unboxedClass;
-	public PrimitiveTypeSpecification(PackageDefinition packageDef, String name) {
-		super(packageDef, name);
+	public PrimitiveTypeSpecification(String packageName, String name) {
+		super(packageName, name);
 		Primitive primitive = JavaPrimitives.getPrimitiveFromBoxedOrUnboxedTypeName(name);
 		jpoetClassName = primitive.getJPoetTypeName();//JPoetUtil.primitiveTypeStringToTypeName.get(name);
 		jpoetClassNameBoxed = primitive.getJPoetTypeNameBoxed();
@@ -62,10 +62,6 @@ public class PrimitiveTypeSpecification extends TypeDefinition implements String
 		return boxPrimitive ? jpoetClassNameBoxed : jpoetClassName;// ClassName.get(getPackageName(), getName());
 	}
 
-	@Override
-	public Optional<Builder> initJPoetTypeSpec() {
-		return Optional.empty();
-	}
 
 	@Override
 	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
@@ -88,9 +84,6 @@ public class PrimitiveTypeSpecification extends TypeDefinition implements String
 	public Object fromString(String string) {
 		return parser.apply(string) ;
 	}
-	@Override
-	public void initGeneratedClasses() {
-		//nothing to do
-	}
+
 
 }

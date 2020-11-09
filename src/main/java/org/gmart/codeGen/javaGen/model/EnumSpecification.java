@@ -36,7 +36,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 
-public class EnumSpecification extends TypeDefinition implements StringToValueConverter {
+public class EnumSpecification extends TypeDefinitionForNonPrimitives implements StringToValueConverter {
 
 	public static final HashSet<String> javaKeyword = new HashSet<>(Arrays.asList(JavaKeywords.get));
 	

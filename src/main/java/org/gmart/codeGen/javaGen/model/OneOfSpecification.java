@@ -47,7 +47,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import api_global.strUtil.StringFunctions;
 
-public class OneOfSpecification extends TypeDefinition {
+public class OneOfSpecification extends TypeDefinitionForNonPrimitives {
 	List<TypeExpression> alternatives;
 	boolean isStubbed;
 	public OneOfSpecification(PackageDefinition packageDef, String name, boolean isStubbed, List<TypeExpression> alternatives) {

@@ -33,11 +33,11 @@ import lombok.Getter;
 
 @SuppressWarnings("rawtypes")
 public abstract class TypeDefinition implements JpoetTypeGenerator, TypeExpression {
-	//@Getter private String packageName;
+
 	@Getter private String name;
-	PackageDefinition packageDefinition;
-	public PackageDefinition getPackageDefinition() {
-		return packageDefinition;
+	@Override
+	public String getJavaIdentifier() {
+		return name;
 	}
 
 	
@@ -45,39 +45,29 @@ public abstract class TypeDefinition implements JpoetTypeGenerator, TypeExpressi
 	public TypeName getJPoetTypeName(boolean boxPrimitive) {
 		return ClassName.get(getPackageName(), getName());
 	}
-	public String getPackageName() {
-		return packageDefinition.getPackageName();
-	}
-
-
-	@Override
-	public String getJavaIdentifier() {
-		return name;
-	}
-
+	
+	public abstract String getPackageName();
 	
 	public String getQualifiedName() {
 		return getPackageName() + "." + name;
 	}
 
-
-	public TypeDefinition(PackageDefinition packageDef, String name) {
+	public TypeDefinition(String name) {
 		super();
-		this.packageDefinition = packageDef;
 		this.name = name;
 	}
 	
 	
-	private Class generatedClass;
+	private Class generatedClass_memo;
 	public Class getGeneratedClass() {
-		if(generatedClass == null)
+		if(generatedClass_memo == null)
 			try {
-				generatedClass = Class.forName(getQualifiedName());
+				generatedClass_memo = Class.forName(getQualifiedName());
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 				return null;
 			}
-		return generatedClass;
+		return generatedClass_memo;
 	}
 	public abstract void initGeneratedClasses();
 	protected abstract Optional<TypeSpec.Builder> initJPoetTypeSpec();

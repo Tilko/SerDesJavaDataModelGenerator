@@ -3,7 +3,8 @@
 A type of data structure definition in a Yaml file.
 Here is an example file that demonstrates the syntax and its associated meaning:
 ```yaml
-rootPackage: org.my.example   # root for all generated files 
+rootPackage: org.my.example   # root for all generated files
+
 package1:                     # then packages are defined relatively to that root
   MyTypeName0:
     myPropertyName0: String                     # "String" or any Java primitive type
@@ -33,7 +34,7 @@ package1:                     # then packages are defined relatively to that roo
     myPropertyName9: MyTypeName0                # you can reference "MyTypeName0" with its simple name 
                                                 # because it's a unique name in this file
     myPropertyName10: package3.MyTypeName2      # else give its relative fully qualified name 
-                                                            #    (with package, cf. next package)
+                                                #    (with package, cf. next package)
 package3:                                       # package to demonstrate the previous point
    MyTypeName2:
     myPropertyName11: double
