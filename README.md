@@ -145,7 +145,8 @@ This stub file contains a class that *extends* the previous `generatedClass`.
 In the `generatedFiles` package, it is this stub class that is referred (almost) everywhere the `generatedClass` would be referred if it was not `stubbed`.
 
 The stub file will be generated (almost empty) only if there is no files with the same qualified name. If you want that file to be regenerated, you have to delete it.
-There is a concrete example of use for this feature at the end of the next section ().
+
+There is a concrete example of use for this feature at the end of the next section ([Here](#an-example-for-the-stubbed-modifier)).
 
 ## Now let's take a concrete example:
 If you designed some REST API before you might have heard about
