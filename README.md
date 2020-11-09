@@ -329,43 +329,45 @@ or like that (`true`):
   - e11
 ```
 #### An example for the `stubbed` modifier:
-On this OpenAPI example, this modifier is on the `SchemaOrRef` `oneOf` class type, and it can be used to resolve the `String` reference to a Schema, with the following stub class:
+On this OpenAPI example, this modifier is on the `SchemaOrRef` `oneOf` class type, 
+and, with the following stub class, it can be used to resolve the `String` reference to the corresponding `Schema` instance:
 ```java
 public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
 
-	public SchemaOrRef(DeserialContext deserialContext) {
-		super(deserialContext);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Schema getSchema(Person person) {
-		Schema schema = toSchema();
-		if (schema != null)
-			return schema;
-		String get$ref = toSchemaRef().get$ref();
-		int lastSlashIndex = get$ref.lastIndexOf("/");
-		String schemaName = get$ref.substring(lastSlashIndex + 1);
-		Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(person).apply(get$ref.substring(0, lastSlashIndex));
-		return (Schema) schemas.get(schemaName);
-	}
-	@SuppressWarnings("unchecked")
-	public static <T> Function<String, T> makeJsonPathResolver(Object context){
-		Function<String, T> convertRefToSchema = ref -> {
-			if(ref.startsWith("#")) {
-				ref = ref.substring(1);
-				String[] path = ref.substring(0).split("[/\\\\]");
-				try {
-					return (T) ReflUtil.getDeepFieldValue(context, path);
-				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-					e.printStackTrace();
-					assert false : "error getting the object at path: " + ref;
-				}
-			}
-			assert false : "Only local JSON paths are supported (path that begins with \"#\".";
-			return null;
-		};
-		return convertRefToSchema;
-	}
+    public SchemaOrRef(DeserialContext deserialContext) {
+        super(deserialContext);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Schema getSchema(Person person) {
+        Schema schema = toSchema();
+        if (schema != null)
+            return schema;
+        String get$ref = toSchemaRef().get$ref();
+        int lastSlashIndex = get$ref.lastIndexOf("/");
+        String schemaName = get$ref.substring(lastSlashIndex + 1);
+        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(person)
+                                                            .apply(get$ref.substring(0, lastSlashIndex));
+        return (Schema) schemas.get(schemaName);
+    }
+    @SuppressWarnings("unchecked")
+    public static <T> Function<String, T> makeJsonPathResolver(Object context){
+        Function<String, T> convertRefToSchema = ref -> {
+            if(ref.startsWith("#")) {
+                ref = ref.substring(1);
+                String[] path = ref.substring(0).split("[/\\\\]");
+                try {
+                    return (T) ReflUtil.getDeepFieldValue(context, path);
+                } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+                    e.printStackTrace();
+                    assert false : "error getting the object at path: " + ref;
+                }
+            }
+            assert false : "Only local JSON paths are supported (path that begins with \"#\".";
+            return null;
+        };
+        return convertRefToSchema;
+    }
 }
 ```
  
