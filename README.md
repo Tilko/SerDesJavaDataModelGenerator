@@ -342,14 +342,15 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
         super(deserialContext);
     }
     
-    public Schema getSchema(Person person) {
+    public Schema getSchema() {
         Schema schema = toSchema();   //this method has been generated in the parent "oneOf" class.
         if (schema != null)
             return schema;
+        OpenApiSpec openApiSpec = (OpenApiSpec) getDeserialContext().getFileRootObject();  //this has been injected at instantiation
         String get$ref = toSchemaRef().get$ref();
         int lastSlashIndex = get$ref.lastIndexOf("/");
         String schemaName = get$ref.substring(lastSlashIndex + 1);
-        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(person)
+        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(openApiSpec)
                                                             .apply(get$ref.substring(0, lastSlashIndex));
         return (Schema) schemas.get(schemaName);
     }
