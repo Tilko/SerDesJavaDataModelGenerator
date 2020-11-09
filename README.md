@@ -145,7 +145,7 @@ This stub file contains a class that *extends* the previous `generatedClass`.
 In the `generatedFiles` package, it is this stub class that is referred (almost) everywhere the `generatedClass` would be referred if it was not `stubbed`.
 
 The stub file will be generated (almost empty) only if there is no files with the same qualified name. If you want that file to be regenerated, you have to delete it.
-
+There is a concrete example of use for this feature at the end of the next section ().
 
 ## Now let's take a concrete example:
 If you designed some REST API before you might have heard about
@@ -327,7 +327,47 @@ or like that (`true`):
   - e10
   - e11
 ```
+#### An example for the `stubbed` modifier:
+On this OpenAPI example, this modifier is on the `SchemaOrRef` `oneOf` class type, and it can be used to resolve the `String` reference to a Schema, with the following stub class:
+```java
+public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
 
+	public SchemaOrRef(DeserialContext deserialContext) {
+		super(deserialContext);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Schema getSchema(Person person) {
+		Schema schema = toSchema();
+		if (schema != null)
+			return schema;
+		String get$ref = toSchemaRef().get$ref();
+		int lastSlashIndex = get$ref.lastIndexOf("/");
+		String schemaName = get$ref.substring(lastSlashIndex + 1);
+		Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(person).apply(get$ref.substring(0, lastSlashIndex));
+		return (Schema) schemas.get(schemaName);
+	}
+	@SuppressWarnings("unchecked")
+	public static <T> Function<String, T> makeJsonPathResolver(Object context){
+		Function<String, T> convertRefToSchema = ref -> {
+			if(ref.startsWith("#")) {
+				ref = ref.substring(1);
+				String[] path = ref.substring(0).split("[/\\\\]");
+				try {
+					return (T) ReflUtil.getDeepFieldValue(context, path);
+				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+					assert false : "error getting the object at path: " + ref;
+				}
+			}
+			assert false : "Only local JSON paths are supported (path that begins with \"#\".";
+			return null;
+		};
+		return convertRefToSchema;
+	}
+}
+```
+ 
 
 ## Installation:
 

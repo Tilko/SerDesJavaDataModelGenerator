@@ -47,7 +47,7 @@ org.gmart.codeGenExample.openApiExample.result:
   
   #Content: Dict[typeMIME]<RequestBodyContent> 
    
-  SchemaOrRef: oneOf(Schema, SchemaRef)
+  stubbed SchemaOrRef: oneOf(Schema, SchemaRef)
   SchemaRef:
     $ref: String  
   

@@ -8,7 +8,6 @@ import org.gmart.codeGen.utils.ReflUtil;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Person;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Schema;
 
-import api_global.logUtility.L;
 
 public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
 
@@ -21,7 +20,6 @@ public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.ge
 		Schema schema = toSchema();
 		if (schema != null)
 			return schema;
-		L.l("person.getClass():"  + person.getClass());
 		String get$ref = toSchemaRef().get$ref();
 		int lastSlashIndex = get$ref.lastIndexOf("/");
 		String schemaName = get$ref.substring(lastSlashIndex + 1);
@@ -41,7 +39,7 @@ public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.ge
 					assert false : "error getting the object at path: " + ref;
 				}
 			}
-			assert false : "Only local JSON paths are supported at the moment (path that begins with \"#\".";
+			assert false : "Only local JSON paths are supported (path that begins with \"#\".";
 			return null;
 		};
 		return convertRefToSchema;
