@@ -18,15 +18,18 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
         this.jsonPathResolver = makeJsonPathResolver(openApiSpec);
     }
     
-    public Schema getSchema() {
+	 public Schema getSchema() {
         Schema schema = toSchema();   //this method has been generated in the parent "oneOf" class.
         if (schema != null)
             return schema;
-        String get$ref = toSchemaRef().get$ref();
-        int lastSlashIndex = get$ref.lastIndexOf("/");
+        String ref = toSchemaRef().get$ref(); //this one too, 
+        // ref must be a path to a member of a JSON (or Yaml) data-structure,
+        // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
+        
+        int lastSlashIndex = ref.lastIndexOf("/");
         Map<String, Object> schemas = (Map<String, Object>) this.jsonPathResolver
-                                                            .apply(get$ref.substring(0, lastSlashIndex));
-        String schemaName = get$ref.substring(lastSlashIndex + 1);
+                                                            .apply(ref.substring(0, lastSlashIndex));
+        String schemaName = ref.substring(lastSlashIndex + 1);
         return (Schema) schemas.get(schemaName);
     }
     
