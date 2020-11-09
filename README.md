@@ -349,9 +349,9 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
         OpenApiSpec openApiSpec = (OpenApiSpec) getDeserialContext().getFileRootObject();  //this has been injected at instantiation
         String get$ref = toSchemaRef().get$ref();
         int lastSlashIndex = get$ref.lastIndexOf("/");
-        String schemaName = get$ref.substring(lastSlashIndex + 1);
         Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(openApiSpec)
                                                             .apply(get$ref.substring(0, lastSlashIndex));
+        String schemaName = get$ref.substring(lastSlashIndex + 1);
         return (Schema) schemas.get(schemaName);
     }
     
