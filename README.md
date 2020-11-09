@@ -103,7 +103,7 @@ example.of.use.for.oneOf.type:
                                                      #    for example with a JSON reference, 
                                                      #    or an URL to an other yaml or JSON file ...
 ```
-#### `oneOf` validation details:
+### `oneOf` validation details:
 To ensure the recognition of the right type between all the types alternatives, the different alternatives must be formally non-ambiguous,
 Here are the validation rules that are checked for you by the tool:
  - Only one alternative can be:
@@ -127,7 +127,26 @@ Here are the validation rules that are checked for you by the tool:
    ```
    is valid, but `oneOf(B, A)` will throw a validation error because `B` would always matches any instance that `A` would match (so `A` would never be instantiated).
    But when `A` is specified first in the alternatives list, `A` will be instantiated when the optional property `b` will be missing.
-   
+
+### The `stubbed` classes feature:
+The `stubbed` modifier allows you to customize the generated class hierarchy by inserting a custom class as an extension of one of the generated classes.
+Let's consider this definition:
+```yaml
+rootPackage: org.example
+package1:                    
+  stubbed MyClassA:            # note the `stubbed` modifier here
+    ... some properties ...
+```
+The generated Java class `generatedClass` that corresponds is: 
+  `org.example.generatedFiles.package1.MyClassA`
+and thanks to that modifier, an other file is generated with the same fully qualified name
+except that the `generatedFiles` part is replaced by: `generatedFilesCustomizationStubs`
+This stub file contains a class that *extends* the previous `generatedClass`. 
+In the `generatedFiles` package, it is this stub class that is referred (almost) everywhere the `generatedClass` would be referred if it was not `stubbed`.
+
+The stub file will be generated (almost empty) only if there is no files with the same qualified name. If you want that file to be regenerated, you have to delete it.
+
+
 ## Now let's take a concrete example:
 If you designed some REST API before you might have heard about
 the OpenAPI specification (formerly called "swagger"), it describes a way to specify a REST API
