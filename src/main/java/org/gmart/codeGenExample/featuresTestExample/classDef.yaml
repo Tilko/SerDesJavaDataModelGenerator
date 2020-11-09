@@ -15,7 +15,7 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
   Components:
     schemas: Dict<Schema>
     
-  SchemaOrRef: oneOf(Schema, SchemaRef) #(SchemaOrRefImpl)   #[SchemaPartTemp.makeSchemaRefResolver]
+  stubbed SchemaOrRef: oneOf(Schema, SchemaRef) #(SchemaOrRefImpl)   #[SchemaPartTemp.makeSchemaRefResolver]
   SchemaRef:
     $ref: String
   Schema:

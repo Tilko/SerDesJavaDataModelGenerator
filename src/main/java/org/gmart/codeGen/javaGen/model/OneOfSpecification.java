@@ -47,14 +47,12 @@ import com.squareup.javapoet.TypeSpec;
 
 import api_global.strUtil.StringFunctions;
 
-public class OneOfSpecification extends TypeDefinitionForNonPrimitives {
+public class OneOfSpecification extends TypeDefinitionForStubbable {
 	List<TypeExpression> alternatives;
-	boolean isStubbed;
+
 	public OneOfSpecification(PackageDefinition packageDef, String name, boolean isStubbed, List<TypeExpression> alternatives) {
-		super(packageDef, name);
-		this.isStubbed = isStubbed;
+		super(packageDef, name, isStubbed);
 		this.alternatives = alternatives;
-		
 	}
 	public void compile() {
 		this.nonOneOfFormalGroups = developToNonOneOfGroups(alternatives, null);

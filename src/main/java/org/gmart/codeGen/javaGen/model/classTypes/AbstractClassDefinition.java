@@ -36,6 +36,7 @@ import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeDefinitionForNonPrimitives;
+import org.gmart.codeGen.javaGen.model.TypeDefinitionForStubbable;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
 import org.gmart.codeGen.javaLang.JPoetUtil;
@@ -53,7 +54,7 @@ import com.squareup.javapoet.TypeSpec;
 //import com.squareup.javapoet.TypeSpec.Builder;
 
 
-public abstract class AbstractClassDefinition extends TypeDefinitionForNonPrimitives  {
+public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable  {
 	private List<AbstractTypedField> fields;
 	
 	public List<AbstractTypedField> getFields() {
@@ -99,13 +100,8 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForNonPrimit
 		return enumSubSpace;
 	}
 	
-	private final boolean isStubbed;
-	public boolean isStubbed() {
-		return isStubbed;
-	}
 	public AbstractClassDefinition(PackageDefinition packageDef, String className, boolean isStubbed, List<AbstractTypedField> fieldSpecifications) {
-		super(packageDef, className);
-		this.isStubbed = isStubbed;
+		super(packageDef, className, isStubbed);
 		this.fields = fieldSpecifications;
 	}
 	public static AbstractClassDefinition makeInstance(PackageDefinition packageDef, String typeName, boolean isStubbed, ArrayList<AbstractTypedField> fields) {
@@ -249,30 +245,5 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForNonPrimit
 		}
 	}
 	
-	@Override
-	public Stream<JavaFile> makeJavaFiles() {
-		Stream.Builder<JavaFile> builder = Stream.builder();
-		super.makeJavaFiles().forEach(builder::accept);
-		makeStub().ifPresent(builder::accept);
-		return builder.build();
-	}
-	private Optional<JavaFile> makeStub(){
-		if(this.isStubbed()) {
-			String packageNameForStub = getPackageNameForStub();
-			if(!getStubFile(packageNameForStub).exists()) {
-				TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(getName());
-				typeBuilder.addModifiers(Modifier.PUBLIC);
-				typeBuilder.superclass(ClassName.get(this.getPackageName(), getName()));
-				
-				return Optional.of(JavaFile.builder(packageNameForStub, typeBuilder.build()).indent("    ").build());
-			}
-		}
-		return Optional.empty();
-	}
-	private String getPackageNameForStub() {
-		return this.getPackageDefinition().packageNameForStubs.get();
-	}
-	private File getStubFile(String packageNameForStub) {
-		return new File(new File("").getAbsolutePath(), "src/main/java/" + packageNameForStub.replaceAll("\\.", "/"));
-	}
+	
 }
