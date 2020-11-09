@@ -337,19 +337,22 @@ On this OpenAPI example, this modifier is on the `SchemaOrRef` `oneOf` class typ
 and, with the following stub class, it can be used to resolve the `String` reference to the corresponding `Schema` instance:
 ```java
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
-
-    public SchemaOrRef(DeserialContext deserialContext) {
+	
+	private final Function<String, Object> jsonPathResolver;
+    
+	public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
+        OpenApiSpec openApiSpec = (OpenApiSpec) deserialContext.getFileRootObject();
+        this.jsonPathResolver = makeJsonPathResolver(openApiSpec);
     }
     
     public Schema getSchema() {
         Schema schema = toSchema();   //this method has been generated in the parent "oneOf" class.
         if (schema != null)
             return schema;
-        OpenApiSpec openApiSpec = (OpenApiSpec) getDeserialContext().getFileRootObject();  //this has been injected at instantiation
         String get$ref = toSchemaRef().get$ref();
         int lastSlashIndex = get$ref.lastIndexOf("/");
-        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(openApiSpec)
+        Map<String, Object> schemas = (Map<String, Object>) this.jsonPathResolver
                                                             .apply(get$ref.substring(0, lastSlashIndex));
         String schemaName = get$ref.substring(lastSlashIndex + 1);
         return (Schema) schemas.get(schemaName);
