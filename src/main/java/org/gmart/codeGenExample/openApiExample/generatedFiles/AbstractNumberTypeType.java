@@ -1,7 +1,7 @@
-package org.gmart.codeGenExample.openApiExample.result;
+package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
+import java.lang.String;
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.EnumSpecification;
 
 @Generated("")

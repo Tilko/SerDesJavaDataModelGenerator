@@ -1,29 +1,27 @@
-package org.gmart.codeGenExample.openApiExample.result;
+package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
-import java.util.Map;
-
+import java.lang.String;
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 
 @Generated("")
-public class Components implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class SchemaRef implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
     private static AbstractClassDefinition classSpecification;
 
-    private Map<String, Schema> schemas;
+    private String $ref;
 
-    public Components() {
+    public SchemaRef() {
     }
 
-    public Map<String, Schema> getSchemas() {
-        return schemas;
+    public String get$ref() {
+        return $ref;
     }
 
-    public void setSchemas(Map<String, Schema> schemas) {
-        this.schemas = schemas;
+    public void set$ref(String $ref) {
+        this.$ref = $ref;
     }
 
     public AbstractClassDefinition getClassDefinition() {

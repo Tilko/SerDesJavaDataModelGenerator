@@ -1,23 +1,24 @@
-package org.gmart.codeGenExample.openApiExample.result;
+package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
+import java.lang.String;
 import java.util.Map;
-
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 
 @Generated("")
-public class Response implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class RequestBody implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
     private static AbstractClassDefinition classSpecification;
 
     private String description;
 
+    private boolean required;
+
     private Map<String, RequestBodyContent> content;
 
-    public Response() {
+    public RequestBody() {
     }
 
     public String getDescription() {
@@ -26,6 +27,14 @@ public class Response implements ClassSerializationToYamlDefaultImpl, ClassDefin
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean getRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 
     public Map<String, RequestBodyContent> getContent() {

@@ -1,27 +1,27 @@
-package org.gmart.codeGenExample.openApiExample.result;
+package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
+import org.gmart.codeGenExample.openApiExample.generatedFilesCustomizationStubs.SchemaOrRef;
 
 @Generated("")
-public class Int64Type extends IntegerType implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class RequestBodyContent implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
     private static AbstractClassDefinition classSpecification;
 
-    private long default_;
+    private SchemaOrRef schema;
 
-    public Int64Type() {
+    public RequestBodyContent() {
     }
 
-    public long getDefault_() {
-        return default_;
+    public SchemaOrRef getSchema() {
+        return schema;
     }
 
-    public void setDefault_(long default_) {
-        this.default_ = default_;
+    public void setSchema(SchemaOrRef schema) {
+        this.schema = schema;
     }
 
     public AbstractClassDefinition getClassDefinition() {

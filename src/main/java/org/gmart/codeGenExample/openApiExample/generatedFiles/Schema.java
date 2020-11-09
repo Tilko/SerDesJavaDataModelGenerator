@@ -1,25 +1,31 @@
-package org.gmart.codeGenExample.openApiExample.result;
+package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
-import java.util.Map;
-
+import java.lang.String;
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 
 @Generated("")
-public class RequestBody implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class Schema implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
     private static AbstractClassDefinition classSpecification;
+
+    private Type type;
 
     private String description;
 
-    private boolean required;
+    private boolean nullable;
 
-    private Map<String, RequestBodyContent> content;
+    public Schema() {
+    }
 
-    public RequestBody() {
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public String getDescription() {
@@ -30,20 +36,12 @@ public class RequestBody implements ClassSerializationToYamlDefaultImpl, ClassDe
         this.description = description;
     }
 
-    public boolean getRequired() {
-        return required;
+    public boolean getNullable() {
+        return nullable;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public Map<String, RequestBodyContent> getContent() {
-        return content;
-    }
-
-    public void setContent(Map<String, RequestBodyContent> content) {
-        this.content = content;
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
     }
 
     public AbstractClassDefinition getClassDefinition() {

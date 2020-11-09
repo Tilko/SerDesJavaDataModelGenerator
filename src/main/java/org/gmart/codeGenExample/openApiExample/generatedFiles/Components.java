@@ -1,27 +1,28 @@
-package org.gmart.codeGenExample.openApiExample.result;
+package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
+import java.lang.String;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 
 @Generated("")
-public class IntegerType extends AbstractNumberType implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class Components implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
     private static AbstractClassDefinition classSpecification;
 
-    private IntegerTypeFormat format;
+    private Map<String, Schema> schemas;
 
-    public IntegerType() {
+    public Components() {
     }
 
-    public IntegerTypeFormat getFormat() {
-        return format;
+    public Map<String, Schema> getSchemas() {
+        return schemas;
     }
 
-    public void setFormat(IntegerTypeFormat format) {
-        this.format = format;
+    public void setSchemas(Map<String, Schema> schemas) {
+        this.schemas = schemas;
     }
 
     public AbstractClassDefinition getClassDefinition() {

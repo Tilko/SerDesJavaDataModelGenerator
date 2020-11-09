@@ -1,4 +1,5 @@
-org.gmart.codeGenExample.openApiExample.result:
+rootPackage: org.gmart.codeGenExample.openApiExample
+.:
   OpenApiSpec:
     paths: Dict[pathTemplate]<Map<HttpMethodWord, HttpMethod>>
     components: Components

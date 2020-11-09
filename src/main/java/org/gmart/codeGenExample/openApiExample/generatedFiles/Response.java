@@ -1,31 +1,22 @@
-package org.gmart.codeGenExample.openApiExample.result;
+package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
+import java.lang.String;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 
 @Generated("")
-public class Schema implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class Response implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
     private static AbstractClassDefinition classSpecification;
-
-    private Type type;
 
     private String description;
 
-    private boolean nullable;
+    private Map<String, RequestBodyContent> content;
 
-    public Schema() {
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
+    public Response() {
     }
 
     public String getDescription() {
@@ -36,12 +27,12 @@ public class Schema implements ClassSerializationToYamlDefaultImpl, ClassDefinit
         this.description = description;
     }
 
-    public boolean getNullable() {
-        return nullable;
+    public Map<String, RequestBodyContent> getContent() {
+        return content;
     }
 
-    public void setNullable(boolean nullable) {
-        this.nullable = nullable;
+    public void setContent(Map<String, RequestBodyContent> content) {
+        this.content = content;
     }
 
     public AbstractClassDefinition getClassDefinition() {

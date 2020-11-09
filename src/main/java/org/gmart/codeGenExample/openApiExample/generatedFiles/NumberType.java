@@ -1,27 +1,26 @@
-package org.gmart.codeGenExample.openApiExample.result;
+package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 
 @Generated("")
-public class DoubleType extends NumberType implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class NumberType extends AbstractNumberType implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
     private static AbstractClassDefinition classSpecification;
 
-    private double default_;
+    private NumberTypeFormat format;
 
-    public DoubleType() {
+    public NumberType() {
     }
 
-    public double getDefault_() {
-        return default_;
+    public NumberTypeFormat getFormat() {
+        return format;
     }
 
-    public void setDefault_(double default_) {
-        this.default_ = default_;
+    public void setFormat(NumberTypeFormat format) {
+        this.format = format;
     }
 
     public AbstractClassDefinition getClassDefinition() {

@@ -1,18 +1,18 @@
-package org.gmart.codeGenExample.openApiExample.result;
+package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
+import java.lang.String;
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.EnumSpecification;
 
 @Generated("")
-public enum NumberTypeFormat implements EnumSpecification.EnumValueFromYaml {
-    float_("float"),
+public enum StringTypeFormat implements EnumSpecification.EnumValueFromYaml {
+    binary("binary"),
 
-    double_("double");
+    byte_("byte");
 
     private String originalValue;
 
-    NumberTypeFormat(String originalValue) {
+    StringTypeFormat(String originalValue) {
         this.originalValue = originalValue;
     }
 
