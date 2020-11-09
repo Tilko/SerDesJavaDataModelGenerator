@@ -161,7 +161,8 @@ The present tool addresses 2 things:
 For that example I wrote data types structures that corresponds to the OpenAPI specification (I omitted a couple of language elements): 
 
 ```yaml
-org.gmart.codeGenExample.openApiExample.result:
+rootPackage: org.gmart.codeGenExample.openApiExample
+.:
   OpenApiSpec:
     paths: Dict[pathTemplate]<Map<HttpMethodWord, HttpMethod>> # the "[pathTemplate]" is not used
                                                                # by the tool (it might change later)
@@ -332,15 +333,14 @@ or like that (`true`):
 On this OpenAPI example, this modifier is on the `SchemaOrRef` `oneOf` class type, 
 and, with the following stub class, it can be used to resolve the `String` reference to the corresponding `Schema` instance:
 ```java
-public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
+public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
 
     public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
     }
     
-    @SuppressWarnings("unchecked")
     public Schema getSchema(Person person) {
-        Schema schema = toSchema();
+        Schema schema = toSchema();   //this method has been generated in the parent "oneOf" class.
         if (schema != null)
             return schema;
         String get$ref = toSchemaRef().get$ref();
@@ -350,7 +350,7 @@ public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.ge
                                                             .apply(get$ref.substring(0, lastSlashIndex));
         return (Schema) schemas.get(schemaName);
     }
-    @SuppressWarnings("unchecked")
+    
     public static <T> Function<String, T> makeJsonPathResolver(Object context){
         Function<String, T> convertRefToSchema = ref -> {
             if(ref.startsWith("#")) {
