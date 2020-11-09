@@ -38,6 +38,7 @@ import org.gmart.codeGen.javaGen.model.OneOfSpecification;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.model.TypeDefinition;
+import org.gmart.codeGen.javaGen.model.TypeDefinitionForNonPrimitives;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.Concrete_AbstractClassDefinition;
@@ -124,7 +125,7 @@ public class YamlToModel {
 	
 	LinkedHashSet<Concrete_AbstractClassDefinition> abstractClassToInitialize = new LinkedHashSet<>();
 	@SuppressWarnings("unchecked")
-	private ArrayList<TypeDefinition> createClassSpecificationsFrom(Map<String, Object> yamlClassSpecifications) {
+	private ArrayList<TypeDefinitionForNonPrimitives> createClassSpecificationsFrom(Map<String, Object> yamlClassSpecifications) {
 		return yamlClassSpecifications.entrySet().stream().map(obj -> {
 			Object value = obj.getValue();
 			if(value instanceof String) {
@@ -149,7 +150,7 @@ public class YamlToModel {
 	}
 	List<Runnable> oneOfValidations = new ArrayList<>();
 	 
-	private TypeDefinition makeEnumOrOneOfSpec(OnOneLineTypeNameContext onOneLineTypeName, String possibleValues_str) {
+	private TypeDefinitionForNonPrimitives makeEnumOrOneOfSpec(OnOneLineTypeNameContext onOneLineTypeName, String possibleValues_str) {
 		OnOneLineTypeDefContext def = ParserFactory.parse(possibleValues_str).onOneLineTypeDef();
 		IdentifierListContext identifierList = def.identifierList();
 		if(identifierList != null) {

@@ -26,11 +26,11 @@ import lombok.Getter;
 
 public class PackageDefinition {
 	//@Getter private final String packageName;
-	@Getter private List<TypeDefinition> typeDefs = new ArrayList<>();
-	public void addAllTypeDefs(List<TypeDefinition> typeDefs) {
+	@Getter private List<TypeDefinitionForNonPrimitives> typeDefs = new ArrayList<>();
+	public void addAllTypeDefs(List<TypeDefinitionForNonPrimitives> typeDefs) {
 		this.typeDefs.addAll(typeDefs);
 	}
-	public void addTypeDefs(TypeDefinition typeDefs) {
+	public void addTypeDefs(TypeDefinitionForNonPrimitives typeDefs) {
 		this.typeDefs.add(typeDefs);
 	}
 	@Getter private String rootPackage;

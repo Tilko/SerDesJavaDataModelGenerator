@@ -15,10 +15,6 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
-import java.util.Optional;
-
-import com.squareup.javapoet.TypeSpec;
-
 import lombok.Getter;
 
 public abstract class TypeDefinitionForPrimitives extends TypeDefinition {
@@ -28,12 +24,4 @@ public abstract class TypeDefinitionForPrimitives extends TypeDefinition {
 		this.packageName = packageName;
 	}
 
-	@Override
-	public Optional<TypeSpec.Builder> initJPoetTypeSpec() {
-		return Optional.empty();
-	}
-	@Override
-	public void initGeneratedClasses() {
-		//nothing to do
-	}
 }

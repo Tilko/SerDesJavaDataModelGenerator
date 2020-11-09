@@ -15,7 +15,6 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
@@ -24,7 +23,6 @@ import org.gmart.codeGen.javaLang.JavaPrimitives.Primitive;
 import org.javatuples.Pair;
 
 import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec.Builder;
 
 
 

@@ -15,13 +15,10 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 
 import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
 import org.javatuples.Pair;
-
-import com.squareup.javapoet.TypeSpec;
 
 import api_global.strUtil.StringRecog;
 

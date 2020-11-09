@@ -28,7 +28,6 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.processing.Generated;
 //import java.lang.reflect.Modifier;
 import javax.lang.model.element.Modifier;
 
@@ -36,7 +35,6 @@ import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.SerialContext;
-import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.TypeDefinitionForNonPrimitives;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
@@ -45,7 +43,6 @@ import org.gmart.util.functionalProg.properties.OptProperty;
 import org.javatuples.Pair;
 import org.yaml.snakeyaml.Yaml;
 
-import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
