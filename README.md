@@ -338,7 +338,7 @@ and, with the following stub class, it can be used to resolve the `String` refer
 ```java
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
 	
-	private final Function<String, Object> jsonPathResolver;
+    private final Function<String, Object> jsonPathResolver;
     
     public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
