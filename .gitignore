@@ -27,3 +27,4 @@ src/main/java/org/gmart/codeGenExample/reflexions/
 src/main/java/org/gmart/codeGenExample/fsmExample/
 
 src/main/java/org/gmart/codeGen/javaGen/model/old/
+src/main/java/org/gmart/codeGen/javaGen/model/old/yamlAppender/
