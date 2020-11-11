@@ -312,13 +312,15 @@ and finally you can serialize your modified or new `OpenApiSpec` instance back i
 
 ```java
 public static void main2(String[] args) throws Exception {
-	... previous code with:
-	OpenApiSpec myApiSpec = ...
-	... modification code ...
-	
-	myApiSpec.toYaml(); //=> returns the Yaml code
+    ... previous code with:
+    OpenApiSpec myApiSpec = ...
+    ... modification code ...
+    
+    myApiSpec.toYaml(); //=> returns the Yaml serialized version
+    myApiSpec.toJson(); //=> returns the JSON serialized version
 }
 ```
+
 #### An example for the `stubbed` modifier:
 On this OpenAPI example, this modifier is on the `SchemaOrRef` `oneOf` class type, 
 and, with the following stub class, it can be used to resolve the `String` reference to the corresponding `Schema` instance:
