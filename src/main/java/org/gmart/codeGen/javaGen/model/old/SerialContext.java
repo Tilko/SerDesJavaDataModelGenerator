@@ -1,3 +1,4 @@
+package org.gmart.codeGen.javaGen.model.old;
 ///*******************************************************************************
 // * Copyright 2020 Grégoire Martinetti
 // * 
@@ -15,11 +16,9 @@
 // ******************************************************************************/
 //package org.gmart.codeGen.javaGen.model;
 //
-//public interface InstanceSerializerToYaml {
-//	//void appendInstanceToYamlCode(SerialContext bui, Object instanceToSerialize);
-//	
-//	/** 
-//	 * if returns null => use the static YAppender.isOnNewLineWhenPropertyValue(Object obj) method
-//	 * */
-//	//Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize);
+//import org.gmart.codeGen.javaGen.model.reporting.NonOptionalNotInitializedCollection;
+//import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
+//
+//public interface SerialContext extends YAppender {
+//	NonOptionalNotInitializedCollection getNonOptionalNotInitializedCollection();
 //}

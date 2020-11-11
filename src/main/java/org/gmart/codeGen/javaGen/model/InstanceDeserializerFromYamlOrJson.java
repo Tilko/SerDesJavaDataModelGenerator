@@ -15,12 +15,17 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
+
 import org.javatuples.Pair;
 
-public interface InstanceDeserializerFromYaml {
-	Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, Object yamlValue, boolean boxedPrimitive);
+public interface InstanceDeserializerFromYamlOrJson {
+	Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlOrJsonValue, boolean boxedPrimitive);
+	//Pair<Class<?>, Object> jsonToJavaObject(DeserialContext ctx, JsonValue jsonValue, boolean boxedPrimitive);
 	
-	default Object makeJavaObject(DeserialContext ctx, Object fieldYamlValue) {
-		return yamlToJavaObject(ctx, fieldYamlValue, false).getValue1();
+	default Object makeJavaObject(DeserialContext ctx, Object yamlValue) {
+		return yamlOrJsonToModelValue(ctx, yamlValue, false).getValue1();
 	}
+//	default Object makeJavaObjectFromJson(DeserialContext ctx, JsonValue jsonValue) {
+//		return jsonToJavaObject(ctx, jsonValue, false).getValue1();
+//	}
 }

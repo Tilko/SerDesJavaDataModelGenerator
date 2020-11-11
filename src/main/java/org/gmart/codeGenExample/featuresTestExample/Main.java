@@ -21,9 +21,10 @@ import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.modelExtraction.PackagesSetFactory;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.CardType;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.HttpMethodTypes;
-import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Person;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.ObjectSchema;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Schema;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaRef;
+import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Person;
 
 import api_global.logUtility.L;
 
@@ -32,7 +33,7 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		File srcParentDir = new File(new File("").getAbsolutePath());
-		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(new File(srcParentDir, "\\src\\main\\java\\org\\gmart\\codeGenExample\\featuresTestExample\\classDef.yaml"));
+		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/featuresTestExample/classDef.yaml"));
 		
 		if(false) {
 			packagesSet.generateJavaSourceFiles_InTheCurrentMavenProject();
@@ -41,9 +42,16 @@ public class Main {
 		}
 		
 		packagesSet.initGeneratedClasses();
-		
-		File personFilePath = new File(srcParentDir, "\\src\\main\\resources\\personInstance.yaml");
-		Person person = packagesSet.yamlFileToObject(personFilePath, Person.class);
+		boolean y = true;
+		y = false;
+		Person person;
+		if(y) {
+			File personFilePath = new File(srcParentDir, "/src/main/resources/personInstance.yaml");
+			person = packagesSet.yamlFileToObject(personFilePath, Person.class);
+		} else {
+			File personFilePath = new File(srcParentDir, "/src/main/resources/personInstance.json");
+			person = packagesSet.jsonFileToObject(personFilePath, Person.class);
+		}
 		
 		person.getVehicle().setWheelCard(7);
 		person.setPreferredCardType(CardType.Heart);
@@ -58,13 +66,20 @@ public class Main {
 			SchemaRef schema = person.getVehicle().getSchema().toSchemaRef();
 			log("schema.get$ref():" + schema.get$ref());//.getTruc());
 			Schema schema2 = person.getVehicle().getSchema().getSchema(person);
+			log("schema2 class:" + schema2.getClass());
 			L.l("schema2.getTruc():" + schema2.getTruc());
+			L.l("((ObjectSchema)schema2).getMachin():" + ((ObjectSchema)schema2).getMachin());
 		} catch(Exception e) {
 			Schema schema = person.getVehicle().getSchema().toSchema();
+			log("schemaclass:" + schema.getClass());
 			log("schema.getTruc():" + schema.getTruc());//.getTruc());
 		}
 		
-		log("person.toYaml():\n" + person.toYaml(false));
+		boolean y2 = true;
+		y2 = false;
+		if(y2)
+			log("person.toYaml():\n" + person.toYaml());
+		else log("person.toJson():\n" + person.toJson());
 	}
 	
 //	Main() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException, JsonGenerationException, JsonMappingException, IOException{
@@ -82,7 +97,7 @@ public class Main {
 ////		ObjectMapper mapper = new ObjectMapper(yamlFactory);
 ////
 ////		// Write object as YAML file
-////		mapper.writeValue(new File("C:\\Users\\marti\\workingLowLevel\\codeGen\\src\\main\\resources\\personInstanceRebuild.yaml"), person);
+////		mapper.writeValue(new File("C:/Users/marti/workingLowLevel/codeGen/src/main/resources/personInstanceRebuild.yaml"), person);
 ////
 ////		// Write object as YAML string
 ////		String yaml = mapper.writeValueAsString(person);

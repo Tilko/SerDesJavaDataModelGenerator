@@ -17,9 +17,6 @@ package org.gmart.codeGen.javaGen.model;
 
 import java.util.stream.Stream;
 
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
-
 import lombok.Getter;
 
 @SuppressWarnings("rawtypes")

@@ -1,7 +1,7 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
 import javax.annotation.processing.Generated;
-import org.gmart.codeGen.javaGen.model.TypeDefinition;
+
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
@@ -34,10 +34,6 @@ public class Schema implements ClassSerializationToYamlDefaultImpl, ClassDefinit
     }
 
     public AbstractClassDefinition getClassDefinition() {
-        return classSpecification;
-    }
-
-    public TypeDefinition getTypeDefinition() {
         return classSpecification;
     }
 }

@@ -1,10 +1,10 @@
 package org.gmart.codeGenExample.openApiExample.generatedFiles;
 
-import java.lang.String;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.processing.Generated;
-import org.gmart.codeGen.javaGen.model.TypeDefinition;
+
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
@@ -77,10 +77,6 @@ public class HttpMethod implements ClassSerializationToYamlDefaultImpl, ClassDef
     }
 
     public AbstractClassDefinition getClassDefinition() {
-        return classSpecification;
-    }
-
-    public TypeDefinition getTypeDefinition() {
         return classSpecification;
     }
 }

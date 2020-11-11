@@ -14,7 +14,6 @@
  * the License.
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -29,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import javax.json.Json;
+import javax.json.JsonReader;
 
 import org.gmart.codeGen.javaGen.generateJavaDataClass.JavaDataClassGenerator;
 import org.gmart.codeGen.javaLang.JavaPrimitives;
@@ -56,26 +58,39 @@ public class PackageSetSpec {
 	public <T> T yamlFileToObject(String yamlFilePath, Class<T> jCLass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
 		return this.yamlFileToObject(new File(yamlFilePath), jCLass);
 	}
-	@SuppressWarnings({ "unchecked" })
+	
 	public <T> T yamlFileToObject(File yamlFile, Class<T> jClass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
-		Object tree = readTree(new FileReader(yamlFile));
-		DeserialContextImpl ctx = new DeserialContextImpl();
-		TypeDefinition typeSpecificationForClass = this.getTypeSpecificationForClass(jClass);
-		assert typeSpecificationForClass != null : "No type definition has been found for the class: " + jClass.getCanonicalName();
-		Pair<Class<?>, Object> rez = typeSpecificationForClass.yamlToJavaObject(ctx, tree, false);
-		ctx.buildReport().ifPresent(report -> L.w("During deserialization:" + report));
-		assert jClass == rez.getValue0();// : "The class that you specified as second argument of \"yamlFileToObject\" to specify the return-type must b";
-		Object value1 = rez.getValue1();
-		ctx.setFileRootObject(value1);
-		return (T)value1;
+		Object tree = readYamlTree(new FileReader(yamlFile));
+		return yamlFileToObject_private(tree, jClass);
 	}
-	private static Object readTree(Reader reader) {
+	private static Object readYamlTree(Reader reader) {
 		LoaderOptions loaderOptions = new LoaderOptions();
 		loaderOptions.setAllowDuplicateKeys(false);
 		Yaml yaml = new Yaml(loaderOptions);
 		Object tree = yaml.load(reader);
 		return tree;
 	}
+	public <T> T jsonFileToObject(File jsonFile, Class<T> jClass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+		Object tree = readJsonTree(new FileReader(jsonFile));
+		return yamlFileToObject_private(tree, jClass);
+	}
+	private Object readJsonTree(FileReader fileReader) {
+		JsonReader reader = Json.createReader(fileReader);
+		return reader.readValue();
+	}
+	@SuppressWarnings({ "unchecked" })
+	private <T> T yamlFileToObject_private(Object tree, Class<T> jClass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+		DeserialContextImpl ctx = new DeserialContextImpl();
+		TypeDefinition typeSpecificationForClass = this.getTypeSpecificationForClass(jClass);
+		assert typeSpecificationForClass != null : "No type definition has been found for the class: " + jClass.getCanonicalName();
+		Pair<Class<?>, Object> rez = typeSpecificationForClass.yamlOrJsonToModelValue(ctx, tree, false);
+		ctx.buildReport().ifPresent(report -> L.w("During deserialization:" + report));
+		assert jClass == rez.getValue0();// : "The class that you specified as second argument of \"yamlFileToObject\" to specify the return-type must b";
+		Object value1 = rez.getValue1();
+		ctx.setFileRootObject(value1);
+		return (T)value1;
+	}
+	
 	
 	
 	public PackageSetSpec(List<PackageDefinition> packages) {

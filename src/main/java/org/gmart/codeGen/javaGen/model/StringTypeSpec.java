@@ -15,12 +15,10 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
-import java.util.regex.Matcher;
+import javax.json.JsonString;
 
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.javatuples.Pair;
-
-import api_global.strUtil.StringRecog;
 
 public class StringTypeSpec extends TypeDefinitionForPrimitives {
 
@@ -29,67 +27,90 @@ public class StringTypeSpec extends TypeDefinitionForPrimitives {
 	}
 
 	@Override
-	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
-//			if(stringToSerialize.contains("#")) {
-//			Consumer<String> c = (content) -> {
-//				bui.append("\"");
-//				bui.append(content);
-//				bui.append("\"");
-//			};
-//		}
-		String stringToSerialize = (String) toSerialize;
-		Matcher m = StringRecog.getLineTerminatorMatcher().matcher(stringToSerialize);
-		String formatedString = stringToSerialize;
-		if (m.find()) {
-			bui.append("|-");
-			bui.n();
-			String replaceAll = m.replaceAll(
-					result -> stringToSerialize.substring(result.start(), result.end()) + bui.getCurrentIndentation());
-			formatedString = replaceAll;
-		}
-		if (stringToSerialize.contains("#")) {
-			bui.append("\"");
-			bui.append(formatedString);
-			bui.append("\"");
-		} else {
-			bui.append(formatedString);
-		}
+	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
+		return makeSerializableValue_static(provider, toSerialize); 
 	}
-	public static void appendInstanceToYamlCode_static(YAppender bui, Object toSerialize) {
-
-		String stringToSerialize = (String) toSerialize;
-		Matcher m = StringRecog.getLineTerminatorMatcher().matcher(stringToSerialize);
-		String formatedString = stringToSerialize;
-		if (m.find()) {
-			bui.append("|-");
-			bui.n();
-			String replaceAll = m.replaceAll(
-					result -> stringToSerialize.substring(result.start(), result.end()) + bui.getCurrentIndentation());
-			formatedString = replaceAll;
-		}
-		if (stringToSerialize.contains("#")) {
-			bui.append("\"");
-			bui.append(formatedString);
-			bui.append("\"");
-		} else {
-			bui.append(formatedString);
-		}
+	
+	public static <T> T makeSerializableValue_static(SerializerProvider<T> provider, Object toSerialize) {
+		//assert toSerialize instanceof String;
+		return provider.makeSerializableString(toSerialize.toString()); //".toString" for robustness, "toSerialize instanceof String" should always be true
 	}
-
+	
+	
 	@Override
-	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
-		return false;
+	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlOrJsonValue, boolean boxedPrimitive) {
+		if(yamlOrJsonValue instanceof JsonString)
+			yamlOrJsonValue = ((JsonString) yamlOrJsonValue).getString();
+		return Pair.with(this.getGeneratedClass(), yamlOrJsonValue);
 	}
-
-	@Override
-	public Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, Object fieldYamlValue, boolean boxedPrimitive) {
-		return Pair.with(this.getGeneratedClass(), fieldYamlValue);
-	}
+	
+//	public Pair<Class<?>, Object> jsonToJavaObject(DeserialContext ctx, JsonValue jsonValue, boolean boxedPrimitive) {
+//		assert jsonValue instanceof JsonString : "error: the following jsonValue is not a JsonString:" + jsonValue.toString();
+//		return yamlOrJsonToJavaObject(ctx, ((JsonString)jsonValue).getString(), boxedPrimitive);
+//	}
 
 	@Override
 	public FormalGroup formalGroup() {
 		return FormalGroup.string;
 	}
 
-	
 }
+
+
+
+
+//@Override
+//public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
+////		if(stringToSerialize.contains("#")) {
+////		Consumer<String> c = (content) -> {
+////			bui.append("\"");
+////			bui.append(content);
+////			bui.append("\"");
+////		};
+////	}
+//	String stringToSerialize = (String) toSerialize;
+//	Matcher m = StringRecog.getLineTerminatorMatcher().matcher(stringToSerialize);
+//	String formatedString = stringToSerialize;
+//	if (m.find()) {
+//		bui.append("|-");
+//		bui.n();
+//		String replaceAll = m.replaceAll(
+//				result -> stringToSerialize.substring(result.start(), result.end()) + bui.getCurrentIndentation());
+//		formatedString = replaceAll;
+//	}
+//	if (stringToSerialize.contains("#")) {
+//		bui.append("\"");
+//		bui.append(formatedString);
+//		bui.append("\"");
+//	} else {
+//		bui.append(formatedString);
+//	}
+//}
+//public static void appendInstanceToYamlCode_static(YAppender bui, Object toSerialize) {
+//
+//	String stringToSerialize = (String) toSerialize;
+//	Matcher m = StringRecog.getLineTerminatorMatcher().matcher(stringToSerialize);
+//	String formatedString = stringToSerialize;
+//	if (m.find()) {
+//		bui.append("|-");
+//		bui.n();
+//		String replaceAll = m.replaceAll(
+//				result -> stringToSerialize.substring(result.start(), result.end()) + bui.getCurrentIndentation());
+//		formatedString = replaceAll;
+//	}
+//	if (stringToSerialize.contains("#")) {
+//		bui.append("\"");
+//		bui.append(formatedString);
+//		bui.append("\"");
+//	} else {
+//		bui.append(formatedString);
+//	}
+//}
+//@Override
+//public JsonValue toJsonValue(Object toSerialize) {
+//	return Json.createValue(toSerialize.toString());
+//}
+//@Override
+//public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
+//	return false;
+//}

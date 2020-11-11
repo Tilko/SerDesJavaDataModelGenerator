@@ -17,22 +17,24 @@ package org.gmart.codeGen.javaGen.model.classTypes;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.json.JsonString;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.EnumSpecification;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
-import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.ClassAbstractEnumField;
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
-import org.gmart.codeGen.javaGen.yamlAppender.SerializableToYaml;
 import org.javatuples.Pair;
 
+import api_global.logUtility.L;
 import api_global.strUtil.StringFunctions;
 
 public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
@@ -54,11 +56,14 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 		this.abstractEnumFields = fields.stream().filter(e-> e instanceof ClassAbstractEnumField).map(e->(ClassAbstractEnumField)e).collect(Collectors.toCollection(ArrayList::new));
 	}
 
-	@Override
-	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
-		((SerializableToYaml) toSerialize).appendToYaml(bui);
+//	@Override
+//	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
+//		((SerializableToYaml) toSerialize).appendToYaml(bui);
+//	}
+	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
+		return ((ClassDefinitionOwner) toSerialize).getClassDefinition().makeSerializableValue_abstract(provider, toSerialize);
 	}
-
+	
 	public void initAndvalidateSubEnumSpacesDisjunction() {
 		ArrayList<EnumSubSpace> subSpaces = initEnumSubSpaces();
 		//TODO clone content because next call mutate the list:
@@ -136,8 +141,8 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 	
 	
 	@Override
-	public Pair<Class<?>, Object> yamlToJavaObjectFromSubClassesOrThisLeaf(DeserialContext ctx, LinkedHashMap<String, ?> yamlProps, LinkedHashMap<String, ?> remainingYamlProps, boolean boxedPrimitive){
-		return getChildClassThatMatch(yamlProps).yamlToJavaObject(ctx, yamlProps, remainingYamlProps, boxedPrimitive);
+	public Pair<Class<?>, Object> yamlToJavaObjectFromSubClassesOrThisLeaf(DeserialContext ctx, Map<String, ?> yamlOrJsonProps, Map<String, ?> remainingYamlOrJsonProps, boolean boxedPrimitive){
+		return getChildClassThatMatch(yamlOrJsonProps).yamlOrJsonToModelValue(ctx, yamlOrJsonProps, remainingYamlOrJsonProps, boxedPrimitive);
 	}
 	AbstractClassDefinition defaultConcreteClass;
 	private AbstractClassDefinition getDefaultConcreteClass() {
@@ -146,18 +151,21 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 		}
 		return defaultConcreteClass;
 	}
-	private AbstractClassDefinition getChildClassThatMatch(LinkedHashMap<String, ?> yamlObjectCopy) {
-		List<Integer> coord = makeCoordinateFromYamlObject(yamlObjectCopy); 
+	private AbstractClassDefinition getChildClassThatMatch(Map<String, ?> yamlOrJsonObjectCopy) {
+		List<Integer> coord = makeCoordinateFromYamlObject(yamlOrJsonObjectCopy); 
 		return getChildren().stream().filter(child -> child.getEnumSubSpace().contains(coord)).findFirst().orElse(getDefaultConcreteClass());
 	}
 	
-	private List<Integer> makeCoordinateFromYamlObject(LinkedHashMap<String, ?> yamlObjectCopy){
+	private List<Integer> makeCoordinateFromYamlObject(Map<String, ?> yamlOrJsonObjectCopy){
 		List<ClassAbstractEnumField> abstractEnumFields = this.getAbstractEnumFields();
 		return abstractEnumFields.stream().map(abstractEnumField -> {
-			Object objectEnumValue = yamlObjectCopy.get(abstractEnumField.getName());
+			L.l("abstractEnumField.getName():" + abstractEnumField.getName());
+			Object objectEnumValue = yamlOrJsonObjectCopy.get(abstractEnumField.getName());
+			if(objectEnumValue instanceof JsonString)
+				objectEnumValue = ((JsonString)objectEnumValue).getString();
 			assert objectEnumValue != null  &&  objectEnumValue instanceof String  : "No property with name " + StringFunctions.guil(abstractEnumField.getName()) + " has been found.";
 			return abstractEnumField.getTypeExpression().getIndexOfValue((String) objectEnumValue);
 		}).collect(Collectors.toCollection(ArrayList::new));
 	}
-	
+
 }

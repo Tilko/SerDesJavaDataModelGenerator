@@ -22,6 +22,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.json.Json;
+import javax.json.JsonNumber;
+import javax.json.JsonString;
+import javax.json.JsonValue;
+
 import org.gmart.codeGen.javaGen.model.FormalGroup;
 
 import com.squareup.javapoet.TypeName;
@@ -29,6 +34,7 @@ import com.squareup.javapoet.TypeName;
 import lombok.Getter;
 import lombok.Setter;
 
+@SuppressWarnings("rawtypes")
 public class JavaPrimitives {
 
 
@@ -40,8 +46,12 @@ public class JavaPrimitives {
 		@Setter @Getter private Class<?> classBoxed;
 		@Setter @Getter private Class<?> classUnboxed;
 		@Setter @Getter private Function<String, Object> parser;
+		@Setter @Getter private Function<JsonValue, Object> jsonValueToModelValue;
+		@Setter @Getter private Function<Object, JsonValue> modelValueToJsonValue_converters;
 		
 		@Setter @Getter private FormalGroup formalGroup;
+
+		@Setter @Getter private int index;
 		
 //		public Primitive(String primitiveTypeName, int index) {
 //			super();
@@ -94,10 +104,30 @@ public class JavaPrimitives {
 		};
 	public final static List<Function<String, Object>> primitivesParser;
 	
+	public final static HashMap<Class, Integer> indexOfClass = new HashMap<Class, Integer>();
+	public final static List<Function<JsonValue,Object>> jsonValueToModelValue_converters;
+	public final static List<Function<Object,JsonValue>> modelValueToJsonValue_converters;
+	
 	public final static Primitive[] primitives = new Primitive[primitiveTypes.length];
 	public final static Map<String, Primitive> boxedOrUnboxedTypeNameToPrimitive = new HashMap<>();
 	public static Primitive getPrimitiveFromBoxedOrUnboxedTypeName(String boxedOrUnboxedTypeName) {
 		return boxedOrUnboxedTypeNameToPrimitive.get(boxedOrUnboxedTypeName);
+	}
+	private static String jString(JsonValue val) {
+		return ((JsonString)val).getString();
+	}
+	private static JsonNumber jNumber(JsonValue val) {
+		return (JsonNumber)val;
+	}
+	private static Boolean jBoolean(JsonValue val) {
+		if(val.getValueType() == JsonValue.ValueType.FALSE)
+			return false;
+		if(val.getValueType() == JsonValue.ValueType.TRUE)
+			return true;
+		if(val.getValueType() == JsonValue.ValueType.NULL)
+			return null;
+		assert false : "error: attempt to assign a \"boolean\" type with a JsonValue that is not \"true\" or \"false\" or \"null\"";
+		return null;
 	}
 	static {		
 		Stream<Function<String,Object>> s = Stream.of(
@@ -111,10 +141,32 @@ public class JavaPrimitives {
 				str -> str.equals("null") ? null : Boolean.valueOf(str)
 			);
 		primitivesParser = s.collect(Collectors.toList());
-		
+		Stream<Function<JsonValue,Object>> jsonValueToModelValue_convertersStream = Stream.of(
+				jsonString -> {String input = jString(jsonString); assert input.length() == 1 : "error attempting to assign a \"Character\" type with a string with more than 1 character";return input.charAt(0);},
+				null,//jsonString -> Byte.valueOf(jString(jsonString)),
+				jsonNumber -> jNumber(jsonNumber).intValue(),
+				jsonNumber -> jNumber(jsonNumber).intValue(),
+				jsonNumber -> jNumber(jsonNumber).longValue(),
+				jsonNumber -> jNumber(jsonNumber).doubleValue(),
+				jsonNumber -> jNumber(jsonNumber).doubleValue(),
+				jsonValue  -> jBoolean(jsonValue)
+			);
+		jsonValueToModelValue_converters = jsonValueToModelValue_convertersStream.collect(Collectors.toList());
+		Stream<Function<Object, JsonValue>> modelValueToJsonValue_convertersStream = Stream.of(
+				string -> Json.createValue((String)string),
+				null,//jsonString -> Byte.valueOf(jString(jsonString)),
+				shortVal    -> Json.createValue((int)shortVal),
+				intNumber   -> Json.createValue((int)intNumber),
+				longNumber  -> Json.createValue((long)longNumber),
+				floatNumber -> Json.createValue((double)floatNumber),
+				doubleNumber-> Json.createValue((double)doubleNumber),
+				booleanValue-> {if(booleanValue == null) return JsonValue.NULL; return (boolean) booleanValue ? JsonValue.TRUE:JsonValue.FALSE;}
+			);
+		modelValueToJsonValue_converters = modelValueToJsonValue_convertersStream.collect(Collectors.toList());
 		
 		for(int i = 0; i < primitiveTypes.length; i++) {
 			Primitive primitive = new Primitive();
+			primitive.setIndex(i);
 			primitives[i] = primitive;
 			primitive.setName(primitiveTypes[i]);
 			primitive.setNameBoxed(primitiveBoxedTypes[i]);
@@ -128,16 +180,26 @@ public class JavaPrimitives {
 				formalGroup[i].setPrimitive(primitive);
 			
 			try {
-				Class<?> forName = Class.forName("java.lang." + primitiveBoxedTypes[i]);
-				primitive.setClassBoxed(forName);
-				primitive.setClassUnboxed((Class)forName.getField("TYPE").get(null));
+				Class<?> classBoxed = Class.forName("java.lang." + primitiveBoxedTypes[i]);
+				primitive.setClassBoxed(classBoxed);
+				Class classUnboxed = (Class)classBoxed.getField("TYPE").get(null);
+				primitive.setClassUnboxed(classUnboxed);
+				indexOfClass.put(classBoxed, i);
+				indexOfClass.put(classUnboxed, i);
 			} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
 				e.printStackTrace();
 				assert false;
 			}
 			primitive.setParser(primitivesParser.get(i));
+			primitive.setJsonValueToModelValue(jsonValueToModelValue_converters.get(i));
+			primitive.setModelValueToJsonValue_converters(modelValueToJsonValue_converters.get(i));
+			
 		}
 		
+	}
+	
+	public static int getIndexOfClass(Class primitiveClass) {
+		return indexOfClass.get(primitiveClass);
 	}
 	
 	

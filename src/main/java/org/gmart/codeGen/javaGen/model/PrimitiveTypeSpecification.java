@@ -17,7 +17,9 @@ package org.gmart.codeGen.javaGen.model;
 
 import java.util.function.Function;
 
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
+import javax.json.JsonValue;
+
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaLang.JavaPrimitives;
 import org.gmart.codeGen.javaLang.JavaPrimitives.Primitive;
 import org.javatuples.Pair;
@@ -27,23 +29,29 @@ import com.squareup.javapoet.TypeName;
 
 
 public class PrimitiveTypeSpecification extends TypeDefinitionForPrimitives implements StringToValueConverter {
-	TypeName jpoetClassName;
-	TypeName jpoetClassNameBoxed;
-	Function<String, Object> parser;
+	private final TypeName jpoetClassName;
+	private final TypeName jpoetClassNameBoxed;
+	private final Function<String, Object> parser;
+	private final Function<JsonValue, Object> jsonValueToModelValue;
+	//private final Function<Object, JsonValue> modelValueToJsonValue;
 	@SuppressWarnings("rawtypes")
-	public final Class boxedClass;
+	private final Class boxedClass;
 	@SuppressWarnings("rawtypes")
-	public final Class unboxedClass;
+	private final Class unboxedClass;
+	private final int primitiveIndex;
 	public PrimitiveTypeSpecification(String packageName, String name) {
 		super(packageName, name);
 		Primitive primitive = JavaPrimitives.getPrimitiveFromBoxedOrUnboxedTypeName(name);
-		jpoetClassName = primitive.getJPoetTypeName();//JPoetUtil.primitiveTypeStringToTypeName.get(name);
-		jpoetClassNameBoxed = primitive.getJPoetTypeNameBoxed();
-		parser = primitive.getParser();
+		this.primitiveIndex = primitive.getIndex();//JPoetUtil.primitiveTypeStringToTypeName.get(name);
+		this.jpoetClassName = primitive.getJPoetTypeName();//JPoetUtil.primitiveTypeStringToTypeName.get(name);
+		this.jpoetClassNameBoxed = primitive.getJPoetTypeNameBoxed();
+		this.parser = primitive.getParser();
 		assert jpoetClassName != null;
-		boxedClass = primitive.getClassBoxed();
-		unboxedClass = primitive.getClassUnboxed();
+		this.boxedClass = primitive.getClassBoxed();
+		this.unboxedClass = primitive.getClassUnboxed();
 		this.formalGroup = primitive.getFormalGroup();
+		this.jsonValueToModelValue = primitive.getJsonValueToModelValue();
+		//this.modelValueToJsonValue = primitive.getModelValueToJsonValue_converters();
 	}
 	public final FormalGroup formalGroup;
 	@Override
@@ -62,26 +70,41 @@ public class PrimitiveTypeSpecification extends TypeDefinitionForPrimitives impl
 
 
 	@Override
-	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
-		appendInstanceToYamlCode_static(bui, toSerialize);
+	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
+		return provider.makeSerializablePrimitive(toSerialize, this.primitiveIndex);
 	}
-	public static void appendInstanceToYamlCode_static(YAppender bui, Object toSerialize) {
-		bui.append(toSerialize.toString());
+	public static <T> T makeSerializableValue_static(SerializerProvider<T> provider, Object toSerialize) {
+		return provider.makeSerializablePrimitive(toSerialize, JavaPrimitives.getIndexOfClass(toSerialize.getClass()));
 	}
-	
+
 	
 	@Override
-	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
-		return false;
+	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlOrJsonValue, boolean boxedPrimitive) {
+		if(yamlOrJsonValue instanceof JsonValue)
+			yamlOrJsonValue = jsonValueToModelValue.apply((JsonValue) yamlOrJsonValue);
+		return Pair.with(boxedPrimitive ? getGeneratedClass() : unboxedClass, yamlOrJsonValue);
 	}
-	@Override
-	public Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, Object fieldYamlValue, boolean boxedPrimitive) {
-		return Pair.with(boxedPrimitive ? getGeneratedClass() : unboxedClass, fieldYamlValue);
-	}
+	
+
 	@Override
 	public Object fromString(String string) {
 		return parser.apply(string) ;
 	}
-
+	
+	
 
 }
+
+
+
+//@Override
+//public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
+//	appendInstanceToYamlCode_static(bui, toSerialize);
+//}
+//public static void appendInstanceToYamlCode_static(YAppender bui, Object toSerialize) {
+//	bui.append(toSerialize.toString());
+//}
+//@Override
+//public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
+//	return false;
+//}

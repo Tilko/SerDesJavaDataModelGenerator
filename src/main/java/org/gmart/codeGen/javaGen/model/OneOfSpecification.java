@@ -32,6 +32,7 @@ import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 import org.gmart.codeGen.javaGen.model.containerTypes.AbstractMapContainerType;
 import org.gmart.codeGen.javaGen.model.containerTypes.ListContainerType;
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaGen.model.typeRecognition.oneOf.ClassRecognition;
 import org.gmart.codeGen.javaGen.model.typeRecognition.oneOf.TypeRecognizer;
 import org.gmart.codeGen.javaLang.JPoetUtil;
@@ -69,10 +70,11 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	@Override
 	public Optional<TypeSpec.Builder> initJPoetTypeSpec() {
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(this.getName());
-		classBuilder.addSuperinterface(ClassSerializationToYamlDefaultImpl.class);
-		Builder initMethodImpl = JPoetUtil.initMethodImpl(ClassSerializationToYamlDefaultImpl.class);
-		initMethodImpl.addStatement("return $L", oneOfSpecificationId);
-		classBuilder.addMethod(initMethodImpl.build());
+		//classBuilder.addSuperinterface(ClassSerializationToYamlDefaultImpl.class);
+		//Builder initMethodImpl = JPoetUtil.initMethodImpl(ClassSerializationToYamlDefaultImpl.class);
+		//initMethodImpl.addStatement("return $L", oneOfSpecificationId);
+		//classBuilder.addMethod(initMethodImpl.build());
+		
 		//classBuilder.addMethod(MethodSpec.constructorBuilder().addParameter(OneOfSpecification.class, oneOfSpecificationId).build());
 		//JPoetUtil.initFieldPrivate(DeserialContext.class, deserialContextId);
 		Builder constructorBuilder = JPoetUtil.initConstructor();//.addParameter(DeserialContext.class, deserialContextId);
@@ -138,11 +140,11 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, Object fieldYamlValue, boolean boxedPrimitive) {
+	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlValue, boolean boxedPrimitive) {
 		Class instanciatedClass = this.getInstanciationClass();
 		try {
 			Object newInstance = instanciatedClass.getConstructor(DeserialContext.class).newInstance(ctx);//jClass.getConstructor(OneOfSpecification.class).newInstance(this);
-			Pair<TypeExpression, Object> payload = makePayloadFromYamlObject(ctx, fieldYamlValue);
+			Pair<TypeExpression, Object> payload = makePayloadFromYamlObject(ctx, yamlValue);
 			TypeExpression resolvedType = payload.getValue0();
 			Object resolvedInstance = payload.getValue1();
 			Class classWithPayload = isStubbed() ? instanciatedClass.getSuperclass() : instanciatedClass;
@@ -157,9 +159,10 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 			return null;
 		}		
 	}
+	
 	public Pair<TypeExpression, Object> makePayload(DeserialContext ctx, Object newPayload){
 		if(newPayload instanceof ClassSerializationToYamlDefaultImpl) {
-			TypeExpression resolvedType = ((ClassSerializationToYamlDefaultImpl) newPayload).getTypeDefinition();
+			TypeExpression resolvedType = ((ClassSerializationToYamlDefaultImpl) newPayload).getClassDefinition();
 			return Pair.with(resolvedType, newPayload);
 		} else {
 			return makePayloadFromYamlObject(ctx, newPayload);
@@ -297,26 +300,35 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	}
 	
 	
+
 	@Override
-	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
+	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
 		OneOfInstance oneOfInstance = (OneOfInstance) toSerialize;
 		TypeExpression resolvedType = oneOfInstance.getPayloadType();
-		resolvedType.appendInstanceToYamlCode(bui, oneOfInstance.getPayload());
+		return resolvedType.makeSerializableValue(provider, oneOfInstance.getPayload());
 	}
-	@Override
-	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
-		OneOfInstance oneOfInstance = (OneOfInstance) toSerialize;
-		TypeExpression resolvedType = oneOfInstance.getPayloadType();
-		return resolvedType.isInstanceAsPropertyValueOnNewLine_nullable(oneOfInstance.getPayload());
-	}
+
 	
 	@Override
 	public FormalGroup formalGroup() {
 		return FormalGroup.oneOf;
 	}
+
 }
 
 
+//@Override
+//public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
+//	OneOfInstance oneOfInstance = (OneOfInstance) toSerialize;
+//	TypeExpression resolvedType = oneOfInstance.getPayloadType();
+//	resolvedType.appendInstanceToYamlCode(bui, oneOfInstance.getPayload());
+//}
+//@Override
+//public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
+//	OneOfInstance oneOfInstance = (OneOfInstance) toSerialize;
+//	TypeExpression resolvedType = oneOfInstance.getPayloadType();
+//	return resolvedType.isInstanceAsPropertyValueOnNewLine_nullable(oneOfInstance.getPayload());
+//}
 
 //Map<FormalGroup, List<TypeExpression>> developToNonOneOfGroups(){
 //Map<FormalGroup, List<TypeExpression>> typeExprByFormalGroup = alternatives.stream().collect(Collectors.groupingBy(alt -> alt.formalGroup()));

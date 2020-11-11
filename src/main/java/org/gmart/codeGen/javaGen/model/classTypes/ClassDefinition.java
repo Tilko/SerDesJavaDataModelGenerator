@@ -16,13 +16,13 @@
 package org.gmart.codeGen.javaGen.model.classTypes;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
-import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.javatuples.Pair;
 
 public class ClassDefinition extends AbstractClassDefinition  {
@@ -33,7 +33,7 @@ public class ClassDefinition extends AbstractClassDefinition  {
 	
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Pair<Class<?>, Object> yamlToJavaObjectFromSubClassesOrThisLeaf(DeserialContext ctx, LinkedHashMap<String, ?> yamlProps, LinkedHashMap<String, ?> remainingYamlProps, boolean boxedPrimitive){
+	public Pair<Class<?>, Object> yamlToJavaObjectFromSubClassesOrThisLeaf(DeserialContext ctx, Map<String, ?> yamlProps, Map<String, ?> remainingYamlProps, boolean boxedPrimitive){
 		Class instanciatedClass = this.getInstanciationClass();
 		
 		try {
@@ -44,13 +44,12 @@ public class ClassDefinition extends AbstractClassDefinition  {
 			return null;
 		}
 	}
-	
+
 	@Override
-	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
-		appendInstanceToYamlCode_abstract(bui, toSerialize);
+	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
+		return makeSerializableValue_abstract(provider, toSerialize);
 	}
 
 
-	
 	
 }

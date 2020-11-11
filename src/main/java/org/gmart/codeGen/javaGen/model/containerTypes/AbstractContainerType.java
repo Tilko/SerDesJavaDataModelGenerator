@@ -15,8 +15,8 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model.containerTypes;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
@@ -56,14 +56,13 @@ public abstract class AbstractContainerType implements ContainerType {
 	}
 
 	@Override
-	public Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, Object yamlValue, boolean boxedPrimitive) {
-		Class<? extends Object> class1 = yamlValue.getClass();
-		assert LinkedHashMap.class == class1  ||  ArrayList.class == class1;
+	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlValue, boolean boxedPrimitive) {
+		assert yamlValue instanceof Map  || yamlValue instanceof List;
+		//that is right for yaml input only: 
+//		Class<? extends Object> class1 = yamlValue.getClass();
+		//assert LinkedHashMap.class == class1  ||  ArrayList.class == class1;  
 		return Pair.with(this.getContainerClass(), makeJavaObject_internal(ctx, yamlValue));
 	}
 	protected abstract Object makeJavaObject_internal(DeserialContext ctx, Object fieldYamlValue);
-	@Override
-	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
-		return true;
-	}
+	
 }

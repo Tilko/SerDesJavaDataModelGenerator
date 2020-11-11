@@ -13,11 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.model;
+package org.gmart.codeGen.javaGen.model.serialization;
 
-import org.gmart.codeGen.javaGen.model.reporting.NonOptionalNotInitializedCollection;
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
+public interface SerializableObject {//extends SerializableValue {
 
-public interface SerialContext extends YAppender {
-	NonOptionalNotInitializedCollection getNonOptionalNotInitializedCollection();
+	String serialize();
+	
 }

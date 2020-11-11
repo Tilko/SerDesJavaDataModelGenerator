@@ -23,3 +23,5 @@ src/main/java/org/gmart/codeGen/POCs/
 src/main/java/org/gmart/codeGenExample/reflexions/
 #src/main/java/org/gmart/codeGenExample/openApiExample/
 src/main/java/org/gmart/codeGenExample/fsmExample/
+
+src/main/java/org/gmart/codeGen/javaGen/model/old/

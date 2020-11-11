@@ -15,34 +15,91 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model.classTypes;
 
-import org.gmart.codeGen.javaGen.model.SerialContext;
-import org.gmart.codeGen.javaGen.model.SerialContextImpl;
-import org.gmart.codeGen.javaGen.model.TypeDefinition;
-import org.gmart.codeGen.javaGen.yamlAppender.SerializableToYaml;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
-import api_global.logUtility.L;
+import javax.json.Json;
+import javax.json.JsonValue;
+import javax.json.JsonWriter;
+import javax.json.stream.JsonGenerator;
 
-public interface ClassSerializationToYamlDefaultImpl extends SerializableToYaml {
-	TypeDefinition getTypeDefinition();
-	@Override
-	default void appendToYaml(SerialContext bui) {
-		getTypeDefinition().appendInstanceToYamlCode(bui, this);
-	}
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
+import org.gmart.codeGen.javaGen.model.serialization.impls.JsonSerializerProvider;
+import org.gmart.codeGen.javaGen.model.serialization.impls.YamlSerializerProvider;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+
+public interface ClassSerializationToYamlDefaultImpl extends ClassDefinitionOwner { //extends SerializableToYaml {
+//	@Override
+//	default void appendToYaml(SerialContext bui) {
+//		getClassDefinition().appendInstanceToYamlCode(bui, this);
+//	}
+//	@Override
+//	default JsonObject toJsonObjet(SerialContext bui) {
+//		getClassDefinition().toJsonObjet(this);
+//	}
+//	
+//	default JsonObject toJsonObjet() {
+//		getClassDefinition().toJsonObject(this);
+//	}
 	static String defaultIndentString = "  ";
 	static boolean default_isStartingNestedSequenceWithNewLine = true;
+//	default String toYaml() {
+//		return toYaml(0, defaultIndentString, default_isStartingNestedSequenceWithNewLine);
+//	}
+//	default String toYaml(String singleIndent, boolean isStartingNestedSequenceWithNewLine) {
+//		return toYaml(0, singleIndent, isStartingNestedSequenceWithNewLine);
+//	}
+//	default String toYaml(boolean isStartingNestedSequenceWithNewLine) {
+//		return toYaml(0, defaultIndentString, isStartingNestedSequenceWithNewLine);
+//	}
+//	default String toYaml(int initIndentDepth, String singleIndent, boolean isStartingNestedSequenceWithNewLine) {
+//		SerialContextImpl ctx = new SerialContextImpl(initIndentDepth, singleIndent, isStartingNestedSequenceWithNewLine);
+//		appendToYaml(ctx);
+//		ctx.buildReport().ifPresent(report -> L.w("During serialization:" + report));
+//		return ctx.toString();
+//	}
 	default String toYaml() {
-		return toYaml(0, defaultIndentString, default_isStartingNestedSequenceWithNewLine);
+		StringWriter writer = new StringWriter();
+	    DumperOptions options = new DumperOptions();
+	    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+		toYaml(writer, options);
+		return writer.toString();
 	}
-	default String toYaml(String singleIndent, boolean isStartingNestedSequenceWithNewLine) {
-		return toYaml(0, singleIndent, isStartingNestedSequenceWithNewLine);
+	default String toYaml(DumperOptions options) {
+		StringWriter writer = new StringWriter();
+		toYaml(writer, options);
+		return writer.toString();
 	}
-	default String toYaml(boolean isStartingNestedSequenceWithNewLine) {
-		return toYaml(0, defaultIndentString, isStartingNestedSequenceWithNewLine);
+	default String toJson() {
+		StringWriter writer = new StringWriter();
+		toJson(writer);
+		return writer.toString();
 	}
-	default String toYaml(int initIndentDepth, String singleIndent, boolean isStartingNestedSequenceWithNewLine) {
-		SerialContextImpl ctx = new SerialContextImpl(initIndentDepth, singleIndent, isStartingNestedSequenceWithNewLine);
-		appendToYaml(ctx);
-		ctx.buildReport().ifPresent(report -> L.w("During serialization:" + report));
-		return ctx.toString();
+	default void toJson(Writer writer) {
+		Map<String, Object> properties = new HashMap<>(1);
+        properties.put(JsonGenerator.PRETTY_PRINTING, true);
+		toJson(Json.createWriterFactory(properties).createWriter(writer));
 	}
+	default void toYaml(Writer writer, DumperOptions options) {
+		Yaml yaml = new Yaml(options);
+		Object serializableValue = toSerializableValue(new YamlSerializerProvider());
+		yaml.dump(serializableValue, writer);
+	}
+	default void toJson(JsonWriter writer1) {
+		JsonValue serializableValue = toSerializableValue(new JsonSerializerProvider());
+		writer1.write(serializableValue);
+	}	
+	private <T> T toSerializableValue(SerializerProvider<T> provider) {
+		return getClassDefinition().makeSerializableValue(provider, this);
+	}
+//	default String toJson() {//int initIndentDepth, String singleIndent, boolean isStartingNestedSequenceWithNewLine) {
+//		//SerialContextImpl ctx = new SerialContextImpl(initIndentDepth, singleIndent, isStartingNestedSequenceWithNewLine);
+//		appendToYaml(ctx);
+//		ctx.buildReport().ifPresent(report -> L.w("During serialization:" + report));
+//		return ctx.toString();
+//	}
+	 
 }

@@ -15,13 +15,13 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model.classTypes;
 
-import java.io.Reader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -33,14 +33,14 @@ import javax.lang.model.element.Modifier;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
-import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeDefinitionForStubbable;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
+import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
 import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.gmart.util.functionalProg.properties.OptProperty;
 import org.javatuples.Pair;
-import org.yaml.snakeyaml.Yaml;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -118,30 +118,30 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, Object fieldYamlValue, boolean boxedPrimitive){
-		assert fieldYamlValue instanceof LinkedHashMap;
-		LinkedHashMap<String, ?> yamlProps = (LinkedHashMap<String, ?>) fieldYamlValue;
-		LinkedHashMap<String, ?> remainingYamlProps = (LinkedHashMap<String, ?>) yamlProps.clone();
-		Pair<Class<?>, Object> yamlToJavaObject = yamlToJavaObject(ctx, yamlProps, remainingYamlProps, boxedPrimitive);
-		long remainingsAndNotAbstractCount = remainingYamlProps.entrySet().stream().filter(entry -> {
+	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlOrJsonValue, boolean boxedPrimitive){
+		assert yamlOrJsonValue instanceof Map;
+		Map<String, ?> yamlOrJsonProps = (Map<String, ?>) yamlOrJsonValue;
+		Map<String, ?> remainingYamlOrJsonProps = (Map<String, ?>) new LinkedHashMap<>(yamlOrJsonProps);
+		Pair<Class<?>, Object> javaObject = yamlOrJsonToModelValue(ctx, yamlOrJsonProps, remainingYamlOrJsonProps, boxedPrimitive);
+		long remainingsAndNotAbstractCount = remainingYamlOrJsonProps.entrySet().stream().filter(entry -> {
 			AbstractTypedField field = this.getField(entry.getKey());
 			return field == null || !field.isAbstract();
 		}).count();
-		assert remainingsAndNotAbstractCount == 0 : "Some yaml objects has not been loaded into the java object (no corresponding fields), all remainings:" + remainingYamlProps;
-		return yamlToJavaObject;
+		assert remainingsAndNotAbstractCount == 0 : "Some yaml objects has not been loaded into the java object (no corresponding fields), all remainings:" + remainingYamlOrJsonProps;
+		return javaObject;
 	}
 
 	
-	protected Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, LinkedHashMap<String, ?> yamlProps, LinkedHashMap<String, ?> remainingYamlProps, boolean boxedPrimitive) {
+	protected Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Map<String, ?> yamlProps, Map<String, ?> remainingYamlProps, boolean boxedPrimitive) {
 		Pair<Class<?>, Object> yamlToJavaObject = yamlToJavaObjectFromSubClassesOrThisLeaf(ctx, yamlProps, remainingYamlProps, boxedPrimitive);
 		setFields(ctx, yamlProps, remainingYamlProps, yamlToJavaObject.getValue1());
 		return yamlToJavaObject;
 	}
 	protected abstract Pair<Class<?>, Object> yamlToJavaObjectFromSubClassesOrThisLeaf(
-			DeserialContext ctx, LinkedHashMap<String, ?> yamlProps, LinkedHashMap<String, ?> remainingYamlProps, boolean boxedPrimitive);
+			DeserialContext ctx, Map<String, ?> yamlProps, Map<String, ?> remainingYamlProps, boolean boxedPrimitive);
 	
 	
-	protected void setFields(DeserialContext ctx, LinkedHashMap<String, ?> yamlProps, LinkedHashMap<String, ?> remainingYamlProps, Object newInstance) {
+	protected void setFields(DeserialContext ctx, Map<String, ?> yamlProps, Map<String, ?> remainingYamlProps, Object newInstance) {
 		List<AbstractTypedField> fields = this.getFields();
 		for(AbstractTypedField fieldSpec : fields) {
 			Object javaObjectFieldVal;
@@ -160,40 +160,25 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 			}			
 		}
 	}
-	private static Object readTree(Reader reader) {
-		Yaml yaml = new Yaml();
-		Object tree = yaml.load(reader);
-		return tree;
+
+
+	
+	public <T> T makeSerializableValue_abstract(SerializerProvider<T> provider, Object toSerialize) {
+		SerializableObjectBuilder<T> objectSerializer = provider.makeObjectSerializer();
+		this.parentClass.ifPresent(parent -> {
+			parent.toSerializableObject_internal(provider, objectSerializer, toSerialize);
+		});
+		toSerializableObject_internal(provider, objectSerializer, toSerialize);
+		return objectSerializer.build();
 	}
-	protected boolean appendInstanceToYamlCode_abstract(SerialContext bui, Object toSerialize) {
-		boolean parentHasField = this.parentClass.map(parent -> {
-			return parent.appendInstanceToYamlCode_abstract(bui, toSerialize);
-			//bui.n();
-		}).orElse(false);
-		boolean hasInternalFields = appendInternalFieldsInstanceToYamlCode(bui, toSerialize, parentHasField, getFields()); //parentHasField ? getConcreteFields() : 
-		return parentHasField || hasInternalFields;
-	}
-	private boolean appendInternalFieldsInstanceToYamlCode(SerialContext bui, Object toSerialize, boolean parentHasField, List<AbstractTypedField> fields) {
-		int size = fields.size();
-		boolean hasField = size != 0;
-//		bui.n();
+	protected <T> void toSerializableObject_internal(SerializerProvider<T> provider, SerializableObjectBuilder<T> objectSerializer, Object toSerialize) {
 		Class<?> generatedClass = this.getGeneratedClass();
-		bui.getNonOptionalNotInitializedCollection().setCurrentClass(this);
-		if(hasField) {
-			if(parentHasField)
-				bui.n();
-			fields.get(0).appendKeyValueToYamlCode(bui, generatedClass, toSerialize);
-		}
-		for (int i = 1; i < size; i++) {
-			bui.n();
-			fields.get(i).appendKeyValueToYamlCode(bui, generatedClass, toSerialize);
-		}
-		return hasField;
+		List<String> nonOptionalNotInitializedCollection = new ArrayList<>();
+		
+		getFields().forEach(field -> field.addPropertyToObjectSerializer(provider, objectSerializer, generatedClass, toSerialize, nonOptionalNotInitializedCollection));
 	}
-	@Override
-	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
-		return true;
-	}
+
+	
 	private static final String classSpecificationId = "classSpecification";
 	
 	
@@ -222,9 +207,9 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 		classDefinitionOwnerBuilder.addStatement("return $L", "classSpecification");
 		typeSpecBuilder.addMethod(classDefinitionOwnerBuilder.build());
 		
-		Builder classSerializationToYamlDefaultImplBuilder = JPoetUtil.initMethodImpl(ClassSerializationToYamlDefaultImpl.class);
-		classSerializationToYamlDefaultImplBuilder.addStatement("return $L", "classSpecification");
-		typeSpecBuilder.addMethod(classSerializationToYamlDefaultImplBuilder.build());
+//		Builder classSerializationToYamlDefaultImplBuilder = JPoetUtil.initMethodImpl(ClassSerializationToYamlDefaultImpl.class);
+//		classSerializationToYamlDefaultImplBuilder.addStatement("return $L", "classSpecification");
+//		typeSpecBuilder.addMethod(classSerializationToYamlDefaultImplBuilder.build());
 		return Optional.of(typeSpecBuilder);
 	}
 	
@@ -245,3 +230,47 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 	
 	
 }
+
+
+
+
+//protected boolean appendInstanceToYamlCode_abstract(SerialContext bui, Object toSerialize) {
+//boolean parentHasField = this.parentClass.map(parent -> {
+//	return parent.appendInstanceToYamlCode_abstract(bui, toSerialize);
+//	//bui.n();
+//}).orElse(false);
+//boolean hasInternalFields = appendInternalFieldsInstanceToYamlCode(bui, toSerialize, parentHasField); //parentHasField ? getConcreteFields() : 
+//return parentHasField || hasInternalFields;
+//}
+//private boolean appendInternalFieldsInstanceToYamlOrJsonCode(SerialContextAbstract bui, JsonObjectBuilder objectBuilder, Object toSerialize, boolean parentHasField) {
+//	List<AbstractTypedField> fields = getFields();
+//	int size = fields.size();
+//	boolean hasField = size != 0;
+////	bui.n();
+//	Class<?> generatedClass = this.getGeneratedClass();
+//	bui.getNonOptionalNotInitializedCollection().setCurrentClass(this);
+//	bui.appendAllFields(hasField, parentHasField, fields);
+//	fields.forEach(field -> field.appendKeyValueToYamlOrJsonCode(bui, generatedClass, toSerialize));
+//	return hasField;
+//}
+//@Override
+//public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
+//	return true;
+//}
+//private boolean appendInternalFieldsInstanceToYamlCode(SerialContext bui, Object toSerialize, boolean parentHasField) {
+//	List<AbstractTypedField> fields = getFields();
+//	int size = fields.size();
+//	boolean hasField = size != 0;
+//	Class<?> generatedClass = this.getGeneratedClass();
+//	bui.getNonOptionalNotInitializedCollection().setCurrentClass(this);
+//	if(hasField) {
+//		if(parentHasField)
+//			bui.n();
+//		fields.get(0).appendKeyValueToYamlCode(bui, generatedClass, toSerialize);
+//	}
+//	for (int i = 1; i < size; i++) {
+//		bui.n();
+//		fields.get(i).appendKeyValueToYamlCode(bui, generatedClass, toSerialize);
+//	}
+//	return hasField;
+//}

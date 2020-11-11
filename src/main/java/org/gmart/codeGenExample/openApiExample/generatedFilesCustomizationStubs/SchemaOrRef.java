@@ -10,9 +10,9 @@ import org.gmart.codeGenExample.openApiExample.generatedFiles.Schema;
 
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
 	
-	private final Function<String, Object> jsonPathResolver;
+    private final Function<String, Object> jsonPathResolver;
     
-	public SchemaOrRef(DeserialContext deserialContext) {
+    public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
         OpenApiSpec openApiSpec = (OpenApiSpec) deserialContext.getFileRootObject();
         this.jsonPathResolver = makeJsonPathResolver(openApiSpec);

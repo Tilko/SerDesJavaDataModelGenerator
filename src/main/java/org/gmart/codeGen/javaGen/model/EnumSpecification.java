@@ -24,7 +24,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
+import javax.json.JsonString;
+
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.gmart.codeGen.javaLang.JavaKeywords;
 import org.javatuples.Pair;
@@ -131,26 +133,26 @@ public class EnumSpecification extends TypeDefinitionForNonPrimitives implements
 	public interface EnumValueFromYaml {
 		String toOriginalValue();
 	}
-	@Override
-	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
-		bui.append(((EnumValueFromYaml)toSerialize).toOriginalValue());
-	}
-	
-	public static void appendInstanceToYamlCode_static(YAppender bui, Object toSerialize) {
-		bui.append(((EnumValueFromYaml)toSerialize).toOriginalValue());
-	}
-	@Override
-	public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
-		return false;
-	}
 
 	@Override
-	public Pair<Class<?>, Object> yamlToJavaObject(DeserialContext ctx, Object fieldYamlValue, boolean boxedPrimitive) {
+	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
+		return makeSerializableValue_static(provider, toSerialize);
+	}
+	public static <T> T makeSerializableValue_static(SerializerProvider<T> provider, Object toSerialize) {
+		return provider.makeSerializableString(((EnumValueFromYaml)toSerialize).toOriginalValue());
+	}
+
+
+	@Override
+	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlOrJsonValue, boolean boxedPrimitive) {
 //		Class<?> generatedClass = this.getGeneratedClass();
 //		if(generatedClass.isEnum()) { }
 //		assert generatedClass.isEnum();
-		return Pair.with(getGeneratedClass(), fromString((String) fieldYamlValue));
+		if(yamlOrJsonValue instanceof JsonString)
+			yamlOrJsonValue = ((JsonString) yamlOrJsonValue).getString();
+		return Pair.with(getGeneratedClass(), fromString((String) yamlOrJsonValue));
 	}
+	
 
 //	@SuppressWarnings({ "rawtypes", "unchecked" })
 //	public Enum getEnumValue(String key) {
@@ -171,7 +173,15 @@ public class EnumSpecification extends TypeDefinitionForNonPrimitives implements
 	public void initGeneratedClasses() {
 		//nothing to do
 	}
-
+	
+	
 
 	
 }
+
+
+
+//@Override
+//public Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize) {
+//	return false;
+//}

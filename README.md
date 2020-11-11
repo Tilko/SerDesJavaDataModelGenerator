@@ -390,7 +390,8 @@ git clone https://github.com/Tilko/SerDesJavaDataModelGenerator.git # and some p
 git clone https://github.com/Tilko/javatuples.git   
 git clone https://github.com/Tilko/stringUtility.git   
 git clone https://github.com/Tilko/functionalStyle.git   
-git clone https://github.com/Tilko/geom1d.git  
+git clone https://github.com/Tilko/geom1d.git
+git clone https://github.com/Tilko/debugLogger.git
 ```
 Perform those 5 git commands in an Eclipse workspace works fine.
 

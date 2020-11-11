@@ -1,17 +1,15 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
-import java.lang.Object;
 import javax.annotation.processing.Generated;
+
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.OneOfInstance;
 import org.gmart.codeGen.javaGen.model.OneOfSpecification;
-import org.gmart.codeGen.javaGen.model.TypeDefinition;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 import org.javatuples.Pair;
 
 @Generated("")
-public class SchemaOrRef implements ClassSerializationToYamlDefaultImpl, OneOfInstance {
+public class SchemaOrRef implements OneOfInstance {
     private static OneOfSpecification oneOfSpecification;
 
     private DeserialContext deserialContext;
@@ -22,10 +20,6 @@ public class SchemaOrRef implements ClassSerializationToYamlDefaultImpl, OneOfIn
 
     public SchemaOrRef(DeserialContext deserialContext) {
         this.deserialContext = deserialContext;
-    }
-
-    public TypeDefinition getTypeDefinition() {
-        return oneOfSpecification;
     }
 
     public DeserialContext getDeserialContext() {

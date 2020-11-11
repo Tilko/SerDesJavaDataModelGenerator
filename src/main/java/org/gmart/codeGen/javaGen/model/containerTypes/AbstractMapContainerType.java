@@ -17,21 +17,20 @@ package org.gmart.codeGen.javaGen.model.containerTypes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
-import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
-import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
-import org.gmart.codeGen.javaGen.yamlAppender.MapEntryAppender;
+import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
-public abstract class AbstractMapContainerType extends AbstractContainerType implements MapEntryAppender {
+public abstract class AbstractMapContainerType extends AbstractContainerType { //implements MapEntryAppender {
 	public AbstractMapContainerType(TypeExpression contentType) {
 		super(contentType);
 	}
@@ -49,8 +48,8 @@ public abstract class AbstractMapContainerType extends AbstractContainerType imp
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	protected Object makeJavaObject_internal(DeserialContext ctx, Object fieldYamlValue) {
-		LinkedHashMap fieldYamlMap = (LinkedHashMap)fieldYamlValue;
+	protected Object makeJavaObject_internal(DeserialContext ctx, Object yamlOrJsonValue) {
+		Map fieldYamlMap = (Map)yamlOrJsonValue;
 		LinkedHashMap rez = new LinkedHashMap<>();
 		fieldYamlMap.forEach((key,val) -> {
 			assert key instanceof String;	
@@ -70,33 +69,48 @@ public abstract class AbstractMapContainerType extends AbstractContainerType imp
 		return ParameterizedTypeName.get(mapClassName, this.getKeyTypeSpec().getReferenceJPoetTypeName(true), this.contentType.getReferenceJPoetTypeName(true));
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
-		assert toSerialize instanceof LinkedHashMap;
-		appendMapToYamlCode(bui, (Map)toSerialize);
+	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
+		return makeSerializableValue_static(provider, toSerialize, elem -> this.getContentType().makeSerializableValue(provider, elem));
 	}
-	@SuppressWarnings({ "rawtypes" })
-	private void appendMapToYamlCode(SerialContext bui, Map mapToSerialize) {
-		appendMapToYamlCode(bui, mapToSerialize, this);
-	}
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void appendMapToYamlCode(SerialContext bui, Map mapToSerialize, MapEntryAppender mapEntryAppender) {
-		AtomicBoolean isNotFirst = new AtomicBoolean(false);
-		mapToSerialize.forEach((key, value) -> {
-			if(isNotFirst.get()) {
-				bui.n();
-			} else isNotFirst.set(true);
-			mapEntryAppender.appendMapEntry(bui, key, value);
-			//appendElement(bui, key.toString(), value);
-		});
-	}
-	@Override
-	public void appendMapEntry(SerialContext bui, Object key, Object elem) {
-		AbstractTypedField.append(bui, key, contentType, elem);
-	}
-	@Override
-	public boolean isListContainer() {
-		return false;
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> T makeSerializableValue_static(SerializerProvider<T> provider, Object toSerialize, Function<Object, T> elemToT) {
+		assert toSerialize instanceof Map;
+		Map mapToSerialize = (Map) toSerialize;
+		SerializableObjectBuilder<T> objectSerializer = provider.makeObjectSerializer();
+		mapToSerialize.forEach((key, value) -> objectSerializer.addProperty(key.toString(), elemToT.apply(value)));
+		return objectSerializer.build();
 	}
 }
+
+
+
+//@SuppressWarnings("rawtypes")
+//@Override
+//public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
+//	assert toSerialize instanceof LinkedHashMap;
+//	appendMapToYamlCode(bui, (Map)toSerialize);
+//}
+//@SuppressWarnings({ "rawtypes" })
+//private void appendMapToYamlCode(SerialContext bui, Map mapToSerialize) {
+//	appendMapToYamlCode(bui, mapToSerialize, this);
+//}
+//@SuppressWarnings({ "rawtypes", "unchecked" })
+//public static void appendMapToYamlCode(SerialContext bui, Map mapToSerialize, MapEntryAppender mapEntryAppender) {
+//	AtomicBoolean isNotFirst = new AtomicBoolean(false);
+//	mapToSerialize.forEach((key, value) -> {
+//		if(isNotFirst.get()) {
+//			bui.n();
+//		} else isNotFirst.set(true);
+//		mapEntryAppender.appendMapEntry(bui, key, value);
+//		//appendElement(bui, key.toString(), value);
+//	});
+//}
+//@Override
+//public void appendMapEntry(SerialContext bui, Object key, Object elem) {
+//	AbstractTypedField.append(bui, key, contentType, elem);
+//}
+//@Override
+//public boolean isListContainer() {
+//	return false;
+//}

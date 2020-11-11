@@ -17,8 +17,6 @@ package org.gmart.codeGen.utils;
 
 import java.lang.reflect.Field;
 
-import api_global.logUtility.L;
-
 public class ReflUtil {
 	public static Object getDeepFieldValue(Object context, String[] path) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		if(path.length == 0) {
@@ -28,7 +26,6 @@ public class ReflUtil {
 		}
 	}
 	private static Object getDeepFieldValue(Object context, String[] path, int index) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		L.l("path[index]:" + "|" + path[index] + "|");
 		Field field = getDeclaredFieldIncludingAncestors_FromInstance(context, path[index]);
 		field.setAccessible(true);
 		Object newContext = field.get(context);

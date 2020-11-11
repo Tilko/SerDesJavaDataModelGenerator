@@ -13,27 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.javaGen.model;
+package org.gmart.codeGen.javaGen.model.serialization;
 
-import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
+import java.util.stream.Stream;
 
-import com.squareup.javapoet.TypeName;
 
-public interface TypeExpression extends InstanceDeserializerFromYamlOrJson {//, InstanceSerializerToYaml, InstanceSerializerToJson {
+public interface SerializerProvider<T>  {
+	SerializableObjectBuilder<T> makeObjectSerializer();
 
-	//TypeName getJPoetTypeName(boolean boxPrimitive);
-	TypeName getReferenceJPoetTypeName(boolean boxPrimitive);
-	
-//	default boolean isListContainer() {
-//		return false;
-//	}
-	
-	FormalGroup formalGroup();
+	T makeSerializablePrimitive(Object toSerialize, int primitiveIndex);
 
-	String getJavaIdentifier();
+	T makeSerializableString(String str);
 
-	<T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize);
+	//T makeSerializableAnyValue(Object toSerialize);
 
-	
-
+	T makeSerializableList(Stream<T> toSerialize);
 }

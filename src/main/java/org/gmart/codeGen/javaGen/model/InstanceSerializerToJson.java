@@ -15,11 +15,8 @@
 // ******************************************************************************/
 //package org.gmart.codeGen.javaGen.model;
 //
-//public interface InstanceSerializerToYaml {
-//	//void appendInstanceToYamlCode(SerialContext bui, Object instanceToSerialize);
+//
+//public interface InstanceSerializerToJson {
+//	void appendInstanceToYamlCode(SerialContext bui, Object instanceToSerialize);
 //	
-//	/** 
-//	 * if returns null => use the static YAppender.isOnNewLineWhenPropertyValue(Object obj) method
-//	 * */
-//	//Boolean isInstanceAsPropertyValueOnNewLine_nullable(Object toSerialize);
 //}

@@ -1,0 +1,54 @@
+{
+  "name": "Albert kljkljkljl\nkjjljk",
+  "vehicle": {
+    "wheelCard": 4,
+    "fuel": "E85",
+    "schema": {
+      "$ref": "#components/schemas/A"
+    }
+  },
+  "preferredNumbers": [
+    [
+      4,
+      7
+    ],
+    [
+      0,
+      1
+    ]
+  ],
+  "preferredCardType": "Spade",
+  "httpMethods": {
+    "GET": [
+      "a",
+      "b"
+    ],
+    "POST": [
+      "c",
+      "d"
+    ]
+  },
+  "components": {
+    "schemas": {
+      "A": {
+        "type": "object",
+        "truc": 7,
+        "machin": 1
+      }
+    }
+  },
+  "bidule0": {
+    "a": "hey"
+  },
+  "bla": {
+    "b": "hey b"
+  },
+  "obj": "hello",
+  "obj2": {
+    "g": 1,
+    "h": [
+      "az",
+      "s"
+    ]
+  }
+}

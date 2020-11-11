@@ -16,14 +16,15 @@
 package org.gmart.codeGen.javaGen.model.containerTypes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
-import org.gmart.codeGen.javaGen.model.SerialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
-import org.gmart.codeGen.javaGen.yamlAppender.YAppender;
+import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -61,70 +62,84 @@ public class ListContainerType extends AbstractContainerType {
 	public Class<?> getContainerClass() {
 		return List.class;
 	}
-	@SuppressWarnings("rawtypes")
-	@Override
-	public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
-		assert toSerialize instanceof List;
-		appendListToYamlCode(bui, (List)toSerialize);
-	}
-	
-	private void appendListToYamlCode(SerialContext bui, List<?> listToSerialize) {
-		int size = listToSerialize.size();
-		if(size != 0) {
-//			if(bui.mustStartNestedSequenceWithNewLine() || previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer())
-//				bui.n();
-			appendElement(bui, listToSerialize.get(0));
-		}
-		for (int i = 1; i < size; i++) {
-			bui.n();
-			appendElement(bui, listToSerialize.get(i));
-		}
-	}
-
-	private void appendElement(SerialContext bui, Object elem) {
-		bui.append("- ");
-		bui.indent(() -> {
-			//|| previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer()
-			if(contentType.isListContainer() && bui.mustStartNestedSequenceWithNewLine())
-				bui.n();
-			this.contentType.appendInstanceToYamlCode(bui, elem);
-		});
-	}
-	public interface YAppendableList {
-		Consumer<Object> getChildAppender();
-		default void appendListToYamlCode(YAppender bui, List<?> listToSerialize) {
-			int size = listToSerialize.size();
-			if(size != 0) {
-//				if(bui.mustStartNestedSequenceWithNewLine() || previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer())
-//					bui.n();
-				appendElement(bui, listToSerialize.get(0));
-			}
-			for (int i = 1; i < size; i++) {
-				bui.n();
-				appendElement(bui, listToSerialize.get(i));
-			}
-		}
-
-		default void appendElement(YAppender bui, Object elem) {
-			bui.append("- ");
-			bui.indent(() -> {
-				if(elem instanceof List && bui.mustStartNestedSequenceWithNewLine())
-					bui.n();
-				getChildAppender().accept(elem);
-				//this.contentType.appendInstanceToYamlCode(bui, elem);
-			});
-		}
-	}
-	
-	
 	
 	@Override
-	public boolean isListContainer() {
-		return true;
+	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
+		return makeSerializableValue_static(provider, toSerialize, elem ->  this.contentType.makeSerializableValue(provider, elem));
 	}
+	
+	public static <T> T makeSerializableValue_static(SerializerProvider<T> provider, Object toSerialize, Function<Object, T> elemToT) {
+		assert toSerialize instanceof Collection;
+		return provider.makeSerializableList(((Collection<?>) toSerialize).stream().map(elem -> elemToT.apply(elem)));
+	}
+
 	@Override
 	public String getContainerTypeName() {
 		return "List";
 	}
-	
 }
+
+
+
+
+
+
+//@SuppressWarnings("rawtypes")
+//@Override
+//public void appendInstanceToYamlCode(SerialContext bui, Object toSerialize) {
+//	assert toSerialize instanceof List;
+//	appendListToYamlCode(bui, (List)toSerialize);
+//}
+//
+//private void appendListToYamlCode(SerialContext bui, List<?> listToSerialize) {
+//	int size = listToSerialize.size();
+//	if(size != 0) {
+////		if(bui.mustStartNestedSequenceWithNewLine() || previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer())
+////			bui.n();
+//		appendElement(bui, listToSerialize.get(0));
+//	}
+//	for (int i = 1; i < size; i++) {
+//		bui.n();
+//		appendElement(bui, listToSerialize.get(i));
+//	}
+//}
+//
+//private void appendElement(SerialContext bui, Object elem) {
+//	bui.append("- ");
+//	bui.indent(() -> {
+//		//|| previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer()
+//		if(contentType.isListContainer() && bui.mustStartNestedSequenceWithNewLine())
+//			bui.n();
+//		this.contentType.appendInstanceToYamlCode(bui, elem);
+//	});
+//}
+//public interface YAppendableList {
+//	Consumer<Object> getChildAppender();
+//	default void appendListToYamlCode(YAppender bui, List<?> listToSerialize) {
+//		int size = listToSerialize.size();
+//		if(size != 0) {
+////			if(bui.mustStartNestedSequenceWithNewLine() || previousJavaObjectMaker_nullable == null || !previousJavaObjectMaker_nullable.isListContainer())
+////				bui.n();
+//			appendElement(bui, listToSerialize.get(0));
+//		}
+//		for (int i = 1; i < size; i++) {
+//			bui.n();
+//			appendElement(bui, listToSerialize.get(i));
+//		}
+//	}
+//
+//	default void appendElement(YAppender bui, Object elem) {
+//		bui.append("- ");
+//		bui.indent(() -> {
+//			if(elem instanceof List && bui.mustStartNestedSequenceWithNewLine())
+//				bui.n();
+//			getChildAppender().accept(elem);
+//			//this.contentType.appendInstanceToYamlCode(bui, elem);
+//		});
+//	}
+//}
+//
+//@Override
+//public boolean isListContainer() {
+//	return true;
+//}
