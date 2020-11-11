@@ -22,8 +22,8 @@ public interface InstanceDeserializerFromYamlOrJson {
 	Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlOrJsonValue, boolean boxedPrimitive);
 	//Pair<Class<?>, Object> jsonToJavaObject(DeserialContext ctx, JsonValue jsonValue, boolean boxedPrimitive);
 	
-	default Object makeJavaObject(DeserialContext ctx, Object yamlValue) {
-		return yamlOrJsonToModelValue(ctx, yamlValue, false).getValue1();
+	default Object makeModelValue(DeserialContext ctx, Object yamlOrJsonValue) {
+		return yamlOrJsonToModelValue(ctx, yamlOrJsonValue, false).getValue1();
 	}
 //	default Object makeJavaObjectFromJson(DeserialContext ctx, JsonValue jsonValue) {
 //		return jsonToJavaObject(ctx, jsonValue, false).getValue1();

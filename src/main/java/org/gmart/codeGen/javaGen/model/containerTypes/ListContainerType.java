@@ -50,7 +50,7 @@ public class ListContainerType extends AbstractContainerType {
 		List fieldYamlList = (List)fieldYamlValue;
 		ArrayList rez = new ArrayList<>();
 		for(Object fieldYaml : fieldYamlList) 
-			rez.add(contentType.makeJavaObject(ctx, fieldYaml));
+			rez.add(contentType.makeModelValue(ctx, fieldYaml));
 		return rez;
 	}
 	private final static ClassName listClassName = ClassName.get(List.class);

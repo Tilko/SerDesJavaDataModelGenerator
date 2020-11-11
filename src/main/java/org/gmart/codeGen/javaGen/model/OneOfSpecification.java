@@ -171,7 +171,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	public Pair<TypeExpression, Object> makePayloadFromYamlObject(DeserialContext ctx, Object rawYamlObject){
 		TypeExpression resolvedType = typeRecognizer.getRecognizer().apply(rawYamlObject);
 		assert resolvedType != null : "impossible to infer the type for:"  + rawYamlObject + "\n (verify property name spelling, maybe ...)"; 
-		Object resolvedInstance = resolvedType != null ? resolvedType.makeJavaObject(ctx, rawYamlObject) : null;
+		Object resolvedInstance = resolvedType != null ? resolvedType.makeModelValue(ctx, rawYamlObject) : null;
 		return Pair.with(resolvedType, resolvedInstance);
 	}
 	

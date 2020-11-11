@@ -11,8 +11,8 @@ Here is an example file that demonstrates the syntax and its associated meaning:
 ```yaml
 rootPackage: org.my.example   # root for all generated files
 
-package1:                     # then packages are defined relatively to that root
-  MyTypeName0:
+my.package0:                  # then packages are defined relatively to that root
+  MyTypeName0:                # a class definition: org.my.example.my.package0.MyTypeName0
     myPropertyName0: String                     # "String" or any Java primitive type
     myPropertyName1: Map<KeyType, ValueType>    # "KeyType" can be String or an enum type 
                                                 #      (cf. "CardType" example of enum definition)
@@ -32,8 +32,8 @@ package1:                     # then packages are defined relatively to that roo
   
   MyPolymorphicType0: oneOf(String, MyTypeName0, ...) # a type of object that can be one of the 
                                                       # specified types, the tool checks that 
-                                                      # types are formally non-ambiguous
-                                                      # between them (cf. details below)
+                                                      # types are not formally ambiguous
+                                                      # with each other (cf. details below)
                                                       
 .:                        # an other package, at the root
   MyTypeName2:

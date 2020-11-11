@@ -53,7 +53,7 @@ public abstract class AbstractMapContainerType extends AbstractContainerType { /
 		LinkedHashMap rez = new LinkedHashMap<>();
 		fieldYamlMap.forEach((key,val) -> {
 			assert key instanceof String;	
-			rez.put(makeKey((String)key), contentType.makeJavaObject(ctx, val));
+			rez.put(makeKey((String)key), contentType.makeModelValue(ctx, val));
 		});
 		return rez;
 	}
