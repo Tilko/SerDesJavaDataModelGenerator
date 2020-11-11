@@ -19,6 +19,8 @@ target/
 *.odt
 *.odt#
 
+old/
+
 src/main/java/org/gmart/codeGen/POCs/
 src/main/java/org/gmart/codeGenExample/reflexions/
 #src/main/java/org/gmart/codeGenExample/openApiExample/

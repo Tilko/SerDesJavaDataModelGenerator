@@ -1,6 +1,8 @@
-Software that generates Java classes from a Yaml data types specification file, 
-and that can serialize/deserialize (or marshall/unmarshall) a Yaml (or later JSON) file into an instance of one of the generated classes. 
-You can also plug custom stub classes in the generated class hierarchy.
+Software that:  
+- generates Java classes from a Yaml data types specification file,   
+- deserializes (marshall) a Yaml or JSON file into an instance of one of the generated classes,  
+- serializes (unmarshall) this (possibly modified) instance back to a Yaml or JSON file.  
+You can also plug custom stub classes in the generated class hierarchy.  
 
 ## As first input of this tool: 
 A type of data structure definition in a Yaml file.
@@ -313,24 +315,8 @@ public static void main2(String[] args) throws Exception {
 	OpenApiSpec myApiSpec = ...
 	... modification code ...
 	
-	myApiSpec.toYaml(false); //=> returns the Yaml code
+	myApiSpec.toYaml(); //=> returns the Yaml code
 }
-```
-The boolean argument of `toYaml` (`isStartingNestedSequenceWithNewLine`) specify if you want that lists looks like that (`false`):
-```yaml 
-- - e00
-  - e01
-- - e10
-  - e11
-```
-or like that (`true`):
-```yaml 
-- 
-  - e00
-  - e01
-- 
-  - e10
-  - e11
 ```
 #### An example for the `stubbed` modifier:
 On this OpenAPI example, this modifier is on the `SchemaOrRef` `oneOf` class type, 
@@ -380,7 +366,6 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
     }
 }
 ```
- 
 
 ## Installation:
 
@@ -409,6 +394,5 @@ so when you generate code, it won't be taken into account by Eclipse and you hav
 
 
 ## Features/work that might came later:
-- JSON as valid input to build a generated model instance
-- regression tests for all features
-- add some user error feedbacks
+- to do regression tests for all features
+- to improve user error feedbacks
