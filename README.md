@@ -2,6 +2,7 @@ Software that:
 - generates Java classes from a Yaml data types specification file,   
 - deserializes (marshall) a Yaml or JSON file into an instance of one of the generated classes,  
 - serializes (unmarshall) this (possibly modified) instance back to a Yaml or JSON file.  
+
 You can also plug custom stub classes in the generated class hierarchy.  
 
 ## As first input of this tool: 
