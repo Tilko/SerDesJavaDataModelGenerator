@@ -46,11 +46,11 @@ public class Main {
 		y = false;
 		Person person;
 		if(y) {
-			File personFilePath = new File(srcParentDir, "/src/main/resources/personInstance.yaml");
-			person = packagesSet.yamlFileToObject(personFilePath, Person.class);
+			File personFile = new File(srcParentDir, "/src/main/resources/personInstance.yaml");
+			person = packagesSet.yamlFileToObject(personFile, Person.class);
 		} else {
-			File personFilePath = new File(srcParentDir, "/src/main/resources/personInstance.json");
-			person = packagesSet.jsonFileToObject(personFilePath, Person.class);
+			File personFile = new File(srcParentDir, "/src/main/resources/personInstance.json");
+			person = packagesSet.jsonFileToObject(personFile, Person.class);
 		}
 		
 		person.getVehicle().setWheelCard(7);

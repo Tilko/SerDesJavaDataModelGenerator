@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
-import org.gmart.codeGen.utils.ReflUtil;
 import org.gmart.codeGenExample.openApiExample.generatedFiles.OpenApiSpec;
 import org.gmart.codeGenExample.openApiExample.generatedFiles.Schema;
+import org.gmart.codeGenExample.utils.ReflUtil;
 
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
 	

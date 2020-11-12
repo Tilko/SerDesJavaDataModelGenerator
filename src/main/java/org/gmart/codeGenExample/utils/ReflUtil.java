@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package org.gmart.codeGen.utils;
+package org.gmart.codeGenExample.utils;
 
 import java.lang.reflect.Field;
 

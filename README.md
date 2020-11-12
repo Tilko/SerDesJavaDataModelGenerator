@@ -89,10 +89,10 @@ example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
     someCommonProperty: String
   OtherType: eee, fff, ggg, hhh 
   
-  ### for example, if, among the 3 following classes, there was not ConcreteB2 among the following classes,
+  ### for example, if, among the 3 following classes, there was not ConcreteB2,
   #   it would be a valid class hierarchy because any pair of {type0, type1} is never possible in both
   #   ConcreteA and ConcreteB. Now if finally there is ConcreteB2, the pair {type0: bbb, type1: eee} is
-  #   problematic it can not discriminate between ConcreteA and ConcreteB2.
+  #   problematic because it can not discriminate between ConcreteA and ConcreteB2.
   ###
   ConcreteA is OtherAbstractTypeName:
     type0: enum(aaa, bbb)
@@ -106,11 +106,11 @@ example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
     
 example.of.use.for.oneOf.type:
   MyTypeOrAReferenceToMyType: oneOf(MyType, String)  # the String can be resolved to a "MyType" object
-                                                     #    for example with a JSON reference, 
+                                                     #    for example it could be a JSON reference 
                                                      #    or an URL to an other yaml or JSON file ...
 ```
 ### `oneOf` validation details:
-To ensure the recognition of the right type between all the types alternatives, the different alternatives must be formally non-ambiguous,
+To ensure the recognition of the right type between all the types alternatives, the different alternatives must be formally non-ambiguous with each other.
 Here are the validation rules that are checked for you by the tool:
  - Only one alternative can be:
    - `String` or an `enum` type
@@ -119,9 +119,8 @@ Here are the validation rules that are checked for you by the tool:
    - `boolean`
  - Multiple `List` types are possible, but the set formed by all their content types must pass the current validation rules (recursion).
  - Only one `Map` type (or `Dict`) can be present among the alternatives, and if there is one, no `class` type can be present.
- - Multiple `class` types can be present, but their property names must be sufficient to recognize which type corresponds to any Yaml instance of one of those classes 
-   (the types of the properties are ignored in this validation). The order of the classes type might matter: 
-     For example: the type expression `oneOf(A, B)` with:
+ - Multiple `class` types can be present, but their property names must be sufficient to recognize which type corresponds to any Yaml/JSON instance of one of those classes 
+   (the types of the properties are ignored in this validation). The order of the classes type might matter, for example, the type expression `oneOf(A, B)` with:
    ```yaml
    A:
      a:...
@@ -131,7 +130,7 @@ Here are the validation rules that are checked for you by the tool:
      b?:...
      c:...  
    ```
-   is valid, but `oneOf(B, A)` will throw a validation error because `B` would always matches any instance that `A` would match (so `A` would never be instantiated).
+   is valid, but `oneOf(B, A)` will throw an error because `B` would always matches any instance that `A` would match (so `A` would never be instantiated).
    But when `A` is specified first in the alternatives list, `A` will be instantiated when the optional property `b` will be missing.
 
 ### The `stubbed` classes feature:
@@ -146,8 +145,8 @@ package1:
 The generated Java class `generatedClass` that corresponds is: 
   `org.example.generatedFiles.package1.MyClassA`
 and thanks to that modifier, an other file is generated with the same fully qualified name
-except that the `generatedFiles` part is replaced by: `generatedFilesCustomizationStubs`
-This stub file contains a class that *extends* the previous `generatedClass`. 
+except that the `generatedFiles` part is replaced by: `generatedFilesCustomizationStubs`. 
+This stub file contains a Java class that *extends* the previous `generatedClass`. 
 In the `generatedFiles` package, it is this stub class that is referred (almost) everywhere the `generatedClass` would be referred if it was not `stubbed`.
 
 The stub file will be generated (almost empty) only if there is no files with the same qualified name. If you want that file to be regenerated, you have to delete it.
@@ -155,7 +154,7 @@ The stub file will be generated (almost empty) only if there is no files with th
 There is a concrete example of use for this feature at the end of the next section ([Here](#an-example-for-the-stubbed-modifier)).
 
 ## Now let's take a concrete example:
-If you designed some REST API before you might have heard about
+If you designed some REST API before, you might have heard about
 the OpenAPI specification (formerly called "swagger"), it describes a way to specify a REST API
 by writing a Yaml (or JSON) document (it's a data tree), of course this document must respect a particular data structure to be valid, 
 this data structure is described (without a formal syntax) in the OpenAPI documentation (https://swagger.io/docs/specification/about/). 
@@ -163,7 +162,7 @@ From an OpenAPI API description (written in Yaml) you can generate some scaffold
 The present tool addresses 2 things:
 1) To learn the OpenAPI specification, a more formal specification can be much more efficient (cf. the types definition below).
 2) To have programmatic access (read and write) to your description in order to, for example, integrate this description 
-   in a more global description of your system (for example with the database part ...) (in order to automate more boiler-plate code).
+   in a more global description of your system (for example with the database part ...) (in order to automate more boiler-plate code or simplify the improvement of the consistency of your system).
 For that example I wrote data types structures that corresponds to the OpenAPI specification (I omitted a couple of language elements): 
 
 ```yaml
@@ -191,7 +190,7 @@ rootPackage: org.gmart.codeGenExample.openApiExample
     name: String
     in: ParameterLocation
     description?: String
-    required: boolean           #in == path =>  required must be set to true
+    required: boolean           #in == path =>  "required" must be set to true
                                 #if there is a default value in schema => required == false
     style?: HttpMethodParameterStyle
     explode?: boolean
@@ -284,7 +283,7 @@ rootPackage: org.gmart.codeGenExample.openApiExample
     default: Object*
 ```
 
-Then, with the following piece of code you can generate the Java classes and enum that corresponds to the previous type descriptions.
+Then, with the following piece of code you can generate the Java classes and enums that corresponds to the previous type descriptions.
 ```java
 public static void main(String[] args) throws Exception {
     File srcParentDir = new File(new File("").getAbsolutePath());
@@ -303,12 +302,13 @@ public static void main2(String[] args) throws Exception {
     File srcParentDir = new File(new File("").getAbsolutePath());
     File myOpenApiFile = new File(srcParentDir, "/src/main/resources/myOpenApiDescriptionInstance.yaml");
     OpenApiSpec myApiSpec = makeOpenApiPackageSet(srcParentDir)
-                                .yamlFileToObject(myOpenApiFile, OpenApiSpec.class);
+                                .yamlFileToObject(myOpenApiFile, OpenApiSpec.class); 
+                          //or  .jsonFileToObject(...
 }
 ```
 
 Then you can programmatically modify this java object (with all the benefit brought by the Java type definition and a modern IDE: the auto-completion, type validations, ...)
-and finally you can serialize your modified or new `OpenApiSpec` instance back into a Yaml file (JSON might be possible later) with the following code:
+and finally you can serialize your modified or new `OpenApiSpec` instance back into a Yaml or JSON file with the following code:
 
 ```java
 public static void main2(String[] args) throws Exception {
@@ -320,8 +320,10 @@ public static void main2(String[] args) throws Exception {
     myApiSpec.toJson(); //=> returns the JSON serialized version
 }
 ```
+Under the hood, the Yaml/JSON serialization is performed by SnakeYaml/javax.json(JSR 374), then snakeyaml.DumpOptions/javax.json.JsonWriter
+are optional parameters for the toYaml/toJson methods.
 
-#### An example for the `stubbed` modifier:
+### An example for the `stubbed` modifier:
 On this OpenAPI example, this modifier is on the `SchemaOrRef` `oneOf` class type, 
 and, with the following stub class, it can be used to resolve the `String` reference to the corresponding `Schema` instance:
 ```java
@@ -381,7 +383,7 @@ git clone https://github.com/Tilko/functionalStyle.git
 git clone https://github.com/Tilko/geom1d.git
 git clone https://github.com/Tilko/debugLogger.git
 ```
-Perform those 5 git commands in an Eclipse workspace works fine.
+Performing those 6 git commands in an Eclipse workspace works fine.
 
 Then, on Eclipse, import each of those cloned directories by:   
 `File -> Open Projects from File System...  ->  Directory...`
@@ -389,13 +391,16 @@ Then, on Eclipse, import each of those cloned directories by:
 User errors are thrown by Java assertion (`assert` keyword), so, for each `main` function that uses this tool, make sure you enable them by doing:   
 `Run -> Run Configurations... -> Arguments -> VM arguments -> `in the text field, type: `-ea`
 
-## Troubleshooting:  
-On eclipse, by default, when the file system is modified, Eclipse won't refresh its package explorer,
-so when you generate code, it won't be taken into account by Eclipse and you have to manually refresh the package explorer
-(with right-click -> refresh). To avoid that pain, just check that eclipse check-box:    
-`Window -> Preferences -> General -> Workspace -> Refresh using native hooks or polling`
-
+## Troubleshooting/Tips:  
+- On eclipse, by default, when the file system is modified, Eclipse won't refresh its package explorer,
+  so when you generate code, it won't be taken into account by Eclipse and you have to manually refresh the package explorer
+  (with right-click -> refresh). To avoid that pain, just check that eclipse check-box:    
+  `Window -> Preferences -> General -> Workspace -> Refresh using native hooks or polling`
+- Verify that you enabled assertions (cf. Installation)
 
 ## Features/work that might came later:
 - to do regression tests for all features
 - to improve user error feedbacks
+- ability to import types 
+- ...
+...
