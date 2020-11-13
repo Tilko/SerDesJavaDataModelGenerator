@@ -82,7 +82,7 @@ example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
     type: enum(ddd)
     otherField: double
   
-  OtherAbstractTypeName:       # you can specify multiple "abstract" field,
+  OtherAbstractTypeName:       # you can specify multiple "abstract" fields,
     type0: abstract Type       #    the tool will verify that all concrete classes can not       
     type1: abstract OtherType  #    have a common combination of enum, cf. following example
                                #    with ConcreteA and ConcreteB                                          
@@ -103,11 +103,9 @@ example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
   ConcreteB2 is OtherAbstractTypeName:  
     type0: enum(bbb, ccc)
     type1: enum(eee)  
-    
-example.of.use.for.oneOf.type:
-  MyTypeOrAReferenceToMyType: oneOf(MyType, String)  # the String can be resolved to a "MyType" object
-                                                     #    for example it could be a JSON reference 
-                                                     #    or an URL to an other yaml or JSON file ...
+  
+  ## If no combination corresponds to a child type, 
+  ## then the "abstract" class is instantiated as the default class.
 ```
 ### `oneOf` validation details:
 To ensure the recognition of the right type between all the types alternatives, the different alternatives must be formally non-ambiguous with each other.
@@ -338,10 +336,10 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
     }
     
     public Schema getSchema() {
-        Schema schema = toSchema(); //this method has been generated in the parent "oneOf" class.
+        Schema schema = asSchema(); //this method has been generated in the parent "oneOf" class.
         if (schema != null)
             return schema;
-        String ref = toSchemaRef().get$ref(); //this one too, 
+        String ref = asSchemaRef().get$ref(); //this one too, 
         // ref must be a path to a member of a JSON (or Yaml) data-structure,
         // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
         

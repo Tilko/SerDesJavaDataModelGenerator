@@ -194,7 +194,7 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 				.addSuperinterface(ClassDefinitionOwner.class)
 			    .addFields(() -> jPoetFields.iterator())
 			    .addMethods(()-> methods.iterator());
-		parentClass.ifPresent(parent -> typeSpecBuilder.superclass(ClassName.get(parent.getPackageName(), parent.getName())));
+		parentClass.ifPresent(parent -> typeSpecBuilder.superclass(ClassName.get(parent.getReferencePackageName(), parent.getName())));
 		
 		MethodSpec.Builder initConstructor = JPoetUtil.initConstructor();
 		typeSpecBuilder.addMethod(initConstructor.build());

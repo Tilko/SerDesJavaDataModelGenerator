@@ -23,20 +23,11 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import org.gmart.codeGen.javaGen.model.serialization.SerializableObject;
 import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaLang.JavaPrimitives;
 
 public class JsonSerializerProvider implements SerializerProvider<JsonValue> {
-
-	public static class SerializableJsonObject implements SerializableObject {
-		@Override
-		public String serialize() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-	}
 	public static class JsonSerializableObjectBuilder implements SerializableObjectBuilder<JsonValue> {
 		private final JsonObjectBuilder objectBuilder;
 		public JsonSerializableObjectBuilder() {

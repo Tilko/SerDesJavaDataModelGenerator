@@ -21,7 +21,7 @@ import org.gmart.codeGen.javaGen.model.TypeExpression;
 
 public class TypeRecognizer<T> {
 		String errorMessage;
-		boolean hasError;
+		//boolean hasError;
 		public String getErrorMessage() {
 			return errorMessage;
 		}
@@ -29,11 +29,11 @@ public class TypeRecognizer<T> {
 			this.errorMessage = errorMessage;
 		}
 		public boolean hasError() {
-			return hasError;
+			return this.errorMessage == null;
 		}
-		public void setHasError(boolean hasError) {
-			this.hasError = hasError;
-		}
+//		public void setHasError(boolean hasError) {
+//			this.hasError = hasError;
+//		}
 		Function<T,TypeExpression> recognizer;
 		public void setRecognizer(Function<T, TypeExpression> recognizer) {
 			this.recognizer = recognizer;
@@ -45,8 +45,9 @@ public class TypeRecognizer<T> {
 //			super();
 //			this.recognizer = recognizer;
 //		}
-		public void prependErrorMessage(String string) {
-			// TODO Auto-generated method stub
-			
+		public void prependErrorMessage(String errorMessage) {
+			this.errorMessage = errorMessage + 
+					this.errorMessage == null ? "" 
+											  : "\n" + this.errorMessage;
 		}
 	}

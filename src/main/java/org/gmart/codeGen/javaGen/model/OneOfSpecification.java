@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 import org.gmart.codeGen.javaGen.model.containerTypes.AbstractMapContainerType;
 import org.gmart.codeGen.javaGen.model.containerTypes.ListContainerType;
@@ -58,6 +57,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	public void compile() {
 		this.nonOneOfFormalGroups = developToNonOneOfGroups(alternatives, null);
 		this.typeRecognizer = makeTypeRecognizer(nonOneOfFormalGroups);
+		assert !this.typeRecognizer.hasError() : this.typeRecognizer.getErrorMessage();
 	}
 	TypeRecognizer<Object> typeRecognizer;
 	Map<FormalGroup, List<TypeExpression>> nonOneOfFormalGroups;
@@ -116,7 +116,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 		return Optional.of(classBuilder);
 	}
 	private static void addConverterMethod(TypeSpec.Builder classBuilder, String typeNameInMethodName, TypeName returnType) {
-		MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("to" + StringFunctions.capitalize(typeNameInMethodName));
+		MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("as" + StringFunctions.capitalize(typeNameInMethodName));
 		addStmt(methodBuilder, returnType);
 		methodBuilder.addModifiers(Modifier.PUBLIC);
 		classBuilder.addMethod(methodBuilder.build());
@@ -227,7 +227,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 			} else {
 				TypeRecognizer<Object> makeTypeRecognizer = makeTypeRecognizer(developToNonOneOfGroups(listsTypeContentTypes, null));
 				if(makeTypeRecognizer.hasError()) {
-					typeRecognizer.prependErrorMessage("");
+					typeRecognizer.prependErrorMessage(makeTypeRecognizer.getErrorMessage());
 				} else {
 					tests.add(snakeYamlObject -> {
 						if(snakeYamlObject instanceof List) {
@@ -243,7 +243,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 		//long mapTypeExpressionCount = nonOneOfsGroups.get(FormalGroup.map).stream().filter(te -> te instanceof AbstractMapContainerType).count();
 		List<TypeExpression> mapSubGroups = mapOrObjectSubGroups.getOrDefault(true, empty);
 		int mapTypeExpressionCount = mapSubGroups.size();
-		List<TypeExpression> classTypeExpression = mapOrObjectSubGroups.getOrDefault(false, empty);
+		List<AbstractClassDefinition> classTypeExpression = (List)mapOrObjectSubGroups.getOrDefault(false, empty);
 		if(mapTypeExpressionCount > 1) {
 			typeRecognizer.setErrorMessage("only one Map/Dict type is supported here.");
 		} else if(mapTypeExpressionCount == 1) {
@@ -256,7 +256,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 		} else {
 			HashSet<TypeExpression> hashSet = new HashSet<>();
 			classTypeExpression.stream().filter(te -> !hashSet.add(te)).findFirst().ifPresentOrElse(te ->{
-				typeRecognizer.setErrorMessage("duplicate class reference alternative: " + ((ClassDefinition)te).getQualifiedName());
+				typeRecognizer.setErrorMessage("duplicate class reference alternative: " + te.getQualifiedName());
 			}, () -> {
 				TypeRecognizer<Map<String, ?>> recog = ClassRecognition.makeRecognizerForClassAlternatives((List)classTypeExpression);
 				if(recog.hasError()) {

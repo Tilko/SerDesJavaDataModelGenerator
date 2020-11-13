@@ -6,6 +6,7 @@ import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.OneOfInstance;
 import org.gmart.codeGen.javaGen.model.OneOfSpecification;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
+import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Schema;
 import org.javatuples.Pair;
 
 @Generated("")
@@ -48,14 +49,14 @@ public class SchemaOrRef implements OneOfInstance {
         this.payload = makePayload.getValue1();
     }
 
-    public Schema toSchema() {
+    public Schema asSchema() {
         if(payload instanceof Schema) {
             return (Schema) payload;
         }
         return null;
     }
 
-    public SchemaRef toSchemaRef() {
+    public SchemaRef asSchemaRef() {
         if(payload instanceof SchemaRef) {
             return (SchemaRef) payload;
         }

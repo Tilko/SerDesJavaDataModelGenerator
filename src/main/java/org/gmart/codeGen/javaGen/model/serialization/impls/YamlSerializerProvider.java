@@ -20,19 +20,11 @@ import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.gmart.codeGen.javaGen.model.serialization.SerializableObject;
 import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 
 public class YamlSerializerProvider implements SerializerProvider<Object> {
 
-	public static class SerializableJsonObject implements SerializableObject {
-		@Override
-		public String serialize() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-	}
 	public static class YamlSerializableObjectBuilder implements SerializableObjectBuilder<Object> {
 		private final LinkedHashMap<String, Object> objectBuilder;
 		public YamlSerializableObjectBuilder() {

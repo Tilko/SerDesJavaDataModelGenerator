@@ -34,7 +34,6 @@ import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
 import org.javatuples.Pair;
 
-import api_global.logUtility.L;
 import api_global.strUtil.StringFunctions;
 
 public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
@@ -63,10 +62,9 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
 		return ((ClassDefinitionOwner) toSerialize).getClassDefinition().makeSerializableValue_abstract(provider, toSerialize);
 	}
-	
+
 	public void initAndvalidateSubEnumSpacesDisjunction() {
 		ArrayList<EnumSubSpace> subSpaces = initEnumSubSpaces();
-		//TODO clone content because next call mutate the list:
 		validateSubEnumSpacesDisjunction(subSpaces);		
 	}
 	public void changeChildrenClassesAbstractEnumFieldNameInCode_removeAnonymousMonoEnum() {
@@ -88,7 +86,6 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 				} 
 			});
 		});
-		
 	}
 	private ArrayList<EnumSubSpace> initEnumSubSpaces(){
 		ArrayList<ClassAbstractEnumField> parentAbstractEnumFields = new ArrayList<>(abstractEnumFields);
@@ -103,7 +100,7 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 			});
 			EnumSubSpace enumSubSpace = new EnumSubSpace(map.collect(Collectors.toCollection(ArrayList::new)));
 			child.setEnumSubSpace(enumSubSpace);
-			return enumSubSpace;
+			return enumSubSpace;//new EnumSubSpaceWithType(enumSubSpace, child);
 		}).collect(Collectors.toCollection(ArrayList::new));
 	}
 	private void validateSubEnumSpacesDisjunction(ArrayList<EnumSubSpace> subSpaces) {
@@ -112,54 +109,75 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 			EnumSubSpace enumSubSpaceI = subSpaces.get(i);
 			for(int j = i + 1; j < subSpaces.size(); j++) {
 				EnumSubSpace enumSubSpaceJ = subSpaces.get(j);
-				boolean allOthersAreEquals = true;
+				//the commented parts of this method are optimization code, but it causes problem to precise to the user which pair of EnumSubSpace cause ambiguity:
+//				boolean allOthersAreEquals = true;
+//				int k0 = 0;
 				boolean oneAndEq0 = false;
-				int k0 = 0;
 				for(int k = 0; k < dimensionCard; k++) {
-					if(oneAndEq0 && !allOthersAreEquals)
-						break;
-					if(!oneAndEq0 && enumSubSpaceI.getProjectionOn(k).and(enumSubSpaceJ.getProjectionOn(k)).equals(BigInteger.ZERO)) {
+					if(enumSubSpaceI.getProjectionOn(k).and(enumSubSpaceJ.getProjectionOn(k)).equals(BigInteger.ZERO)) {
 						oneAndEq0 = true;
-						k0 = k;
-					} else {
-						if(allOthersAreEquals && !enumSubSpaceI.getProjectionOn(k).equals(enumSubSpaceJ.getProjectionOn(k)))
-							allOthersAreEquals = false;
-					}
+						break;
+					} 
+			//following instead the previous "if" for the problematic optimization:
+//					if(oneAndEq0 && !allOthersAreEquals)
+//						break;
+//					if(!oneAndEq0 && enumSubSpaceI.getProjectionOn(k).and(enumSubSpaceJ.getProjectionOn(k)).equals(BigInteger.ZERO)) {
+//						oneAndEq0 = true;
+//						k0 = k;
+//					} 
+//					else {
+//						if(allOthersAreEquals && !enumSubSpaceI.getProjectionOn(k).equals(enumSubSpaceJ.getProjectionOn(k)))
+//							allOthersAreEquals = false;
+//					}
 				}
 				if(!oneAndEq0) {
-					//error
-				} else {
-					if(allOthersAreEquals) {
-						enumSubSpaceI.setProjection(k0, enumSubSpaceI.getProjectionOn(k0).or(enumSubSpaceJ.getProjectionOn(k0)));
-						subSpaces.remove(j);
-					}
+					AbstractClassDefinition iChild = getChildren().stream().filter(child -> child.getEnumSubSpace() == enumSubSpaceI).findFirst().get();
+					AbstractClassDefinition jChild = getChildren().stream().filter(child -> child.getEnumSubSpace() == enumSubSpaceJ).findFirst().get();
+					assert false : "Error: the type discrimination enums of the 2 following classes admit common possible combinations:\n" + 
+						"  - " + iChild.getQualifiedName() + "\n" + 
+					    "  - " + jChild.getQualifiedName();
 				}
+		//   /!\: for this optimization code, enumSubSpaceI is mutated => clone the input of this method.
+//				else {
+//					if(allOthersAreEquals) {
+//						enumSubSpaceI.setProjection(k0, enumSubSpaceI.getProjectionOn(k0).or(enumSubSpaceJ.getProjectionOn(k0)));
+//						subSpaces.remove(j);
+//					}
+//				}
 			}
 		}
 	}
-	
+	//the class for the "allOthersAreEquals" optimization (cf. just above)
+//	private static class EnumSubSpaceWithType {
+//	final EnumSubSpace space;
+//	final AbstractClassDefinition type;
+//	public EnumSubSpaceWithType(EnumSubSpace space, AbstractClassDefinition type) {
+//		super();
+//		this.space = space;
+//		this.type = type;
+//	}
+//}
 	
 	
 	@Override
 	public Pair<Class<?>, Object> yamlToJavaObjectFromSubClassesOrThisLeaf(DeserialContext ctx, Map<String, ?> yamlOrJsonProps, Map<String, ?> remainingYamlOrJsonProps, boolean boxedPrimitive){
 		return getChildClassThatMatch(yamlOrJsonProps).yamlOrJsonToModelValue(ctx, yamlOrJsonProps, remainingYamlOrJsonProps, boxedPrimitive);
 	}
-	AbstractClassDefinition defaultConcreteClass;
-	private AbstractClassDefinition getDefaultConcreteClass() {
-		if(defaultConcreteClass == null) {
-			//TODO 
-		}
-		return defaultConcreteClass;
-	}
+//	AbstractClassDefinition defaultConcreteClass;
+//	private AbstractClassDefinition getDefaultConcreteClass() {
+//		if(defaultConcreteClass == null) {
+//			
+//		}
+//		return defaultConcreteClass;
+//	}
 	private AbstractClassDefinition getChildClassThatMatch(Map<String, ?> yamlOrJsonObjectCopy) {
 		List<Integer> coord = makeCoordinateFromYamlObject(yamlOrJsonObjectCopy); 
-		return getChildren().stream().filter(child -> child.getEnumSubSpace().contains(coord)).findFirst().orElse(getDefaultConcreteClass());
+		return getChildren().stream().filter(child -> child.getEnumSubSpace().contains(coord)).findFirst().orElse(this);//getDefaultConcreteClass());
 	}
 	
 	private List<Integer> makeCoordinateFromYamlObject(Map<String, ?> yamlOrJsonObjectCopy){
 		List<ClassAbstractEnumField> abstractEnumFields = this.getAbstractEnumFields();
 		return abstractEnumFields.stream().map(abstractEnumField -> {
-			L.l("abstractEnumField.getName():" + abstractEnumField.getName());
 			Object objectEnumValue = yamlOrJsonObjectCopy.get(abstractEnumField.getName());
 			if(objectEnumValue instanceof JsonString)
 				objectEnumValue = ((JsonString)objectEnumValue).getString();

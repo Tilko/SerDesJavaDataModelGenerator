@@ -22,9 +22,9 @@ import org.gmart.codeGen.javaGen.modelExtraction.PackagesSetFactory;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.CardType;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.HttpMethodTypes;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.ObjectSchema;
-import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Schema;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaRef;
-import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Person;
+import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Person; //
+import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Schema;
 
 import api_global.logUtility.L;
 
@@ -35,7 +35,7 @@ public class Main {
 		File srcParentDir = new File(new File("").getAbsolutePath());
 		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/featuresTestExample/classDef.yaml"));
 		
-		if(false) {
+		if(true) {
 			packagesSet.generateJavaSourceFiles_InTheCurrentMavenProject();
 			L.l("files generated");
 			return;
@@ -63,14 +63,14 @@ public class Main {
 		//schema.setTruc(schema..getTruc()+1);
 		
 		try {
-			SchemaRef schema = person.getVehicle().getSchema().toSchemaRef();
+			SchemaRef schema = person.getVehicle().getSchema().asSchemaRef();
 			log("schema.get$ref():" + schema.get$ref());//.getTruc());
-			Schema schema2 = person.getVehicle().getSchema().getSchema(person);
+			Schema schema2 = person.getVehicle().getSchema().getSchema();
 			log("schema2 class:" + schema2.getClass());
 			L.l("schema2.getTruc():" + schema2.getTruc());
 			L.l("((ObjectSchema)schema2).getMachin():" + ((ObjectSchema)schema2).getMachin());
 		} catch(Exception e) {
-			Schema schema = person.getVehicle().getSchema().toSchema();
+			Schema schema = person.getVehicle().getSchema().asSchema();
 			log("schemaclass:" + schema.getClass());
 			log("schema.getTruc():" + schema.getTruc());//.getTruc());
 		}

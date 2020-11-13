@@ -18,7 +18,7 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
   stubbed SchemaOrRef: oneOf(Schema, SchemaRef) #(SchemaOrRefImpl)   #[SchemaPartTemp.makeSchemaRefResolver]
   SchemaRef:
     $ref: String
-  Schema:
+  stubbed Schema:
     type: abstract enum(object, integer)
     truc: int
   #SchemaType: object, integer

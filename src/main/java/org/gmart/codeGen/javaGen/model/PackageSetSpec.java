@@ -46,13 +46,14 @@ public class PackageSetSpec {
 	public void generateJavaSourceFiles(File javaRootDirectory) throws IOException {
 		JavaDataClassGenerator.generateJavaSourceFiles(this, javaRootDirectory);
 	}
+	private void generateJavaSourceFiles_InTheCurrentMavenProject(String relativePath) throws IOException {
+		generateJavaSourceFiles(new File(new File("").getAbsolutePath(), relativePath));
+	}
 	public void generateJavaSourceFiles_InTheCurrentMavenProject() throws IOException {
-		File javaRootDirectory = new File(new File("").getAbsolutePath(), "src\\main\\java");
-		JavaDataClassGenerator.generateJavaSourceFiles(this, javaRootDirectory);
+		generateJavaSourceFiles_InTheCurrentMavenProject("src\\main\\java");
 	}
 	public void generateJavaSourceFiles_InTheCurrentSimpleEclipseProject() throws IOException {
-		File javaRootDirectory = new File(new File("").getAbsolutePath(), "src");
-		JavaDataClassGenerator.generateJavaSourceFiles(this, javaRootDirectory);
+		generateJavaSourceFiles_InTheCurrentMavenProject("src");
 	}
 	
 	public <T> T yamlFileToObject(String yamlFilePath, Class<T> jCLass) throws FileNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
@@ -116,10 +117,13 @@ public class PackageSetSpec {
 	private void setTypeDef(TypeDefinition typedef, boolean primitive) {
 		String name = typedef.getName();
 		typedef.getAllQualifiedNames().forEach(qualifiedName -> qualifiedNameToClassSpec.put(qualifiedName, typedef));
-		if(simpleNameToClassSpec.get(name) != null) {
-			simpleNameInMultiplePackagesOfThisSet.add(name);
-		}
-		simpleNameToClassSpec.put(name, typedef);
+		simpleNameToClassSpec.compute(name, (k, oldTypedef) -> {
+			if(oldTypedef != null) {
+				simpleNameInMultiplePackagesOfThisSet.add(name);
+				return oldTypedef;
+			}
+			return typedef;
+		});
 		if(primitive) {
 			primitiveTypeSpec.put(name, typedef);
 		}

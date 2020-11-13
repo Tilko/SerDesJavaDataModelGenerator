@@ -51,9 +51,12 @@ public abstract class TypeDefinitionForStubbable extends TypeDefinitionForNonPri
 //	public TypeName getJPoetTypeName(boolean boxPrimitive) {
 //		return ClassName.get(getPackageName(this.isStubbed()), getName());
 //	}
+	public String getReferencePackageName() {
+		return getPackageName(this.isStubbed());
+	}
 	@Override
 	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive) {
-		return ClassName.get(getPackageName(this.isStubbed()), getName());
+		return ClassName.get(getReferencePackageName(), getName());
 	}
 	@Override
 	public Class<?> getReferenceClass() {

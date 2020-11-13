@@ -60,7 +60,6 @@ public abstract class AbstractTypedField extends AbstractField {
 			if(childToSerialize == null) {
 				if(!isOptional())
 					nonOptionalNotInitializedCollection.add(this.getName());
-					//assert false: "A required field has not been filled:" + toString();//TODO or no assert: just warning 
 				else {/* nothing to do */}
 			} else {
 				builder.addProperty(getName(), getTypeExpression().makeSerializableValue(provider, childToSerialize));
@@ -106,7 +105,7 @@ public abstract class AbstractTypedField extends AbstractField {
 //		if(childToSerialize == null) {
 //			if(!isOptional())
 //				ctx.getNonOptionalNotInitializedCollection().addNonOptionalFieldNonInitialized(this.getName());
-//				//assert false: "A required field has not been filled:" + toString();//TODO or no assert: just warning 
+//				//assert false: "A required field has not been filled:" + toString();
 //			else {/* nothing to do */}
 //		} else {
 //			appendYaml(ctx, getName(), getTypeExpression(), childToSerialize);
