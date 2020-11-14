@@ -10,7 +10,8 @@ import api_global.logUtility.L;
 
 
 public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
-
+    // at the end of the deserialization, this will contains the 
+    // "fileRootObject" (here a "OpenApiSpec" object) that is used below to get the schema.
 	public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
     }

@@ -326,9 +326,8 @@ On this OpenAPI example, this modifier is on the `SchemaOrRef` `oneOf` class typ
 and, with the following stub class, it can be used to resolve the `String` reference to the corresponding `Schema` instance:
 ```java
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
-	
-	// at the end of the deserialization, this will contains the 
-	// "fileRootObject" (here a "OpenApiSpec" object) that is used below to get the schema.
+    // at the end of the deserialization, this will contains the 
+    // "fileRootObject" (here a "OpenApiSpec" object) that is used below to get the schema.
     public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
     }
