@@ -22,13 +22,14 @@ public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.ge
         String ref = asSchemaRef().get$ref(); //this one too, 
         // ref must be a path to a member of a JSON (or Yaml) data-structure,
         // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
+        // (cf. "OpenApiSpec" type definition 
+        //  that have a "components" property that a schemas property that have a Dict<Schema> type ...)
         
         int lastSlashIndex = ref.lastIndexOf("/");
-        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(this.getDeserialContext().getFileRootObject())
-                                                            .apply(ref.substring(0, lastSlashIndex));
+        Map<String, Schema> schemas = (Map) makeJsonPathResolver(this.getDeserialContext().getFileRootObject())
+                                            .apply(ref.substring(0, lastSlashIndex));
         String schemaName = ref.substring(lastSlashIndex + 1);
-        L.l("schemas:" + schemas);
-        return (Schema) schemas.get(schemaName);
+        return schemas.get(schemaName); 
     }
     
     public static <T> Function<String, T> makeJsonPathResolver(Object context){

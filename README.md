@@ -327,9 +327,11 @@ and, with the following stub class, it can be used to resolve the `String` refer
 ```java
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
 	
-    public SchemaOrRef(DeserialContext deserialContext) { //at the end of the deserialization, this will contains 
-        super(deserialContext);                           //the "fileRootObject" (here a "OpenApiSpec" object)
-    }                                                     //that is used below to get the schema.
+	// at the end of the deserialization, this will contains the 
+	// "fileRootObject" (here a "OpenApiSpec" object) that is used below to get the schema.
+    public SchemaOrRef(DeserialContext deserialContext) {
+        super(deserialContext);
+    }
 	                                                      
     public Schema getSchema() {
         Schema schema = asSchema();   //this method has been generated in the parent "oneOf" class.
@@ -338,13 +340,14 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
         String ref = asSchemaRef().get$ref(); //this one too, 
         // ref must be a path to a member of a JSON (or Yaml) data-structure,
         // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
+        // (cf. "OpenApiSpec" type definition 
+        //  that have a "components" property that a schemas property that have a Dict<Schema> type ...)
         
         int lastSlashIndex = ref.lastIndexOf("/");
-        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(this.getDeserialContext().getFileRootObject())
-                                                            .apply(ref.substring(0, lastSlashIndex));
+        Map<String, Schema> schemas = (Map) makeJsonPathResolver(this.getDeserialContext().getFileRootObject())
+                                            .apply(ref.substring(0, lastSlashIndex));
         String schemaName = ref.substring(lastSlashIndex + 1);
-        L.l("schemas:" + schemas);
-        return (Schema) schemas.get(schemaName);
+        return schemas.get(schemaName); 
     }
     
     public static <T> Function<String, T> makeJsonPathResolver(Object context){

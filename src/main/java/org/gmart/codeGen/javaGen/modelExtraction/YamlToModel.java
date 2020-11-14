@@ -222,7 +222,6 @@ public class YamlToModel {
 			if(typeDef == null) {
 				typeDef = packageSetSpec.getTypeSpecFromSimpleOrQualifiedName(rootPackageForGeneratedFiles + "." + qualifiedName);
 				if(typeDef == null) {
-					L.l("rootPackageForGeneratedFiles + \".\" + qualifiedName:" + rootPackageForGeneratedFiles + "." + qualifiedName);
 					assert false : "no type definition has been found for the name: " + qualifiedName;
 				}
 			}

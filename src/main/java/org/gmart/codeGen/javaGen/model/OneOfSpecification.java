@@ -142,10 +142,8 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlValue, boolean boxedPrimitive) {
-		L.l("ctx:" + ctx);
 		Class instanciatedClass = this.getInstanciationClass();
 		try {
-			L.l("instanciatedClass:" + instanciatedClass);
 			Object newInstance = instanciatedClass.getConstructor(DeserialContext.class).newInstance(ctx);//jClass.getConstructor(OneOfSpecification.class).newInstance(this);
 			Pair<TypeExpression, Object> payload = makePayloadFromYamlObject(ctx, yamlValue);
 			TypeExpression resolvedType = payload.getValue0();
@@ -263,9 +261,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 			}, () -> {
 				TypeRecognizer<Map<String, ?>> recog = ClassRecognition.makeRecognizerForClassAlternatives((List)classTypeExpression);
 				if(recog.hasError()) {
-					L.l("recog.getErrorMessage():" + recog.getErrorMessage());
 					typeRecognizer.setErrorMessage(recog.getErrorMessage());
-					
 				} else {
 					tests.add(snakeYamlObject -> {
 						return snakeYamlObject instanceof Map ? recog.getRecognizer().apply((Map<String, ?>)snakeYamlObject) : null;
