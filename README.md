@@ -327,10 +327,8 @@ and, with the following stub class, it can be used to resolve the `String` refer
 ```java
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
 	
-    private final DeserialContext deserialContext;
 	public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
-        this.deserialContext = deserialContext;
     }
 	
     public Schema getSchema() {
@@ -342,7 +340,7 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
         // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
         
         int lastSlashIndex = ref.lastIndexOf("/");
-        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(this.deserialContext.getFileRootObject())
+        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(this.getDeserialContext().getFileRootObject())
                                                             .apply(ref.substring(0, lastSlashIndex));
         String schemaName = ref.substring(lastSlashIndex + 1);
         L.l("schemas:" + schemas);
