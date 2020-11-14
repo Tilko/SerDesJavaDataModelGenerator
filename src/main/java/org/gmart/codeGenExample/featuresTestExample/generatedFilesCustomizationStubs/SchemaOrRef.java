@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
-import org.gmart.codeGenExample.openApiExample.generatedFiles.OpenApiSpec;
 import org.gmart.codeGenExample.utils.ReflUtil;
 
 import api_global.logUtility.L;
@@ -12,10 +11,8 @@ import api_global.logUtility.L;
 
 public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
 
-	private final DeserialContext deserialContext;
 	public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
-        this.deserialContext = deserialContext;
     }
 	
     public Schema getSchema() {
@@ -27,7 +24,7 @@ public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.ge
         // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
         
         int lastSlashIndex = ref.lastIndexOf("/");
-        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(this.deserialContext.getFileRootObject())
+        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(this.getDeserialContext().getFileRootObject())
                                                             .apply(ref.substring(0, lastSlashIndex));
         String schemaName = ref.substring(lastSlashIndex + 1);
         L.l("schemas:" + schemas);
