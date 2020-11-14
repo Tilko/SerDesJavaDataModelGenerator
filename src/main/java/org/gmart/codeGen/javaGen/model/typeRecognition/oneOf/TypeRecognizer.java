@@ -29,7 +29,7 @@ public class TypeRecognizer<T> {
 			this.errorMessage = errorMessage;
 		}
 		public boolean hasError() {
-			return this.errorMessage == null;
+			return this.errorMessage != null;
 		}
 //		public void setHasError(boolean hasError) {
 //			this.hasError = hasError;

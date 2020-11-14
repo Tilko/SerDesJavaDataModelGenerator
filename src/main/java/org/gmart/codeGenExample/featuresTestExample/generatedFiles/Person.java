@@ -1,10 +1,11 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
+import java.lang.Integer;
+import java.lang.Object;
+import java.lang.String;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
@@ -20,6 +21,8 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassDefinit
     private Vehicle vehicle;
 
     private List<List<Integer>> preferredNumbers;
+
+    private boolean here;
 
     private CardType preferredCardType;
 
@@ -60,6 +63,14 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassDefinit
 
     public void setPreferredNumbers(List<List<Integer>> preferredNumbers) {
         this.preferredNumbers = preferredNumbers;
+    }
+
+    public boolean getHere() {
+        return here;
+    }
+
+    public void setHere(boolean here) {
+        this.here = here;
     }
 
     public CardType getPreferredCardType() {

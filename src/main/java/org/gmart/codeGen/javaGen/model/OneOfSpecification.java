@@ -45,6 +45,7 @@ import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import api_global.logUtility.L;
 import api_global.strUtil.StringFunctions;
 
 public class OneOfSpecification extends TypeDefinitionForStubbable {
@@ -260,7 +261,9 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 			}, () -> {
 				TypeRecognizer<Map<String, ?>> recog = ClassRecognition.makeRecognizerForClassAlternatives((List)classTypeExpression);
 				if(recog.hasError()) {
+					L.l("recog.getErrorMessage():" + recog.getErrorMessage());
 					typeRecognizer.setErrorMessage(recog.getErrorMessage());
+					
 				} else {
 					tests.add(snakeYamlObject -> {
 						return snakeYamlObject instanceof Map ? recog.getRecognizer().apply((Map<String, ?>)snakeYamlObject) : null;

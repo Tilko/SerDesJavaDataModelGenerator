@@ -12,7 +12,7 @@ Here is an example file that demonstrates the syntax and its associated meaning:
 rootPackage: org.my.example   # root for all generated files
 
 my.package0:                  # then packages are defined relatively to that root
-  MyTypeName0:                # a class definition: org.my.example.my.package0.MyTypeName0
+  MyTypeName0:                # a class definition: org.my.example.generatedFiles.my.package0.MyTypeName0
     myPropertyName0: String                     # "String" or any Java primitive type
     myPropertyName1: Map<KeyType, ValueType>    # "KeyType" can be String or an enum type 
                                                 #      (cf. "CardType" example of enum definition)

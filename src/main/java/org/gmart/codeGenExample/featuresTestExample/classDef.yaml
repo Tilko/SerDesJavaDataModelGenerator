@@ -4,6 +4,7 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
     name?: String
     vehicle: Vehicle
     preferredNumbers: int**
+    here: boolean
     preferredCardType: CardType
     httpMethods: Map<HttpMethodTypes, String*> #Map<String, Map<CardType, Vehicle**>*>*
     components: Components
