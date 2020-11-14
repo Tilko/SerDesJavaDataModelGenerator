@@ -35,7 +35,7 @@ public class Main {
 		File srcParentDir = new File(new File("").getAbsolutePath());
 		PackageSetSpec packagesSet = PackagesSetFactory.makePackageSet(new File(srcParentDir, "/src/main/java/org/gmart/codeGenExample/featuresTestExample/classDef.yaml"));
 		
-		if(true) {
+		if(false) {
 			packagesSet.generateJavaSourceFiles_InTheCurrentMavenProject();
 			L.l("files generated");
 			return;
@@ -69,6 +69,7 @@ public class Main {
 			log("schema2 class:" + schema2.getClass());
 			L.l("schema2.getTruc():" + schema2.getTruc());
 			L.l("((ObjectSchema)schema2).getMachin():" + ((ObjectSchema)schema2).getMachin());
+			L.l("person here:" + person.getHere());
 		} catch(Exception e) {
 			Schema schema = person.getVehicle().getSchema().asSchema();
 			log("schemaclass:" + schema.getClass());

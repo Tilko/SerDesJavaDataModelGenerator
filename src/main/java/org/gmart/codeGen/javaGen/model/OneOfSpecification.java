@@ -142,8 +142,10 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlValue, boolean boxedPrimitive) {
+		L.l("ctx:" + ctx);
 		Class instanciatedClass = this.getInstanciationClass();
 		try {
+			L.l("instanciatedClass:" + instanciatedClass);
 			Object newInstance = instanciatedClass.getConstructor(DeserialContext.class).newInstance(ctx);//jClass.getConstructor(OneOfSpecification.class).newInstance(this);
 			Pair<TypeExpression, Object> payload = makePayloadFromYamlObject(ctx, yamlValue);
 			TypeExpression resolvedType = payload.getValue0();

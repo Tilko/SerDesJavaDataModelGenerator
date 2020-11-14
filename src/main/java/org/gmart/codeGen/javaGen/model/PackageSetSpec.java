@@ -88,6 +88,7 @@ public class PackageSetSpec {
 		ctx.buildReport().ifPresent(report -> L.w("During deserialization:" + report));
 		assert jClass == rez.getValue0();// : "The class that you specified as second argument of \"yamlFileToObject\" to specify the return-type must b";
 		Object value1 = rez.getValue1();
+		L.l("value1:" + value1);
 		ctx.setFileRootObject(value1);
 		return (T)value1;
 	}
