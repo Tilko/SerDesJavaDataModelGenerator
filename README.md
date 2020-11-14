@@ -327,10 +327,10 @@ and, with the following stub class, it can be used to resolve the `String` refer
 ```java
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
 	
-    public SchemaOrRef(DeserialContext deserialContext) {
-        super(deserialContext);
-    }
-	
+    public SchemaOrRef(DeserialContext deserialContext) { //at the end of the deserialization, this will contains 
+        super(deserialContext);                           //the "fileRootObject" (here a "OpenApiSpec" object)
+    }                                                     //that is used below to get the schema.
+	                                                      
     public Schema getSchema() {
         Schema schema = asSchema();   //this method has been generated in the parent "oneOf" class.
         if (schema != null)
