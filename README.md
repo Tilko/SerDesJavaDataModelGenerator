@@ -327,7 +327,7 @@ and, with the following stub class, it can be used to resolve the `String` refer
 ```java
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
 	
-	public SchemaOrRef(DeserialContext deserialContext) {
+    public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
     }
 	
