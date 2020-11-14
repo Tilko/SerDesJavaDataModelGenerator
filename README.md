@@ -327,16 +327,14 @@ and, with the following stub class, it can be used to resolve the `String` refer
 ```java
 public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generatedFiles.SchemaOrRef {
 	
-    private final Function<String, Object> jsonPathResolver;
-    
-    public SchemaOrRef(DeserialContext deserialContext) {
+    private final DeserialContext deserialContext;
+	public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
-        OpenApiSpec openApiSpec = (OpenApiSpec) deserialContext.getFileRootObject();
-        this.jsonPathResolver = makeJsonPathResolver(openApiSpec);
+        this.deserialContext = deserialContext;
     }
-    
+	
     public Schema getSchema() {
-        Schema schema = asSchema(); //this method has been generated in the parent "oneOf" class.
+        Schema schema = asSchema();   //this method has been generated in the parent "oneOf" class.
         if (schema != null)
             return schema;
         String ref = asSchemaRef().get$ref(); //this one too, 
@@ -344,9 +342,10 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
         // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
         
         int lastSlashIndex = ref.lastIndexOf("/");
-        Map<String, Object> schemas = (Map<String, Object>) this.jsonPathResolver
+        Map<String, Object> schemas = (Map<String, Object>) makeJsonPathResolver(this.deserialContext.getFileRootObject())
                                                             .apply(ref.substring(0, lastSlashIndex));
         String schemaName = ref.substring(lastSlashIndex + 1);
+        L.l("schemas:" + schemas);
         return (Schema) schemas.get(schemaName);
     }
     

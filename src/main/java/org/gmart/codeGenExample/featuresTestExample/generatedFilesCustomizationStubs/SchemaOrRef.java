@@ -13,10 +13,9 @@ import api_global.logUtility.L;
 public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
 
 	private final DeserialContext deserialContext;
-    public SchemaOrRef(DeserialContext deserialContext) {
+	public SchemaOrRef(DeserialContext deserialContext) {
         super(deserialContext);
         this.deserialContext = deserialContext;
-       
     }
 	
     public Schema getSchema() {
