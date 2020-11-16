@@ -1,27 +1,26 @@
-package org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs;
+package org.gmart.codeGenExample.featuresTestExample.temp;
 
 import java.util.Map;
 import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaRef;
+import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Schema;
 import org.gmart.codeGenExample.utils.ReflUtil;
 
-public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaOrRef {
-    // at the end of the deserialization, this will contains the 
-    // "fileRootObject" (here a "OpenApiSpec" object) that is used below to get the schema.
-	public SchemaOrRef(DeserialContext deserialContext) {
-        super(deserialContext);
-    }
-	
-    public Schema getSchema() {
-        Schema schema = asSchema();   //this method has been generated in the parent "oneOf" class.
-        if (schema != null)
-            return schema;
-        String ref = asSchemaRef().get$ref(); //this one too,
-        // ref must be a path to a member of a JSON (or Yaml) data-structure,
-        // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
-        // (cf. "OpenApiSpec" type definition 
-        //  that have a "components" property that a schemas property that have a Dict<Schema> type ...)
+public interface ObjectOrRef<T, R> {
+	public interface Ref<T>{
+		DeserialContext getDeserialContext();
+	}
+	DeserialContext getDeserialContext();
+	T asReferedObject();
+
+    R asReference();
+    default T getReferedObject() {
+        T referedObject = asReferedObject();
+        if (referedObject != null)
+            return referedObject;
+        R ref = asReference();
         
         int lastSlashIndex = ref.lastIndexOf("/");
         Map<String, Schema> schemas = (Map) makeJsonPathResolver(this.getDeserialContext().getFileRootObject())
@@ -29,11 +28,11 @@ public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.ge
         String schemaName = ref.substring(lastSlashIndex + 1);
         return schemas.get(schemaName); 
     }
-    //this function is just for demonstration purpose ...
+    
     public static <T> Function<String, T> makeJsonPathResolver(Object context){
         Function<String, T> convertRefToSchema = ref -> {
-            if(ref.startsWith("#/")) {
-                ref = ref.substring(2);
+            if(ref.startsWith("#")) {
+                ref = ref.substring(1);
                 String[] path = ref.substring(0).split("[/\\\\]");
                 try {
                     return (T) ReflUtil.getDeepFieldValue(context, path);

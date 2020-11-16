@@ -39,11 +39,10 @@ my.package0:                  # then packages are defined relatively to that roo
   MyTypeName2:
     myPropertyName9: MyTypeName0                # you can reference "MyTypeName0" with its simple name 
                                                 # because it's a unique name in this file
-    myPropertyName10: package3.MyTypeName2      # else give its relative fully qualified name 
-                                                #    (with package, cf. next package)
-package3:                                       # package to demonstrate the previous point
-   MyTypeName2:
-    myPropertyName11: double
+    myPropertyName10: package3.MyTypeName2      # else give its relative fully qualified name.
+  package3:                                     # package to demonstrate the previous point.
+    MyTypeName2:
+      myPropertyName11: double
     
     
     
@@ -118,7 +117,7 @@ Here are the validation rules that are checked for you by the tool:
  - Multiple `List` types are possible, but the set formed by all their content types must pass the current validation rules (recursion).
  - Only one `Map` type (or `Dict`) can be present among the alternatives, and if there is one, no `class` type can be present.
  - Multiple `class` types can be present, but their property names must be sufficient to recognize which type corresponds to any Yaml/JSON instance of one of those classes 
-   (the types of the properties are ignored in this validation). The order of the classes type might matter, for example, the type expression `oneOf(A, B)` with:
+   (the types of the properties are ignored in this validation). The order of the classes type may matter, for example, the type expression `oneOf(A, B)` with:
    ```yaml
    A:
      a:...
@@ -299,9 +298,10 @@ Then, with the following code, you can load your OpenAPI Yaml file into an insta
 public static void main2(String[] args) throws Exception {
     File srcParentDir = new File(new File("").getAbsolutePath());
     File myOpenApiFile = new File(srcParentDir, "/src/main/resources/myOpenApiDescriptionInstance.yaml");
-    OpenApiSpec myApiSpec = makeOpenApiPackageSet(srcParentDir)
-                                .yamlFileToObject(myOpenApiFile, OpenApiSpec.class); 
-                          //or  .jsonFileToObject(...
+    PackageSetSpec packagesSet = makeOpenApiPackageSet(srcParentDir);
+    packagesSet.initGeneratedClasses();
+    OpenApiSpec myApiSpec = packagesSet.yamlFileToObject(myOpenApiFile, OpenApiSpec.class); 
+                                 //or  .jsonFileToObject(...
 }
 ```
 
@@ -338,7 +338,7 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
             return schema;
         String ref = asSchemaRef().get$ref(); //this one too, 
         // ref must be a path to a member of a JSON (or Yaml) data-structure,
-        // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
+        // in this OpenAPI example it can be: "#/components/schemas/<name of the schema>"
         // (cf. "OpenApiSpec" type definition 
         //  that have a "components" property that a schemas property that have a Dict<Schema> type ...)
         
@@ -399,5 +399,6 @@ User errors are thrown by Java assertion (`assert` keyword), so, for each `main`
 - to do regression tests for all features
 - to improve user error feedbacks
 - ability to import types 
+- JSON pointer implementation based on the "oneOf(String, MyType)" example solution
 - ...
 ...

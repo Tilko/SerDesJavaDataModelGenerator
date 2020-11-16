@@ -13,7 +13,7 @@ vehicle:
   wheelCard: 4
   fuel: E85
   schema:
-    $ref: "#components/schemas/A" #truc: 2 #
+    $ref: "#/components/schemas/A" #truc: 2 #
   
 httpMethods:
   GET:
