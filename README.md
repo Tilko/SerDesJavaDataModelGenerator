@@ -6,7 +6,7 @@ Software to:
 You can also plug custom stub classes in the generated class hierarchy.  
 
 ## As first input of this tool: 
-A type of data structure definition in a Yaml file.
+A data structure type definition in a Yaml file.
 Here is an example file that demonstrates the syntax and its associated meaning:
 ```yaml
 rootPackage: org.my.example   # root for all generated files
@@ -399,6 +399,6 @@ User errors are thrown by Java assertion (`assert` keyword), so, for each `main`
 - to do regression tests for all features
 - to improve user error feedbacks
 - ability to import types 
-- JSON pointer implementation based on the "oneOf(String, MyType)" example solution
+- reference resolution (ongoing)
 - ...
 ...
