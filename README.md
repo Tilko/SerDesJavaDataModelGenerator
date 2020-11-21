@@ -396,9 +396,9 @@ User errors are thrown by Java assertion (`assert` keyword), so, for each `main`
 - Verify that you enabled assertions (cf. Installation)
 
 ## Features/work that might came later:
-- to do regression tests for all features
-- to improve user error feedbacks
-- ability to import types 
-- reference resolution (ongoing)
-- ...
+- to do regression tests for all features  
+- to improve user error feedbacks  
+- ability to import types  
+- reference resolution (ongoing)   
+- ...   
 ...
