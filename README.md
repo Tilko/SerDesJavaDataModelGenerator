@@ -4,7 +4,8 @@ Software to:
 - serialize (unmarshall) this (possibly modified) instance back to a Yaml or JSON file.  
 Some features in two words:
   - type polymorphism based on shape (`oneOf`) or enum property (`is`).
-  - internal reference node (an instance node that references an other instance node somewhere in the deserialized tree) that allows programmatic access to the referred node.
+  - internal reference node (an instance node that references an other instance node somewhere in the deserialized tree) that allows programmatic access to the referred node 
+    and referred nodes existence validation.
   - ability to plug custom stub classes in the generated class hierarchy.
 
 ## As first input of this tool: 
@@ -52,7 +53,7 @@ my.package0:                  # then packages are defined relatively to that roo
                              # the "b2" must have Json-pointer format: "myKey0/myKey1/..."
                              # (with "/" escaped with "~1" and "~" with- "~0")
                              
-    b22: Dict<keysFor(a2.?)*>*  # collections of references are supported
+    b22: Dict<keysFor(a2.?)*>*  # Collections of references are supported.
    
     b3: Dict<keysFor(b3.?)>    # So can you can do this wonderful endomorphism type :)
   MyReferencedType0:
@@ -60,11 +61,12 @@ my.package0:                  # then packages are defined relatively to that roo
   
   MyTypeNameX2:
     a: Dict<MyReferencedTypeContainer0>  
-    b: keysFor(a.?.?)     # deep reference in an other type
+    b: keysFor(a.?.?)     # Deep reference in an other type
   MyReferencedTypeContainer0:
     a0Bis: Dict<MyReferencedType0>
   
-  #### you can also specify the following dependency relation between 2 types (class or oneOf):
+  #### You can also specify the following dependency relation between 2 types (class or oneOf)
+  ##   with what looks like a contructor construct:
   RootType:
     a: Dict<MyReferencedType>
     b: MyDependentType(a.?)
@@ -103,16 +105,16 @@ parent is set in the child when the child is set as property of the parent
 on the reference object that the data will be accessed from that parent reference. 
 If you add a node in a List/Map or assign a property, the generated classes will take 
 care of this dependency by propagating a reference to the parent in the child for you.)
-You can see a concrete example for the use of those internal references ([Here](#a-use-example-of-the-internal-reference))
+You can see a concrete example for the use of those internal references ([Here](#a-use-example-of-the-internal-reference)).
 
 #### About package names:
 ```yaml
-.:                        # an other package, at the root
+.:                        # An other package, at the root
   MyTypeName2:
-    myPropertyName9: MyTypeName0                # you can reference "MyTypeName0" with its simple name 
+    myPropertyName9: MyTypeName0                # You can reference "MyTypeName0" with its simple name 
                                                 # because it's a unique name in this file
     myPropertyName10: package3.MyTypeName2      # else give its relative fully qualified name.
-  package3:                                     # package to demonstrate the previous point.
+  package3:                                     # Package to demonstrate the previous point.
     MyTypeName2:
       myPropertyName11: double
 ```
@@ -124,44 +126,44 @@ example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
     myField0: AbstractTypeName0     # cf. the following type to see how this type is defined
   
   AbstractTypeName0:
-    type: abstract Type             # this "abstract" property will be used to choose a concrete type
+    type: abstract Type             # This "abstract" property will be used to choose a concrete type
                                     # for the previous "myField0" property when a 
-                                    # MyTypeThatHaveAFieldWithAnAbstractType is instantiated
+                                    # MyTypeThatHaveAFieldWithAnAbstractType is instantiated.
     someCommonProperty: String
     
-  Type: aaa, bbb, ccc, ddd          # enum type used previously to specify the "abstract" field
+  Type: aaa, bbb, ccc, ddd          # Enum type used previously to specify the "abstract" field.
   	
 ```
 Now, let's see how to specify some concrete types with the "AbstractTypeName0" super-type:
 ```yaml 
-  ConcreteTypeName0 is AbstractTypeName0:   # note the "is" clause
-    type: enum(aaa, bbb)                    # note that the property name is the same as 
+  ConcreteTypeName0 is AbstractTypeName0:   # Note the "is" clause.
+    type: enum(aaa, bbb)                    # Note that the property name is the same as 
                                             #    the "abstract" one in AbstractTypeName0,
                                             #    it means that the "type" property discriminates between
                                             #    the concrete types to instantiate, in this case 
                                             #    if type is "aaa" or "bbb", this concrete type will be 
                                             #    instantiated.
-    otherField: int                         # a field specific to that concrete type
+    otherField: int                         # A field specific to that concrete type.
     
-  SubAbstractTypeName1 is AbstractTypeName0: # also a AbstractTypeName0 sub-type
+  SubAbstractTypeName1 is AbstractTypeName0: # Also a AbstractTypeName0 sub-type,
     type: abstract enum(ccc, ddd)            # this time SubAbstractTypeName1 is also "abstract"
     otherField: String  
   
-  SubSubAbstractTypeName1 is SubAbstractTypeName1:  # concrete type
+  SubSubAbstractTypeName1 is SubAbstractTypeName1:  # Concrete type
     type: enum(ccc)									
     otherField: double 
-  SubSubAbstractTypeName2 is SubAbstractTypeName1:  # concrete type
+  SubSubAbstractTypeName2 is SubAbstractTypeName1:  # Concrete type
     type: enum(ddd)
     otherField: double
   
-  OtherAbstractTypeName:       # you can specify multiple "abstract" fields,
+  OtherAbstractTypeName:       # You can specify multiple "abstract" fields,
     type0: abstract Type       #    the tool will verify that all concrete classes can not       
     type1: abstract OtherType  #    have a common combination of enum, cf. following example
                                #    with ConcreteA and ConcreteB                                          
     someCommonProperty: String
   OtherType: eee, fff, ggg, hhh 
   
-  ### for example, if, among the 3 following classes, there was not ConcreteB2,
+  ### For example, if, among the 3 following classes, there was not ConcreteB2,
   #   it would be a valid class hierarchy because any pair of {type0, type1} is never possible in both
   #   ConcreteA and ConcreteB. Now if finally there is ConcreteB2, the pair {type0: bbb, type1: eee} is
   #   problematic because it can not discriminate between ConcreteA and ConcreteB2.
@@ -444,7 +446,8 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
 ### A use example of the internal reference:
 A finite state machine (FSM) data structure can take advantage of this language element,
 indeed a FSM is a directed graph so because of the tree nature of a deserialized instance,
-we have to use some kind of references ... Here is the type definition:
+we have to use some kind of references ...    
+Here is the type definition:
 ```yaml
 .:
   FiniteStateMachine:
