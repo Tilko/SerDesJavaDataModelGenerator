@@ -11,8 +11,9 @@ Some features in two words:
   - ability to plug custom stub classes in the generated class hierarchy.
 
 ## As first input of this tool: 
-A data structure type definition in a Yaml file.
+A data structure type definition in a Yaml file.  
 Here is an example file that demonstrates the syntax and its associated meaning:
+  - the basic language elements:
 ```yaml
 rootPackage: org.my.example   # root for all generated files
 
@@ -39,6 +40,9 @@ my.package0:                  # then packages are defined relatively to that roo
                                                       # specified types, the tool checks that 
                                                       # types are not formally ambiguous
                                                       # with each other (cf. details below).
+```
+  - the internal reference language element:
+```yaml
   MyTypeNameX:
     a0: Dict<MyReferencedType0>
     b0: keysFor(a0.?)       # The "keysFor(a0.?)" type means that the "b0" property must contain a key of 
@@ -109,7 +113,7 @@ on the reference object that the data will be accessed from that parent referenc
 If you add a node in a List/Map or assign a property, the generated classes will take 
 care of this dependency by propagating a reference to the parent in the child for you.)
 
-#### About package names:
+  - about package names:
 ```yaml
 .:                        # An other package, at the root
   MyTypeName2:
@@ -120,7 +124,7 @@ care of this dependency by propagating a reference to the parent in the child fo
     MyTypeName2:
       myPropertyName11: double
 ```
-#### About the "is a" relationship based on enum properties:
+  - the "is a" language element that is based on enum properties:
 ```yaml
 example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
   
