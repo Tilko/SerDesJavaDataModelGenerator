@@ -1,7 +1,9 @@
 Software to:  
 - generate Java classes from a Yaml data types specification file,   
 - deserialize (marshall) a Yaml or JSON file into an instance of one of the generated classes,  
-- serialize (unmarshall) this (possibly modified) instance back to a Yaml or JSON file.  
+- serialize (unmarshall) this (possibly modified) instance back to a Yaml or JSON file.      
+   
+
 Some features in two words:
   - type polymorphism based on shape (`oneOf`) or enum property (`is`).
   - internal reference node (an instance node that references an other instance node somewhere in the deserialized tree) that allows programmatic access to the referred node 
