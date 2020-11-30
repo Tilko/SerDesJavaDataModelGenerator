@@ -99,7 +99,8 @@ this software can also validate that every keys that should guide to a referred 
 and can be called on a deserialized instance on with:
 ```java
 myDeserializedInstance.checkReferences_recursive().getKeysThatPointToNoValues()
-```
+```  
+You can see a concrete example for the use of those internal references ([Here](#a-use-example-of-the-internal-reference)).  
 (Under-the-hood note: I used the expression "constructor arguments" but in fact no `Accessor<...>` function is passed to a Java node when it 
 is constructed, in fact, when a node is dependent to its parent, just a reference to the  
 parent is set in the child when the child is set as property of the parent 
@@ -107,7 +108,6 @@ parent is set in the child when the child is set as property of the parent
 on the reference object that the data will be accessed from that parent reference. 
 If you add a node in a List/Map or assign a property, the generated classes will take 
 care of this dependency by propagating a reference to the parent in the child for you.)
-You can see a concrete example for the use of those internal references ([Here](#a-use-example-of-the-internal-reference)).
 
 #### About package names:
 ```yaml
