@@ -15,7 +15,13 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessPathKeyAndOutputTypes;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
@@ -38,5 +44,24 @@ public abstract class TypeDefinitionForPrimitives extends TypeDefinition {
 	@Override
 	protected Stream<String> getAllQualifiedNames(){
 		return Stream.of(this.getQualifiedName());
+	}
+	//public static final Function<List<Object>, Optional<Object>> lAccessor = list -> Optional.of(instance);
+	public static final Function<Object, Function<List<Object>, Optional<Object>>> identityAccessor = instance -> list -> Optional.of(instance);
+
+//	public static final Function<Object, Function<List<Object>, Optional<Object>>> identityAccessor2 = instance -> list -> Optional.of(instance);
+//	public static final Function<Object, Function<List<Object>, Optional<Object>>> identityAccessor3 = instance -> list -> Optional.of(instance);
+//	public static final Function<Object, Function<List<Object>, Optional<Object>>> identityAccessor4 = instance -> list -> Optional.of(instance);
+	@Override
+	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+		return makeAccessor_static(path, toFillWithTypesForValidation, this, "primitive (or Object)");
+	}
+	public static Function<Object, Function<List<Object>, Optional<Object>>> makeAccessor_static(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation, TypeExpression thisType, String typesNameForErrorMessage) {
+		assert path.size() == 0 : "The following non-empty accessor path is written on a " + typesNameForErrorMessage + " type: " + path.stream().collect(Collectors.joining("."));
+		toFillWithTypesForValidation.setOutputType(thisType);
+		return identityAccessor;
+	}
+	@Override
+	public boolean isDependent() {
+		return false;
 	}
 }

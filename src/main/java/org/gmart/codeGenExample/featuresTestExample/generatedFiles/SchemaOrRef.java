@@ -1,7 +1,7 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
-import java.lang.Object;
 import javax.annotation.processing.Generated;
+
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.OneOfInstance;
 import org.gmart.codeGen.javaGen.model.OneOfSpecification;
@@ -44,7 +44,7 @@ public class SchemaOrRef implements OneOfInstance {
     }
 
     public void setPayload(Object payload) {
-        Pair<TypeExpression, Object> makePayload = oneOfSpecification.makePayload(deserialContext, payload);
+        Pair<TypeExpression, Object> makePayload = oneOfSpecification.makePayload(deserialContext, payload, this);
         this.payloadType = makePayload.getValue0();
         this.payload = makePayload.getValue1();
     }

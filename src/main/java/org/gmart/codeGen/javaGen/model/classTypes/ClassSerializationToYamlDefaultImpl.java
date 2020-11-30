@@ -18,6 +18,7 @@ package org.gmart.codeGen.javaGen.model.classTypes;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.json.Json;
@@ -31,7 +32,9 @@ import org.gmart.codeGen.javaGen.model.serialization.impls.YamlSerializerProvide
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-public interface ClassSerializationToYamlDefaultImpl extends ClassDefinitionOwner { //extends SerializableToYaml {
+import api_global.logUtility.L;
+
+public interface ClassSerializationToYamlDefaultImpl extends ClassInstance { //extends SerializableToYaml {
 //	@Override
 //	default void appendToYaml(SerialContext bui) {
 //		getClassDefinition().appendInstanceToYamlCode(bui, this);
@@ -73,6 +76,13 @@ public interface ClassSerializationToYamlDefaultImpl extends ClassDefinitionOwne
 		toYaml(writer, options);
 		return writer.toString();
 	}
+	default void toYaml(Writer writer, DumperOptions options) {
+		Yaml yaml = new Yaml(options);
+		checkReferences_recursive_internal();
+		Object serializableValue = toSerializableValue(new YamlSerializerProvider());
+		yaml.dump(serializableValue, writer);
+	}
+	
 	default String toJson() {
 		StringWriter writer = new StringWriter();
 		toJson(writer);
@@ -83,15 +93,19 @@ public interface ClassSerializationToYamlDefaultImpl extends ClassDefinitionOwne
         properties.put(JsonGenerator.PRETTY_PRINTING, true);
 		toJson(Json.createWriterFactory(properties).createWriter(writer));
 	}
-	default void toYaml(Writer writer, DumperOptions options) {
-		Yaml yaml = new Yaml(options);
-		Object serializableValue = toSerializableValue(new YamlSerializerProvider());
-		yaml.dump(serializableValue, writer);
-	}
 	default void toJson(JsonWriter writer1) {
 		JsonValue serializableValue = toSerializableValue(new JsonSerializerProvider());
 		writer1.write(serializableValue);
-	}	
+		checkReferences_recursive_internal();
+	}
+	
+	
+	private void checkReferences_recursive_internal() {
+		List<String> keysThatPointToNoValues = this.checkReferences_recursive().getKeysThatPointToNoValues();
+		if(!keysThatPointToNoValues.isEmpty())
+			L.e("The following \"keysFor\" keys do not point to a value:" + keysThatPointToNoValues);
+	}
+		
 	private <T> T toSerializableValue(SerializerProvider<T> provider) {
 		return getClassDefinition().makeSerializableValue(provider, this);
 	}

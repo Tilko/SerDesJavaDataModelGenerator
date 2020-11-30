@@ -20,10 +20,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
+import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ArrayListD;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 
 import com.squareup.javapoet.ClassName;
@@ -48,7 +51,7 @@ public class ListContainerType extends AbstractContainerType {
 	@Override
 	protected Object makeJavaObject_internal(DeserialContext ctx, Object fieldYamlValue) {
 		List fieldYamlList = (List)fieldYamlValue;
-		ArrayList rez = new ArrayList<>();
+		ArrayList rez = this.isDependent() ? new ArrayListD<>(fieldYamlList.size()) : new ArrayList<>(fieldYamlList.size());
 		for(Object fieldYaml : fieldYamlList) 
 			rez.add(contentType.makeModelValue(ctx, fieldYaml));
 		return rez;
@@ -77,6 +80,33 @@ public class ListContainerType extends AbstractContainerType {
 	public String getContainerTypeName() {
 		return "List";
 	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected Object getElem(Object containerInstance, Object keyInstance) {
+		return ((List)containerInstance).get((Integer)keyInstance);
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	protected Stream<Object> getAllInstanceValues(Object containerInstance) {
+		return ((List)containerInstance).stream();
+	}
+	TypeExpression keyTypeSpec;
+	@Override
+	public TypeExpression getKeyTypeSpec() {
+		if(keyTypeSpec == null)
+			keyTypeSpec = PackageSetSpec.getPrimitiveTypeSpecFromSimpleName("Integer");
+		return keyTypeSpec;
+	}
+	@Override
+	public boolean isEquivalent_AccessorParameterType(TypeExpression other) {
+		if(!(other instanceof ListContainerType)) {
+			return false;
+		}
+		return this.getContentType().isEquivalent_AccessorParameterType(((ListContainerType)other).getContentType());
+	}
+	
+	
 }
 
 

@@ -16,13 +16,20 @@
 package org.gmart.codeGenExample.featuresTestExample;
 
 import java.io.File;
+import java.util.List;
 
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor_Object;
 import org.gmart.codeGen.javaGen.modelExtraction.PackagesSetFactory;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.CardType;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.HttpMethodTypes;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.ObjectSchema;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.SchemaRef;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Transition;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Transition2;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Transition3;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Transition4;
+import org.gmart.codeGenExample.featuresTestExample.generatedFiles.Transition5;
 import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Person; //
 import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Schema;
 
@@ -42,10 +49,10 @@ public class Main {
 		}
 		
 		packagesSet.initGeneratedClasses();
-		boolean y = true;
-		y = false;
+		boolean yamlInput = true;
+		//yamlInput = false;
 		Person person;
-		if(y) {
+		if(yamlInput) {
 			File personFile = new File(srcParentDir, "/src/main/resources/personInstance.yaml");
 			person = packagesSet.yamlFileToObject(personFile, Person.class);
 		} else {
@@ -70,17 +77,44 @@ public class Main {
 			L.l("schema2.getTruc():" + schema2.getTruc());
 			L.l("((ObjectSchema)schema2).getMachin():" + ((ObjectSchema)schema2).getMachin());
 			L.l("person here:" + person.getHere());
+			
+			KeysFor_Object<List<Transition>> target = person.getStates().get("sleepy").get(0).getTarget();
+			L.l("target.getKeys():" + target.getKeys());
+			L.l("target.getReferedObject():" + target.getReferedObject().get(0).getCondition());//.ifPresent(state -> L.l("state.get(0).getCondition():" + state.get(0).getCondition()));
+			
+			KeysFor_Object<List<Transition2>> target2 = person.getStates2().get("sleepy").get(0).getTarget();
+			L.l("target2.getKeys():" + target2.getKeys());
+			L.l("target2.getReferedObject():" + target2.getReferedObject().get(0).getCondition());
+			
+			KeysFor_Object<List<Transition3>> target3 = person.getStates3().get("sleepy").get("trucish").get(0).getTarget();
+			L.l("target3.getKeys():" + target3.getKeys());
+			L.l("target3.getReferedObject():" + target3.getReferedObject().get(0).getCondition());
+			
+			KeysFor_Object<List<Transition4>> target4 = person.getStates4().get("sleepy").get("trucish").get(0).getTarget();
+			L.l("target4.getKeys():" + target4.getKeys());
+			L.l("target4.getReferedObject():" + target4.getReferedObject().get(0).getCondition());
+			
+			KeysFor_Object<List<Transition5>> target5 = person.getStates5().get("sleepy").get("trucish").get(0).getTarget();
+			L.l("target5.getKeys():" + target5.getKeys());
+			List<Transition5> referedObject = target5.getReferedObject();
+			L.l("referedObject:" + referedObject);
+			L.l("target5.getReferedObject():" + referedObject.get(0).getCondition());
+			
+			L.l("OneOfAndAccessorTest:" + person.getOneOfAndAccessorTest().asKeysFor_states().getReferedObject());
+			
+			assert person.checkReferences_recursive().getKeysThatPointToNoValues().toString().equals("[sleepy/trucish2]");
 		} catch(Exception e) {
+			e.printStackTrace();
 			Schema schema = person.getVehicle().getSchema().asSchema();
 			log("schemaclass:" + schema.getClass());
 			log("schema.getTruc():" + schema.getTruc());//.getTruc());
 		}
 		
-		boolean y2 = true;
-		y2 = false;
-		if(y2)
-			log("person.toYaml():\n" + person.toYaml());
-		else log("person.toJson():\n" + person.toJson());
+//		boolean yamlOutput = true;
+//		//yamlOutput = false;
+//		if(yamlOutput)
+//			log("person.toYaml():\n" + person.toYaml());
+//		else log("person.toJson():\n" + person.toJson());
 	}
 	
 //	Main() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException, JsonGenerationException, JsonMappingException, IOException{

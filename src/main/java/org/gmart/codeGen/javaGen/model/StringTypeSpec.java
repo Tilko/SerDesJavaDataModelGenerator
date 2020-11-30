@@ -22,9 +22,10 @@ import org.javatuples.Pair;
 
 public class StringTypeSpec extends TypeDefinitionForPrimitives {
 
-	public StringTypeSpec() {
+	private StringTypeSpec() {
 		super(PackageDefinition.javaLangPackageName, "String");
 	}
+	public static final StringTypeSpec theInstance = new StringTypeSpec();
 
 	@Override
 	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
@@ -53,7 +54,10 @@ public class StringTypeSpec extends TypeDefinitionForPrimitives {
 	public FormalGroup formalGroup() {
 		return FormalGroup.string;
 	}
-
+	@Override
+	public TypeExpression getNormalizedTypeForAccessorParameterTypeComparison() {
+		return this;
+	}
 }
 
 

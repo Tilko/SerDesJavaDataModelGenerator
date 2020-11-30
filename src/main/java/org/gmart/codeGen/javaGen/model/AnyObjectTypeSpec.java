@@ -35,9 +35,11 @@ import org.javatuples.Pair;
 
 public class AnyObjectTypeSpec extends TypeDefinitionForPrimitives {
 
-	public AnyObjectTypeSpec() {
+	private AnyObjectTypeSpec() {
 		super(PackageDefinition.javaLangPackageName, "Object");
 	}
+	
+	public static final AnyObjectTypeSpec theInstance = new AnyObjectTypeSpec();
 	
 	@Override
 	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
@@ -45,12 +47,14 @@ public class AnyObjectTypeSpec extends TypeDefinitionForPrimitives {
 			return AbstractMapContainerType.makeSerializableValue_static(provider, toSerialize, elem -> this.makeSerializableValue(provider, elem));
 		} else if(toSerialize instanceof List) {
 			return ListContainerType.makeSerializableValue_static(provider, toSerialize, elem -> this.makeSerializableValue(provider, elem));
-		}else if(toSerialize instanceof String) {
+		}else return makeSerializableValue_static(provider, toSerialize);
+	}
+	public static <T> T makeSerializableValue_static(SerializerProvider<T> provider, Object toSerialize) {
+		if(toSerialize instanceof String) {
 			return StringTypeSpec.makeSerializableValue_static(provider, toSerialize);
 		} else if(toSerialize instanceof Enum) {
 			return EnumSpecification.makeSerializableValue_static(provider, toSerialize);
-		}
-		else {//if(toSerialize instanceof Integer || toSerialize instanceof Boolean || toSerialize instanceof Float || toSerialize instanceof Double || toSerialize instanceof Long || toSerialize instanceof Short) {
+		} else {//if(toSerialize instanceof Integer || toSerialize instanceof Boolean || toSerialize instanceof Float || toSerialize instanceof Double || toSerialize instanceof Long || toSerialize instanceof Short) {
 			return PrimitiveTypeSpecification.makeSerializableValue_static(provider, toSerialize);
 		}
 	}
@@ -85,6 +89,10 @@ public class AnyObjectTypeSpec extends TypeDefinitionForPrimitives {
 	@Override
 	public FormalGroup formalGroup() {
 		return FormalGroup.any;
+	}
+	@Override
+	public TypeExpression getNormalizedTypeForAccessorParameterTypeComparison() {
+		return this;
 	}
 }
 

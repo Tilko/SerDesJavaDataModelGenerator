@@ -18,4 +18,5 @@ package org.gmart.codeGen.javaGen.model;
 public interface OneOfInstance {
 	TypeExpression getPayloadType();
 	Object getPayload();
+	OneOfSpecification getOneOfSpecification();
 }

@@ -2,24 +2,40 @@ grammar DataTypeHierarchy;
 
 // the 4 following rules and the "typeExpression" generate the main rules (input rules).
 
-
 typeNamePart
-	:	stubbedMark='stubbed'? Identifier ('is' qualifiedName)?
+	:	stubbedMark='stubbed'? Identifier ('(' constructorParameters? ')')? ('is' qualifiedName)?
 	;
 propertyNamePart
 	:	Identifier optionalMark='?'?
 	;
 onOneLineTypeName
-	: 	stubbedMark='stubbed'? Identifier
+	: 	stubbedMark='stubbed'? Identifier ('(' constructorParameters? ')')?
 	;
 onOneLineTypeDef
 	:	'oneOf' '(' typeExpression (',' typeExpression)* ')'
 	|	identifierList
 	;
 	
-identifierList
-	: 	Identifier (',' Identifier)*
+constructorParameters
+	:	constructorParameter ( ',' constructorParameter)*
 	;
+constructorParameter
+//	:	accessorMark='Accessor' '<' typeExpression (',' typeExpression)* '>' Identifier
+	:	accessorMark='Accessor' '<' (qualifiedName ',')* typeExpression '>' Identifier
+//	|	typeExpression Identifier
+	;
+//constructorParameterTypeExpression
+//	|   mapTypeExpression
+//	|	qualifiedName ArrayMarks?
+//	;
+//constructorParameterMapTypeExpression
+//	:	'Dict' ('[' Identifier ']')? diamondOneArg ArrayMarks? 
+//	|   'Map'  ('[' Identifier ']')? diamondTwoArg ArrayMarks? 
+//	;
+//diamondOneArg:	'<' constructorParameterTypeExpression '>';
+//diamondTwoArg:	'<' qualifiedName ',' constructorParameter '>';
+
+
 	
 	
 mapTypeExpression
@@ -30,8 +46,21 @@ typeExpression
 	:   abstractFieldMark='abstract' (anonymousEnumField | qualifiedName?)
 	|	anonymousEnumField
 	|   mapTypeExpression
-	|	qualifiedName ArrayMarks?
+	|   'keysFor' '(' pathWithKeyHole ')'
+	|	qualifiedName ('(' constructorArguments ')')? ArrayMarks?
 	;
+constructorArguments
+	:	pathWithKeyHole (',' pathWithKeyHole)*
+	;
+//constructorArgument
+//	:	'this'
+//	|	('this' '.')?  qualifiedName
+//	;
+pathWithKeyHole
+	:	(thisMark='this' '.')? Identifier ('.' idOrKeyHole)*
+	|	thisMark='this'
+	;
+idOrKeyHole: '?' | Identifier;
 	
 anonymousEnumField
 	:	enumMark='enum' '(' identifierList ')'
@@ -51,6 +80,9 @@ ArrayMarks
 	:	'*'+
 	;
 
+identifierList
+	: 	Identifier (',' Identifier)*
+	;
 qualifiedName
 	:	Identifier ('.' Identifier)*
 	;
@@ -60,7 +92,9 @@ WS  :  [ \t\r\n\u000C]+ -> skip
     
 // Identifiers
 
-Identifier:         Letter LetterOrDigit*;
+Identifier
+	:	Letter LetterOrDigit*
+	;
 
 fragment LetterOrDigit
     : Letter

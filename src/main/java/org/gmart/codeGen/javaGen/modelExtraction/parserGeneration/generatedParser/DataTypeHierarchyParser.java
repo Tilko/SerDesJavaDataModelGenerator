@@ -28,33 +28,38 @@ public class DataTypeHierarchyParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, ArrayMarks=17, 
-		WS=18, Identifier=19;
+		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
+		T__17=18, T__18=19, ArrayMarks=20, WS=21, Identifier=22;
 	public static final int
 		RULE_typeNamePart = 0, RULE_propertyNamePart = 1, RULE_onOneLineTypeName = 2, 
-		RULE_onOneLineTypeDef = 3, RULE_identifierList = 4, RULE_mapTypeExpression = 5, 
-		RULE_typeExpression = 6, RULE_anonymousEnumField = 7, RULE_diamondOneArg = 8, 
-		RULE_diamondTwoArg = 9, RULE_qualifiedName = 10;
+		RULE_onOneLineTypeDef = 3, RULE_constructorParameters = 4, RULE_constructorParameter = 5, 
+		RULE_mapTypeExpression = 6, RULE_typeExpression = 7, RULE_constructorArguments = 8, 
+		RULE_pathWithKeyHole = 9, RULE_idOrKeyHole = 10, RULE_anonymousEnumField = 11, 
+		RULE_diamondOneArg = 12, RULE_diamondTwoArg = 13, RULE_identifierList = 14, 
+		RULE_qualifiedName = 15;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"typeNamePart", "propertyNamePart", "onOneLineTypeName", "onOneLineTypeDef", 
-			"identifierList", "mapTypeExpression", "typeExpression", "anonymousEnumField", 
-			"diamondOneArg", "diamondTwoArg", "qualifiedName"
+			"constructorParameters", "constructorParameter", "mapTypeExpression", 
+			"typeExpression", "constructorArguments", "pathWithKeyHole", "idOrKeyHole", 
+			"anonymousEnumField", "diamondOneArg", "diamondTwoArg", "identifierList", 
+			"qualifiedName"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'stubbed'", "'is'", "'?'", "'oneOf'", "'('", "','", "')'", "'Dict'", 
-			"'['", "']'", "'Map'", "'abstract'", "'enum'", "'<'", "'>'", "'.'"
+			null, "'stubbed'", "'('", "')'", "'is'", "'?'", "'oneOf'", "','", "'Accessor'", 
+			"'<'", "'>'", "'Dict'", "'['", "']'", "'Map'", "'abstract'", "'keysFor'", 
+			"'this'", "'.'", "'enum'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, "ArrayMarks", "WS", "Identifier"
+			null, null, null, null, null, null, null, null, "ArrayMarks", "WS", "Identifier"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -114,6 +119,9 @@ public class DataTypeHierarchyParser extends Parser {
 		public QualifiedNameContext qualifiedName() {
 			return getRuleContext(QualifiedNameContext.class,0);
 		}
+		public ConstructorParametersContext constructorParameters() {
+			return getRuleContext(ConstructorParametersContext.class,0);
+		}
 		public TypeNamePartContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -135,26 +143,48 @@ public class DataTypeHierarchyParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(23);
+			setState(33);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__0) {
 				{
-				setState(22);
+				setState(32);
 				((TypeNamePartContext)_localctx).stubbedMark = match(T__0);
 				}
 			}
 
-			setState(25);
+			setState(35);
 			match(Identifier);
-			setState(28);
+			setState(41);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__1) {
 				{
-				setState(26);
+				setState(36);
 				match(T__1);
-				setState(27);
+				setState(38);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				if (_la==T__7) {
+					{
+					setState(37);
+					constructorParameters();
+					}
+				}
+
+				setState(40);
+				match(T__2);
+				}
+			}
+
+			setState(45);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__3) {
+				{
+				setState(43);
+				match(T__3);
+				setState(44);
 				qualifiedName();
 				}
 			}
@@ -196,15 +226,15 @@ public class DataTypeHierarchyParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(30);
+			setState(47);
 			match(Identifier);
-			setState(32);
+			setState(49);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__2) {
+			if (_la==T__4) {
 				{
-				setState(31);
-				((PropertyNamePartContext)_localctx).optionalMark = match(T__2);
+				setState(48);
+				((PropertyNamePartContext)_localctx).optionalMark = match(T__4);
 				}
 			}
 
@@ -224,6 +254,9 @@ public class DataTypeHierarchyParser extends Parser {
 	public static class OnOneLineTypeNameContext extends ParserRuleContext {
 		public Token stubbedMark;
 		public TerminalNode Identifier() { return getToken(DataTypeHierarchyParser.Identifier, 0); }
+		public ConstructorParametersContext constructorParameters() {
+			return getRuleContext(ConstructorParametersContext.class,0);
+		}
 		public OnOneLineTypeNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -245,18 +278,40 @@ public class DataTypeHierarchyParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(35);
+			setState(52);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__0) {
 				{
-				setState(34);
+				setState(51);
 				((OnOneLineTypeNameContext)_localctx).stubbedMark = match(T__0);
 				}
 			}
 
-			setState(37);
+			setState(54);
 			match(Identifier);
+			setState(60);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__1) {
+				{
+				setState(55);
+				match(T__1);
+				setState(57);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				if (_la==T__7) {
+					{
+					setState(56);
+					constructorParameters();
+					}
+				}
+
+				setState(59);
+				match(T__2);
+				}
+			}
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -299,42 +354,42 @@ public class DataTypeHierarchyParser extends Parser {
 		enterRule(_localctx, 6, RULE_onOneLineTypeDef);
 		int _la;
 		try {
-			setState(52);
+			setState(75);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case T__3:
+			case T__5:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(39);
-				match(T__3);
-				setState(40);
-				match(T__4);
-				setState(41);
+				setState(62);
+				match(T__5);
+				setState(63);
+				match(T__1);
+				setState(64);
 				typeExpression();
-				setState(46);
+				setState(69);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				while (_la==T__5) {
+				while (_la==T__6) {
 					{
 					{
-					setState(42);
-					match(T__5);
-					setState(43);
+					setState(65);
+					match(T__6);
+					setState(66);
 					typeExpression();
 					}
 					}
-					setState(48);
+					setState(71);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
-				setState(49);
-				match(T__6);
+				setState(72);
+				match(T__2);
 				}
 				break;
 			case Identifier:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(51);
+				setState(74);
 				identifierList();
 				}
 				break;
@@ -353,50 +408,126 @@ public class DataTypeHierarchyParser extends Parser {
 		return _localctx;
 	}
 
-	public static class IdentifierListContext extends ParserRuleContext {
-		public List<TerminalNode> Identifier() { return getTokens(DataTypeHierarchyParser.Identifier); }
-		public TerminalNode Identifier(int i) {
-			return getToken(DataTypeHierarchyParser.Identifier, i);
+	public static class ConstructorParametersContext extends ParserRuleContext {
+		public List<ConstructorParameterContext> constructorParameter() {
+			return getRuleContexts(ConstructorParameterContext.class);
 		}
-		public IdentifierListContext(ParserRuleContext parent, int invokingState) {
+		public ConstructorParameterContext constructorParameter(int i) {
+			return getRuleContext(ConstructorParameterContext.class,i);
+		}
+		public ConstructorParametersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_identifierList; }
+		@Override public int getRuleIndex() { return RULE_constructorParameters; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).enterIdentifierList(this);
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).enterConstructorParameters(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).exitIdentifierList(this);
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).exitConstructorParameters(this);
 		}
 	}
 
-	public final IdentifierListContext identifierList() throws RecognitionException {
-		IdentifierListContext _localctx = new IdentifierListContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_identifierList);
+	public final ConstructorParametersContext constructorParameters() throws RecognitionException {
+		ConstructorParametersContext _localctx = new ConstructorParametersContext(_ctx, getState());
+		enterRule(_localctx, 8, RULE_constructorParameters);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(54);
-			match(Identifier);
-			setState(59);
+			setState(77);
+			constructorParameter();
+			setState(82);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__5) {
+			while (_la==T__6) {
 				{
 				{
-				setState(55);
-				match(T__5);
-				setState(56);
-				match(Identifier);
+				setState(78);
+				match(T__6);
+				setState(79);
+				constructorParameter();
 				}
 				}
-				setState(61);
+				setState(84);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class ConstructorParameterContext extends ParserRuleContext {
+		public Token accessorMark;
+		public TypeExpressionContext typeExpression() {
+			return getRuleContext(TypeExpressionContext.class,0);
+		}
+		public TerminalNode Identifier() { return getToken(DataTypeHierarchyParser.Identifier, 0); }
+		public List<QualifiedNameContext> qualifiedName() {
+			return getRuleContexts(QualifiedNameContext.class);
+		}
+		public QualifiedNameContext qualifiedName(int i) {
+			return getRuleContext(QualifiedNameContext.class,i);
+		}
+		public ConstructorParameterContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_constructorParameter; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).enterConstructorParameter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).exitConstructorParameter(this);
+		}
+	}
+
+	public final ConstructorParameterContext constructorParameter() throws RecognitionException {
+		ConstructorParameterContext _localctx = new ConstructorParameterContext(_ctx, getState());
+		enterRule(_localctx, 10, RULE_constructorParameter);
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(85);
+			((ConstructorParameterContext)_localctx).accessorMark = match(T__7);
+			setState(86);
+			match(T__8);
+			setState(92);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(87);
+					qualifiedName();
+					setState(88);
+					match(T__6);
+					}
+					} 
+				}
+				setState(94);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+			}
+			setState(95);
+			typeExpression();
+			setState(96);
+			match(T__9);
+			setState(97);
+			match(Identifier);
 			}
 		}
 		catch (RecognitionException re) {
@@ -435,72 +566,72 @@ public class DataTypeHierarchyParser extends Parser {
 
 	public final MapTypeExpressionContext mapTypeExpression() throws RecognitionException {
 		MapTypeExpressionContext _localctx = new MapTypeExpressionContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_mapTypeExpression);
+		enterRule(_localctx, 12, RULE_mapTypeExpression);
 		int _la;
 		try {
-			setState(82);
+			setState(119);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case T__7:
+			case T__10:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(62);
-				match(T__7);
-				setState(66);
+				setState(99);
+				match(T__10);
+				setState(103);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==T__8) {
+				if (_la==T__11) {
 					{
-					setState(63);
-					match(T__8);
-					setState(64);
+					setState(100);
+					match(T__11);
+					setState(101);
 					match(Identifier);
-					setState(65);
-					match(T__9);
+					setState(102);
+					match(T__12);
 					}
 				}
 
-				setState(68);
+				setState(105);
 				diamondOneArg();
-				setState(70);
+				setState(107);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==ArrayMarks) {
 					{
-					setState(69);
+					setState(106);
 					match(ArrayMarks);
 					}
 				}
 
 				}
 				break;
-			case T__10:
+			case T__13:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(72);
-				match(T__10);
-				setState(76);
+				setState(109);
+				match(T__13);
+				setState(113);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==T__8) {
+				if (_la==T__11) {
 					{
-					setState(73);
-					match(T__8);
-					setState(74);
+					setState(110);
+					match(T__11);
+					setState(111);
 					match(Identifier);
-					setState(75);
-					match(T__9);
+					setState(112);
+					match(T__12);
 					}
 				}
 
-				setState(78);
+				setState(115);
 				diamondTwoArg();
-				setState(80);
+				setState(117);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==ArrayMarks) {
 					{
-					setState(79);
+					setState(116);
 					match(ArrayMarks);
 					}
 				}
@@ -533,6 +664,12 @@ public class DataTypeHierarchyParser extends Parser {
 		public MapTypeExpressionContext mapTypeExpression() {
 			return getRuleContext(MapTypeExpressionContext.class,0);
 		}
+		public PathWithKeyHoleContext pathWithKeyHole() {
+			return getRuleContext(PathWithKeyHoleContext.class,0);
+		}
+		public ConstructorArgumentsContext constructorArguments() {
+			return getRuleContext(ConstructorArgumentsContext.class,0);
+		}
 		public TerminalNode ArrayMarks() { return getToken(DataTypeHierarchyParser.ArrayMarks, 0); }
 		public TypeExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -550,37 +687,37 @@ public class DataTypeHierarchyParser extends Parser {
 
 	public final TypeExpressionContext typeExpression() throws RecognitionException {
 		TypeExpressionContext _localctx = new TypeExpressionContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_typeExpression);
+		enterRule(_localctx, 14, RULE_typeExpression);
 		int _la;
 		try {
-			setState(97);
+			setState(145);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case T__11:
+			case T__14:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(84);
-				((TypeExpressionContext)_localctx).abstractFieldMark = match(T__11);
-				setState(89);
+				setState(121);
+				((TypeExpressionContext)_localctx).abstractFieldMark = match(T__14);
+				setState(126);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
-				case T__12:
+				case T__18:
 					{
-					setState(85);
+					setState(122);
 					anonymousEnumField();
 					}
 					break;
-				case T__5:
+				case T__2:
 				case T__6:
-				case T__14:
+				case T__9:
 				case Identifier:
 					{
-					setState(87);
+					setState(124);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==Identifier) {
 						{
-						setState(86);
+						setState(123);
 						qualifiedName();
 						}
 					}
@@ -592,32 +729,59 @@ public class DataTypeHierarchyParser extends Parser {
 				}
 				}
 				break;
-			case T__12:
+			case T__18:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(91);
+				setState(128);
 				anonymousEnumField();
 				}
 				break;
-			case T__7:
 			case T__10:
+			case T__13:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(92);
+				setState(129);
 				mapTypeExpression();
 				}
 				break;
-			case Identifier:
+			case T__15:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(93);
+				setState(130);
+				match(T__15);
+				setState(131);
+				match(T__1);
+				setState(132);
+				pathWithKeyHole();
+				setState(133);
+				match(T__2);
+				}
+				break;
+			case Identifier:
+				enterOuterAlt(_localctx, 5);
+				{
+				setState(135);
 				qualifiedName();
-				setState(95);
+				setState(140);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				if (_la==T__1) {
+					{
+					setState(136);
+					match(T__1);
+					setState(137);
+					constructorArguments();
+					setState(138);
+					match(T__2);
+					}
+				}
+
+				setState(143);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==ArrayMarks) {
 					{
-					setState(94);
+					setState(142);
 					match(ArrayMarks);
 					}
 				}
@@ -626,6 +790,197 @@ public class DataTypeHierarchyParser extends Parser {
 				break;
 			default:
 				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class ConstructorArgumentsContext extends ParserRuleContext {
+		public List<PathWithKeyHoleContext> pathWithKeyHole() {
+			return getRuleContexts(PathWithKeyHoleContext.class);
+		}
+		public PathWithKeyHoleContext pathWithKeyHole(int i) {
+			return getRuleContext(PathWithKeyHoleContext.class,i);
+		}
+		public ConstructorArgumentsContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_constructorArguments; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).enterConstructorArguments(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).exitConstructorArguments(this);
+		}
+	}
+
+	public final ConstructorArgumentsContext constructorArguments() throws RecognitionException {
+		ConstructorArgumentsContext _localctx = new ConstructorArgumentsContext(_ctx, getState());
+		enterRule(_localctx, 16, RULE_constructorArguments);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(147);
+			pathWithKeyHole();
+			setState(152);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==T__6) {
+				{
+				{
+				setState(148);
+				match(T__6);
+				setState(149);
+				pathWithKeyHole();
+				}
+				}
+				setState(154);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class PathWithKeyHoleContext extends ParserRuleContext {
+		public Token thisMark;
+		public TerminalNode Identifier() { return getToken(DataTypeHierarchyParser.Identifier, 0); }
+		public List<IdOrKeyHoleContext> idOrKeyHole() {
+			return getRuleContexts(IdOrKeyHoleContext.class);
+		}
+		public IdOrKeyHoleContext idOrKeyHole(int i) {
+			return getRuleContext(IdOrKeyHoleContext.class,i);
+		}
+		public PathWithKeyHoleContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_pathWithKeyHole; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).enterPathWithKeyHole(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).exitPathWithKeyHole(this);
+		}
+	}
+
+	public final PathWithKeyHoleContext pathWithKeyHole() throws RecognitionException {
+		PathWithKeyHoleContext _localctx = new PathWithKeyHoleContext(_ctx, getState());
+		enterRule(_localctx, 18, RULE_pathWithKeyHole);
+		int _la;
+		try {
+			setState(168);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,25,_ctx) ) {
+			case 1:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(157);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				if (_la==T__16) {
+					{
+					setState(155);
+					((PathWithKeyHoleContext)_localctx).thisMark = match(T__16);
+					setState(156);
+					match(T__17);
+					}
+				}
+
+				setState(159);
+				match(Identifier);
+				setState(164);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				while (_la==T__17) {
+					{
+					{
+					setState(160);
+					match(T__17);
+					setState(161);
+					idOrKeyHole();
+					}
+					}
+					setState(166);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				}
+				}
+				break;
+			case 2:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(167);
+				((PathWithKeyHoleContext)_localctx).thisMark = match(T__16);
+				}
+				break;
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class IdOrKeyHoleContext extends ParserRuleContext {
+		public TerminalNode Identifier() { return getToken(DataTypeHierarchyParser.Identifier, 0); }
+		public IdOrKeyHoleContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_idOrKeyHole; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).enterIdOrKeyHole(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).exitIdOrKeyHole(this);
+		}
+	}
+
+	public final IdOrKeyHoleContext idOrKeyHole() throws RecognitionException {
+		IdOrKeyHoleContext _localctx = new IdOrKeyHoleContext(_ctx, getState());
+		enterRule(_localctx, 20, RULE_idOrKeyHole);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(170);
+			_la = _input.LA(1);
+			if ( !(_la==T__4 || _la==Identifier) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -660,18 +1015,18 @@ public class DataTypeHierarchyParser extends Parser {
 
 	public final AnonymousEnumFieldContext anonymousEnumField() throws RecognitionException {
 		AnonymousEnumFieldContext _localctx = new AnonymousEnumFieldContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_anonymousEnumField);
+		enterRule(_localctx, 22, RULE_anonymousEnumField);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(99);
-			((AnonymousEnumFieldContext)_localctx).enumMark = match(T__12);
-			setState(100);
-			match(T__4);
-			setState(101);
+			setState(172);
+			((AnonymousEnumFieldContext)_localctx).enumMark = match(T__18);
+			setState(173);
+			match(T__1);
+			setState(174);
 			identifierList();
-			setState(102);
-			match(T__6);
+			setState(175);
+			match(T__2);
 			}
 		}
 		catch (RecognitionException re) {
@@ -705,16 +1060,16 @@ public class DataTypeHierarchyParser extends Parser {
 
 	public final DiamondOneArgContext diamondOneArg() throws RecognitionException {
 		DiamondOneArgContext _localctx = new DiamondOneArgContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_diamondOneArg);
+		enterRule(_localctx, 24, RULE_diamondOneArg);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(104);
-			match(T__13);
-			setState(105);
+			setState(177);
+			match(T__8);
+			setState(178);
 			typeExpression();
-			setState(106);
-			match(T__14);
+			setState(179);
+			match(T__9);
 			}
 		}
 		catch (RecognitionException re) {
@@ -751,20 +1106,77 @@ public class DataTypeHierarchyParser extends Parser {
 
 	public final DiamondTwoArgContext diamondTwoArg() throws RecognitionException {
 		DiamondTwoArgContext _localctx = new DiamondTwoArgContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_diamondTwoArg);
+		enterRule(_localctx, 26, RULE_diamondTwoArg);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(108);
-			match(T__13);
-			setState(109);
+			setState(181);
+			match(T__8);
+			setState(182);
 			qualifiedName();
-			setState(110);
-			match(T__5);
-			setState(111);
+			setState(183);
+			match(T__6);
+			setState(184);
 			typeExpression();
-			setState(112);
-			match(T__14);
+			setState(185);
+			match(T__9);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class IdentifierListContext extends ParserRuleContext {
+		public List<TerminalNode> Identifier() { return getTokens(DataTypeHierarchyParser.Identifier); }
+		public TerminalNode Identifier(int i) {
+			return getToken(DataTypeHierarchyParser.Identifier, i);
+		}
+		public IdentifierListContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_identifierList; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).enterIdentifierList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DataTypeHierarchyListener ) ((DataTypeHierarchyListener)listener).exitIdentifierList(this);
+		}
+	}
+
+	public final IdentifierListContext identifierList() throws RecognitionException {
+		IdentifierListContext _localctx = new IdentifierListContext(_ctx, getState());
+		enterRule(_localctx, 28, RULE_identifierList);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(187);
+			match(Identifier);
+			setState(192);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==T__6) {
+				{
+				{
+				setState(188);
+				match(T__6);
+				setState(189);
+				match(Identifier);
+				}
+				}
+				setState(194);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -799,26 +1211,26 @@ public class DataTypeHierarchyParser extends Parser {
 
 	public final QualifiedNameContext qualifiedName() throws RecognitionException {
 		QualifiedNameContext _localctx = new QualifiedNameContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_qualifiedName);
+		enterRule(_localctx, 30, RULE_qualifiedName);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(114);
+			setState(195);
 			match(Identifier);
-			setState(119);
+			setState(200);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__15) {
+			while (_la==T__17) {
 				{
 				{
-				setState(115);
-				match(T__15);
-				setState(116);
+				setState(196);
+				match(T__17);
+				setState(197);
 				match(Identifier);
 				}
 				}
-				setState(121);
+				setState(202);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -836,37 +1248,70 @@ public class DataTypeHierarchyParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\25}\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
-		"\f\t\f\3\2\5\2\32\n\2\3\2\3\2\3\2\5\2\37\n\2\3\3\3\3\5\3#\n\3\3\4\5\4"+
-		"&\n\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\7\5/\n\5\f\5\16\5\62\13\5\3\5\3\5\3"+
-		"\5\5\5\67\n\5\3\6\3\6\3\6\7\6<\n\6\f\6\16\6?\13\6\3\7\3\7\3\7\3\7\5\7"+
-		"E\n\7\3\7\3\7\5\7I\n\7\3\7\3\7\3\7\3\7\5\7O\n\7\3\7\3\7\5\7S\n\7\5\7U"+
-		"\n\7\3\b\3\b\3\b\5\bZ\n\b\5\b\\\n\b\3\b\3\b\3\b\3\b\5\bb\n\b\5\bd\n\b"+
-		"\3\t\3\t\3\t\3\t\3\t\3\n\3\n\3\n\3\n\3\13\3\13\3\13\3\13\3\13\3\13\3\f"+
-		"\3\f\3\f\7\fx\n\f\f\f\16\f{\13\f\3\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26"+
-		"\2\2\2\u0084\2\31\3\2\2\2\4 \3\2\2\2\6%\3\2\2\2\b\66\3\2\2\2\n8\3\2\2"+
-		"\2\fT\3\2\2\2\16c\3\2\2\2\20e\3\2\2\2\22j\3\2\2\2\24n\3\2\2\2\26t\3\2"+
-		"\2\2\30\32\7\3\2\2\31\30\3\2\2\2\31\32\3\2\2\2\32\33\3\2\2\2\33\36\7\25"+
-		"\2\2\34\35\7\4\2\2\35\37\5\26\f\2\36\34\3\2\2\2\36\37\3\2\2\2\37\3\3\2"+
-		"\2\2 \"\7\25\2\2!#\7\5\2\2\"!\3\2\2\2\"#\3\2\2\2#\5\3\2\2\2$&\7\3\2\2"+
-		"%$\3\2\2\2%&\3\2\2\2&\'\3\2\2\2\'(\7\25\2\2(\7\3\2\2\2)*\7\6\2\2*+\7\7"+
-		"\2\2+\60\5\16\b\2,-\7\b\2\2-/\5\16\b\2.,\3\2\2\2/\62\3\2\2\2\60.\3\2\2"+
-		"\2\60\61\3\2\2\2\61\63\3\2\2\2\62\60\3\2\2\2\63\64\7\t\2\2\64\67\3\2\2"+
-		"\2\65\67\5\n\6\2\66)\3\2\2\2\66\65\3\2\2\2\67\t\3\2\2\28=\7\25\2\29:\7"+
-		"\b\2\2:<\7\25\2\2;9\3\2\2\2<?\3\2\2\2=;\3\2\2\2=>\3\2\2\2>\13\3\2\2\2"+
-		"?=\3\2\2\2@D\7\n\2\2AB\7\13\2\2BC\7\25\2\2CE\7\f\2\2DA\3\2\2\2DE\3\2\2"+
-		"\2EF\3\2\2\2FH\5\22\n\2GI\7\23\2\2HG\3\2\2\2HI\3\2\2\2IU\3\2\2\2JN\7\r"+
-		"\2\2KL\7\13\2\2LM\7\25\2\2MO\7\f\2\2NK\3\2\2\2NO\3\2\2\2OP\3\2\2\2PR\5"+
-		"\24\13\2QS\7\23\2\2RQ\3\2\2\2RS\3\2\2\2SU\3\2\2\2T@\3\2\2\2TJ\3\2\2\2"+
-		"U\r\3\2\2\2V[\7\16\2\2W\\\5\20\t\2XZ\5\26\f\2YX\3\2\2\2YZ\3\2\2\2Z\\\3"+
-		"\2\2\2[W\3\2\2\2[Y\3\2\2\2\\d\3\2\2\2]d\5\20\t\2^d\5\f\7\2_a\5\26\f\2"+
-		"`b\7\23\2\2a`\3\2\2\2ab\3\2\2\2bd\3\2\2\2cV\3\2\2\2c]\3\2\2\2c^\3\2\2"+
-		"\2c_\3\2\2\2d\17\3\2\2\2ef\7\17\2\2fg\7\7\2\2gh\5\n\6\2hi\7\t\2\2i\21"+
-		"\3\2\2\2jk\7\20\2\2kl\5\16\b\2lm\7\21\2\2m\23\3\2\2\2no\7\20\2\2op\5\26"+
-		"\f\2pq\7\b\2\2qr\5\16\b\2rs\7\21\2\2s\25\3\2\2\2ty\7\25\2\2uv\7\22\2\2"+
-		"vx\7\25\2\2wu\3\2\2\2x{\3\2\2\2yw\3\2\2\2yz\3\2\2\2z\27\3\2\2\2{y\3\2"+
-		"\2\2\23\31\36\"%\60\66=DHNRTY[acy";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\30\u00ce\4\2\t\2"+
+		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
+		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\5\2"+
+		"$\n\2\3\2\3\2\3\2\5\2)\n\2\3\2\5\2,\n\2\3\2\3\2\5\2\60\n\2\3\3\3\3\5\3"+
+		"\64\n\3\3\4\5\4\67\n\4\3\4\3\4\3\4\5\4<\n\4\3\4\5\4?\n\4\3\5\3\5\3\5\3"+
+		"\5\3\5\7\5F\n\5\f\5\16\5I\13\5\3\5\3\5\3\5\5\5N\n\5\3\6\3\6\3\6\7\6S\n"+
+		"\6\f\6\16\6V\13\6\3\7\3\7\3\7\3\7\3\7\7\7]\n\7\f\7\16\7`\13\7\3\7\3\7"+
+		"\3\7\3\7\3\b\3\b\3\b\3\b\5\bj\n\b\3\b\3\b\5\bn\n\b\3\b\3\b\3\b\3\b\5\b"+
+		"t\n\b\3\b\3\b\5\bx\n\b\5\bz\n\b\3\t\3\t\3\t\5\t\177\n\t\5\t\u0081\n\t"+
+		"\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\5\t\u008f\n\t\3\t\5\t"+
+		"\u0092\n\t\5\t\u0094\n\t\3\n\3\n\3\n\7\n\u0099\n\n\f\n\16\n\u009c\13\n"+
+		"\3\13\3\13\5\13\u00a0\n\13\3\13\3\13\3\13\7\13\u00a5\n\13\f\13\16\13\u00a8"+
+		"\13\13\3\13\5\13\u00ab\n\13\3\f\3\f\3\r\3\r\3\r\3\r\3\r\3\16\3\16\3\16"+
+		"\3\16\3\17\3\17\3\17\3\17\3\17\3\17\3\20\3\20\3\20\7\20\u00c1\n\20\f\20"+
+		"\16\20\u00c4\13\20\3\21\3\21\3\21\7\21\u00c9\n\21\f\21\16\21\u00cc\13"+
+		"\21\3\21\2\2\22\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \2\3\4\2\7\7\30"+
+		"\30\2\u00dc\2#\3\2\2\2\4\61\3\2\2\2\6\66\3\2\2\2\bM\3\2\2\2\nO\3\2\2\2"+
+		"\fW\3\2\2\2\16y\3\2\2\2\20\u0093\3\2\2\2\22\u0095\3\2\2\2\24\u00aa\3\2"+
+		"\2\2\26\u00ac\3\2\2\2\30\u00ae\3\2\2\2\32\u00b3\3\2\2\2\34\u00b7\3\2\2"+
+		"\2\36\u00bd\3\2\2\2 \u00c5\3\2\2\2\"$\7\3\2\2#\"\3\2\2\2#$\3\2\2\2$%\3"+
+		"\2\2\2%+\7\30\2\2&(\7\4\2\2\')\5\n\6\2(\'\3\2\2\2()\3\2\2\2)*\3\2\2\2"+
+		"*,\7\5\2\2+&\3\2\2\2+,\3\2\2\2,/\3\2\2\2-.\7\6\2\2.\60\5 \21\2/-\3\2\2"+
+		"\2/\60\3\2\2\2\60\3\3\2\2\2\61\63\7\30\2\2\62\64\7\7\2\2\63\62\3\2\2\2"+
+		"\63\64\3\2\2\2\64\5\3\2\2\2\65\67\7\3\2\2\66\65\3\2\2\2\66\67\3\2\2\2"+
+		"\678\3\2\2\28>\7\30\2\29;\7\4\2\2:<\5\n\6\2;:\3\2\2\2;<\3\2\2\2<=\3\2"+
+		"\2\2=?\7\5\2\2>9\3\2\2\2>?\3\2\2\2?\7\3\2\2\2@A\7\b\2\2AB\7\4\2\2BG\5"+
+		"\20\t\2CD\7\t\2\2DF\5\20\t\2EC\3\2\2\2FI\3\2\2\2GE\3\2\2\2GH\3\2\2\2H"+
+		"J\3\2\2\2IG\3\2\2\2JK\7\5\2\2KN\3\2\2\2LN\5\36\20\2M@\3\2\2\2ML\3\2\2"+
+		"\2N\t\3\2\2\2OT\5\f\7\2PQ\7\t\2\2QS\5\f\7\2RP\3\2\2\2SV\3\2\2\2TR\3\2"+
+		"\2\2TU\3\2\2\2U\13\3\2\2\2VT\3\2\2\2WX\7\n\2\2X^\7\13\2\2YZ\5 \21\2Z["+
+		"\7\t\2\2[]\3\2\2\2\\Y\3\2\2\2]`\3\2\2\2^\\\3\2\2\2^_\3\2\2\2_a\3\2\2\2"+
+		"`^\3\2\2\2ab\5\20\t\2bc\7\f\2\2cd\7\30\2\2d\r\3\2\2\2ei\7\r\2\2fg\7\16"+
+		"\2\2gh\7\30\2\2hj\7\17\2\2if\3\2\2\2ij\3\2\2\2jk\3\2\2\2km\5\32\16\2l"+
+		"n\7\26\2\2ml\3\2\2\2mn\3\2\2\2nz\3\2\2\2os\7\20\2\2pq\7\16\2\2qr\7\30"+
+		"\2\2rt\7\17\2\2sp\3\2\2\2st\3\2\2\2tu\3\2\2\2uw\5\34\17\2vx\7\26\2\2w"+
+		"v\3\2\2\2wx\3\2\2\2xz\3\2\2\2ye\3\2\2\2yo\3\2\2\2z\17\3\2\2\2{\u0080\7"+
+		"\21\2\2|\u0081\5\30\r\2}\177\5 \21\2~}\3\2\2\2~\177\3\2\2\2\177\u0081"+
+		"\3\2\2\2\u0080|\3\2\2\2\u0080~\3\2\2\2\u0081\u0094\3\2\2\2\u0082\u0094"+
+		"\5\30\r\2\u0083\u0094\5\16\b\2\u0084\u0085\7\22\2\2\u0085\u0086\7\4\2"+
+		"\2\u0086\u0087\5\24\13\2\u0087\u0088\7\5\2\2\u0088\u0094\3\2\2\2\u0089"+
+		"\u008e\5 \21\2\u008a\u008b\7\4\2\2\u008b\u008c\5\22\n\2\u008c\u008d\7"+
+		"\5\2\2\u008d\u008f\3\2\2\2\u008e\u008a\3\2\2\2\u008e\u008f\3\2\2\2\u008f"+
+		"\u0091\3\2\2\2\u0090\u0092\7\26\2\2\u0091\u0090\3\2\2\2\u0091\u0092\3"+
+		"\2\2\2\u0092\u0094\3\2\2\2\u0093{\3\2\2\2\u0093\u0082\3\2\2\2\u0093\u0083"+
+		"\3\2\2\2\u0093\u0084\3\2\2\2\u0093\u0089\3\2\2\2\u0094\21\3\2\2\2\u0095"+
+		"\u009a\5\24\13\2\u0096\u0097\7\t\2\2\u0097\u0099\5\24\13\2\u0098\u0096"+
+		"\3\2\2\2\u0099\u009c\3\2\2\2\u009a\u0098\3\2\2\2\u009a\u009b\3\2\2\2\u009b"+
+		"\23\3\2\2\2\u009c\u009a\3\2\2\2\u009d\u009e\7\23\2\2\u009e\u00a0\7\24"+
+		"\2\2\u009f\u009d\3\2\2\2\u009f\u00a0\3\2\2\2\u00a0\u00a1\3\2\2\2\u00a1"+
+		"\u00a6\7\30\2\2\u00a2\u00a3\7\24\2\2\u00a3\u00a5\5\26\f\2\u00a4\u00a2"+
+		"\3\2\2\2\u00a5\u00a8\3\2\2\2\u00a6\u00a4\3\2\2\2\u00a6\u00a7\3\2\2\2\u00a7"+
+		"\u00ab\3\2\2\2\u00a8\u00a6\3\2\2\2\u00a9\u00ab\7\23\2\2\u00aa\u009f\3"+
+		"\2\2\2\u00aa\u00a9\3\2\2\2\u00ab\25\3\2\2\2\u00ac\u00ad\t\2\2\2\u00ad"+
+		"\27\3\2\2\2\u00ae\u00af\7\25\2\2\u00af\u00b0\7\4\2\2\u00b0\u00b1\5\36"+
+		"\20\2\u00b1\u00b2\7\5\2\2\u00b2\31\3\2\2\2\u00b3\u00b4\7\13\2\2\u00b4"+
+		"\u00b5\5\20\t\2\u00b5\u00b6\7\f\2\2\u00b6\33\3\2\2\2\u00b7\u00b8\7\13"+
+		"\2\2\u00b8\u00b9\5 \21\2\u00b9\u00ba\7\t\2\2\u00ba\u00bb\5\20\t\2\u00bb"+
+		"\u00bc\7\f\2\2\u00bc\35\3\2\2\2\u00bd\u00c2\7\30\2\2\u00be\u00bf\7\t\2"+
+		"\2\u00bf\u00c1\7\30\2\2\u00c0\u00be\3\2\2\2\u00c1\u00c4\3\2\2\2\u00c2"+
+		"\u00c0\3\2\2\2\u00c2\u00c3\3\2\2\2\u00c3\37\3\2\2\2\u00c4\u00c2\3\2\2"+
+		"\2\u00c5\u00ca\7\30\2\2\u00c6\u00c7\7\24\2\2\u00c7\u00c9\7\30\2\2\u00c8"+
+		"\u00c6\3\2\2\2\u00c9\u00cc\3\2\2\2\u00ca\u00c8\3\2\2\2\u00ca\u00cb\3\2"+
+		"\2\2\u00cb!\3\2\2\2\u00cc\u00ca\3\2\2\2\36#(+/\63\66;>GMT^imswy~\u0080"+
+		"\u008e\u0091\u0093\u009a\u009f\u00a6\u00aa\u00c2\u00ca";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

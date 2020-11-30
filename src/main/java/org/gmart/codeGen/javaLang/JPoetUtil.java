@@ -39,7 +39,8 @@ import api_global.strUtil.StringFunctions;
 public class JPoetUtil {
 
 	public static MethodSpec.Builder initMethodImpl(Class interfaceWithSingleAbstractMethod){
-		ArrayList<Method> abstractMethods = Stream.of(interfaceWithSingleAbstractMethod.getMethods()).filter(meth ->  java.lang.reflect.Modifier.isAbstract(meth.getModifiers())).collect(Collectors.toCollection(ArrayList::new));
+		ArrayList<Method> abstractMethods = Stream.of(interfaceWithSingleAbstractMethod.getDeclaredMethods())
+				.filter(meth ->  java.lang.reflect.Modifier.isAbstract(meth.getModifiers())).collect(Collectors.toCollection(ArrayList::new));
 		assert abstractMethods.size() == 1 : "no abstract method or cannot decide between several methods to implement";
 		Method method = abstractMethods.get(0);
 		Class<?> returnType = method.getReturnType();

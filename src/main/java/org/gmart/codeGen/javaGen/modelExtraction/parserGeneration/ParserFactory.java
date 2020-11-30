@@ -15,16 +15,59 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.modelExtraction.parserGeneration;
 
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.CommonTokenFactory;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.TokenSource;
+import org.antlr.v4.runtime.misc.Pair;
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyLexer;
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser;
 
 public class ParserFactory {
 	public static DataTypeHierarchyParser parse(String str){
+		return parse(str, 10);
+	}
+	public static DataTypeHierarchyParser parse(String str, int lineOffset){
 		DataTypeHierarchyLexer lexer = new DataTypeHierarchyLexer(CharStreams.fromString(str));
+		lexer.setTokenFactory(new CommonTokenFactory2(lineOffset));
 		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 		return new DataTypeHierarchyParser(tokenStream);
 	}
-	
+	public static class CommonTokenFactory2 extends CommonTokenFactory {
+		private int lineOffset;
+		public CommonTokenFactory2(int lineOffset){
+			this.lineOffset = lineOffset;
+		}
+		@Override
+		public CommonToken create(int type, String text) {
+			return super.create(type, text);
+		}
+		@Override
+		public CommonToken create(Pair<TokenSource, CharStream> source, int type, String text, int channel, int start, int stop, int line, int charPositionInLine) {
+			return super.create(source, type, text, channel, start, stop, lineOffset + line, charPositionInLine);
+		}
+	}
 }
+//class CommonToken2 extends CommonToken {
+//
+//	public CommonToken2(int type, String text) {
+//		super(type, text);
+//	}
+//
+//	public CommonToken2(int type) {
+//		super(type);
+//	}
+//
+//	public CommonToken2(Pair<TokenSource, CharStream> source, int type, int channel, int start, int stop) {
+//		super(source, type, channel, start, stop);
+//	}
+//
+//	public CommonToken2(Token oldToken) {
+//		super(oldToken);
+//	}
+//	public int getLine() {
+//		return super.getLine() + lineOffset;
+//	}
+//}

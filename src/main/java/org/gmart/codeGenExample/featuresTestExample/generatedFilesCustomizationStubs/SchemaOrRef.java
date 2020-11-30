@@ -42,7 +42,7 @@ public class SchemaOrRef extends org.gmart.codeGenExample.featuresTestExample.ge
                     assert false : "error getting the object at path: " + ref;
                 }
             }
-            assert false : "Only local JSON paths are supported (path that begins with \"#\".";
+            assert false : "Only local JSON paths are supported (path that begins with \"#\").";
             return null;
         };
         return convertRefToSchema;

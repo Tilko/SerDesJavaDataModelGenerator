@@ -39,3 +39,45 @@ obj2:
     - az
     - s
 here: true
+oneOfAndAccessorTest: sleepy
+states:
+  sleepy:
+    - condition: hammer in the face
+      target: active
+  active:
+    - condition: sand in the face
+      target: sleepy
+states2:
+  sleepy:
+    - condition: hammer in the face
+      target: active
+  active:
+    - condition: sand in the face
+      target: sleepy
+states3:
+  active:
+    trucish:
+      - condition: sand in the face
+        target: sleepy/trucish
+  sleepy:
+    trucish:
+      - condition: hammer in the face
+        target: active/trucish
+states4:
+  active:
+    trucish:
+      - condition: sand in the face
+        target: sleepy/trucish
+  sleepy:
+    trucish:
+      - condition: hammer in the face
+        target: active/trucish
+states5:
+  active:
+    trucish:
+      - condition: sand in the face
+        target: sleepy/trucish2
+  sleepy:
+    trucish:
+      - condition: hammer in the face
+        target: active/trucish

@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.json.Json;
@@ -93,7 +95,6 @@ public class PackageSetSpec {
 	}
 	
 	
-	
 	public PackageSetSpec(List<PackageDefinition> packages) {
 		super();
 		//this.packages = packages.stream().collect(Collectors.toMap(PackageDefinition::getPackageName, v->v, (a,b)->b, LinkedHashMap::new));
@@ -102,13 +103,26 @@ public class PackageSetSpec {
 		qualifiedNameToClassSpec = new HashMap<>();
 		simpleNameInMultiplePackagesOfThisSet = new HashSet<>();
 		packages.forEach(ps -> ps.getTypeDefs().forEach(td -> setTypeDef(td, false)));
-		Stream.of(JavaPrimitives.primitiveBoxedTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLangPackageName, primitiveTypeName), true));
-		Stream.of(JavaPrimitives.primitiveTypes).forEach(primitiveTypeName -> setTypeDef(new PrimitiveTypeSpecification(PackageDefinition.javaLangPackageName, primitiveTypeName), true));
-		setTypeDef(new StringTypeSpec(), true);
-		setTypeDef(new AnyObjectTypeSpec(), true);
+		List<PrimitiveTypeSpecification> notBoxedPrimitives = setPrimitiveAndReturnList(JavaPrimitives.primitiveTypes);
+		List<PrimitiveTypeSpecification> boxedPrimitives = setPrimitiveAndReturnList(JavaPrimitives.primitiveBoxedTypes);
+		//asserted in "JavaPrimitives": assert notBoxedPrimitives.size() == boxedPrimitives.size();
+		for(int i = 0; i < boxedPrimitives.size(); i++) {
+			PrimitiveTypeSpecification notBoxedOne = notBoxedPrimitives.get(i);
+			boxedPrimitives.get(i).setNormalizedTypeForAccessorParameterTypeComparison(notBoxedOne);
+			notBoxedOne.setNormalizedTypeForAccessorParameterTypeComparison(notBoxedOne);
+		}
+		setTypeDef(StringTypeSpec.theInstance, true);
+		setTypeDef(AnyObjectTypeSpec.theInstance, true);
 		simpleNameInMultiplePackagesOfThisSet.forEach(simpleName -> simpleNameToClassSpec.remove(simpleName));
 		simpleOrQualifiedNameToClassSpec = new HashMap<>(simpleNameToClassSpec);
 		simpleOrQualifiedNameToClassSpec.putAll(qualifiedNameToClassSpec);
+	}
+	private List<PrimitiveTypeSpecification> setPrimitiveAndReturnList(String[] primitiveTypes){
+		return Stream.of(primitiveTypes).map(primitiveTypeName -> {
+			PrimitiveTypeSpecification typedef = new PrimitiveTypeSpecification(PackageDefinition.javaLangPackageName, primitiveTypeName);
+			setTypeDef(typedef, true);
+			return typedef;
+		}).collect(Collectors.toCollection(ArrayList::new));
 	}
 	public final static Map<String, TypeDefinition> primitiveTypeSpec = new HashMap<>();
 	public static TypeDefinition getPrimitiveTypeSpecFromSimpleName(String simpleName) {

@@ -18,10 +18,7 @@ package org.gmart.codeGen.javaGen.modelExtraction.parserGeneration;
 import java.io.File;
 import java.io.IOException;
 
-
-
 public class ParserGeneration {
-	
 	/**
 	 * compile time code to generate lexer for this coding challenge
 	 * @param args

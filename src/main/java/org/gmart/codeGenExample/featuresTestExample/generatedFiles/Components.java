@@ -1,15 +1,16 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
-import java.lang.String;
 import java.util.Map;
+
 import javax.annotation.processing.Generated;
+
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
+import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Schema;
 
 @Generated("")
-public class Components implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class Components implements ClassSerializationToYamlDefaultImpl, ClassInstance {
     private static AbstractClassDefinition classSpecification;
 
     private Map<String, Schema> schemas;

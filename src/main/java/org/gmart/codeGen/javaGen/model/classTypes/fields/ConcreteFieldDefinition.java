@@ -26,10 +26,10 @@ public class ConcreteFieldDefinition extends AbstractTypedField {
 	public ConcreteFieldDefinition(String name, boolean isOptional) {
 		super(name, isOptional);
 	}
-	public ConcreteFieldDefinition(String name, boolean isOptional, TypeExpression typeExpression) {
-		this(name, isOptional);
-		this.typeExpression = typeExpression;
-	}
+//	public ConcreteFieldDefinition(String name, boolean isOptional, TypeExpression typeExpression) {
+//		this(name, isOptional);
+//		this.typeExpression = typeExpression;
+//	}
 	
 	@Override
 	public <T extends TypeExpression> void setTypeExpression(T typeExpression) {
@@ -39,4 +39,7 @@ public class ConcreteFieldDefinition extends AbstractTypedField {
 	public boolean isAbstract() {
 		return false;
 	}
+
+	
+	
 }

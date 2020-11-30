@@ -1,19 +1,19 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
-import java.lang.Integer;
-import java.lang.Object;
-import java.lang.String;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.processing.Generated;
+
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
+import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstance;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.bidulePackage.Bidule;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.bidulePackage.TypeWithAUniqueSimpleNameInThisPackagesSet;
 
 @Generated("")
-public class Person implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstance, AbstractClassDefinition.DependentInstanceSourceClass {
     private static AbstractClassDefinition classSpecification;
 
     private String name;
@@ -37,6 +37,18 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassDefinit
     private Object obj;
 
     private Object obj2;
+
+    private Map<String, List<Transition>> states;
+
+    private Map<String, List<Transition2>> states2;
+
+    private Map<String, Map<String, List<Transition3>>> states3;
+
+    private Map<String, Map<String, List<Transition4>>> states4;
+
+    private Map<String, Map<String, List<Transition5>>> states5;
+
+    private A oneOfAndAccessorTest;
 
     public Person() {
     }
@@ -127,6 +139,60 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassDefinit
 
     public void setObj2(Object obj2) {
         this.obj2 = obj2;
+    }
+
+    public Map<String, List<Transition>> getStates() {
+        return states;
+    }
+
+    public void setStates(Map<String, List<Transition>> states) {
+        this.states = states;
+        ((DependentInstance)states).setParentContext(this);
+    }
+
+    public Map<String, List<Transition2>> getStates2() {
+        return states2;
+    }
+
+    public void setStates2(Map<String, List<Transition2>> states2) {
+        this.states2 = states2;
+        ((DependentInstance)states2).setParentContext(this);
+    }
+
+    public Map<String, Map<String, List<Transition3>>> getStates3() {
+        return states3;
+    }
+
+    public void setStates3(Map<String, Map<String, List<Transition3>>> states3) {
+        this.states3 = states3;
+        ((DependentInstance)states3).setParentContext(this);
+    }
+
+    public Map<String, Map<String, List<Transition4>>> getStates4() {
+        return states4;
+    }
+
+    public void setStates4(Map<String, Map<String, List<Transition4>>> states4) {
+        this.states4 = states4;
+        ((DependentInstance)states4).setParentContext(this);
+    }
+
+    public Map<String, Map<String, List<Transition5>>> getStates5() {
+        return states5;
+    }
+
+    public void setStates5(Map<String, Map<String, List<Transition5>>> states5) {
+        this.states5 = states5;
+        ((DependentInstance)states5).setParentContext(this);
+    }
+
+    public A getOneOfAndAccessorTest() {
+        return oneOfAndAccessorTest;
+    }
+
+    public void setOneOfAndAccessorTest(A oneOfAndAccessorTest) {
+        this.oneOfAndAccessorTest = oneOfAndAccessorTest;
+        ((DependentInstance)oneOfAndAccessorTest).setParentContext(this);
     }
 
     public AbstractClassDefinition getClassDefinition() {

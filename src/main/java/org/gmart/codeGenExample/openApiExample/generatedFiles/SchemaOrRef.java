@@ -43,19 +43,19 @@ public class SchemaOrRef implements OneOfInstance {
     }
 
     public void setPayload(Object payload) {
-        Pair<TypeExpression, Object> makePayload = oneOfSpecification.makePayload(deserialContext, payload);
+        Pair<TypeExpression, Object> makePayload = oneOfSpecification.makePayload(deserialContext, payload, this);
         this.payloadType = makePayload.getValue0();
         this.payload = makePayload.getValue1();
     }
 
-    public Schema toSchema() {
+    public Schema asSchema() {
         if(payload instanceof Schema) {
             return (Schema) payload;
         }
         return null;
     }
 
-    public SchemaRef toSchemaRef() {
+    public SchemaRef asSchemaRef() {
         if(payload instanceof SchemaRef) {
             return (SchemaRef) payload;
         }

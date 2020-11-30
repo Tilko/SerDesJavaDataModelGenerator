@@ -5,12 +5,12 @@ import java.util.List;
 import javax.annotation.processing.Generated;
 
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
+import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 import org.gmart.codeGenExample.openApiExample.generatedFilesCustomizationStubs.SchemaOrRef;
 
 @Generated("")
-public class ArrayType extends Schema implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class ArrayType extends Schema implements ClassSerializationToYamlDefaultImpl, ClassInstance {
     private static AbstractClassDefinition classSpecification;
 
     private SchemaOrRef items;

@@ -64,13 +64,25 @@ public class DataTypeHierarchyBaseListener implements DataTypeHierarchyListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx) { }
+	@Override public void enterConstructorParameters(DataTypeHierarchyParser.ConstructorParametersContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx) { }
+	@Override public void exitConstructorParameters(DataTypeHierarchyParser.ConstructorParametersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConstructorParameter(DataTypeHierarchyParser.ConstructorParameterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstructorParameter(DataTypeHierarchyParser.ConstructorParameterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -95,6 +107,42 @@ public class DataTypeHierarchyBaseListener implements DataTypeHierarchyListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTypeExpression(DataTypeHierarchyParser.TypeExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConstructorArguments(DataTypeHierarchyParser.ConstructorArgumentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstructorArguments(DataTypeHierarchyParser.ConstructorArgumentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPathWithKeyHole(DataTypeHierarchyParser.PathWithKeyHoleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPathWithKeyHole(DataTypeHierarchyParser.PathWithKeyHoleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdOrKeyHole(DataTypeHierarchyParser.IdOrKeyHoleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdOrKeyHole(DataTypeHierarchyParser.IdOrKeyHoleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -131,6 +179,18 @@ public class DataTypeHierarchyBaseListener implements DataTypeHierarchyListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDiamondTwoArg(DataTypeHierarchyParser.DiamondTwoArgContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

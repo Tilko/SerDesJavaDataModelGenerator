@@ -17,10 +17,16 @@ package org.gmart.codeGen.javaGen.model.containerTypes;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
+import org.gmart.codeGen.javaGen.model.TypeDefinitionForPrimitives;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
+import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessPathKeyAndOutputTypes;
 import org.javatuples.Pair;
 
 public abstract class AbstractContainerType implements ContainerType {
@@ -28,6 +34,22 @@ public abstract class AbstractContainerType implements ContainerType {
 	public TypeExpression getContentType() {
 		return contentType;
 	}
+	private boolean isDependent;
+	public void setIsDependent(boolean isDependent) {
+		this.isDependent = isDependent;
+		if(contentType instanceof AbstractContainerType) {
+			((AbstractContainerType) contentType).setIsDependent(true);
+		}
+	}
+	public boolean isDependent() {
+		return isDependent;
+	}
+	public void checkReferences_recursive(Object containerInstance, ReferenceCheckResult referenceCheckResult) {
+		if(isDependent())
+			this.getAllInstanceValues(containerInstance).forEach(elem -> getContentType().checkReferences_recursive(elem, referenceCheckResult));
+	}
+	protected abstract Stream<Object> getAllInstanceValues(Object containerInstance);
+	public abstract TypeExpression getKeyTypeSpec();
 	public abstract String getContainerTypeName();
 	@Override
 	public String getJavaIdentifier() {
@@ -65,4 +87,37 @@ public abstract class AbstractContainerType implements ContainerType {
 	}
 	protected abstract Object makeJavaObject_internal(DeserialContext ctx, Object fieldYamlValue);
 	
+	
+	@Override
+	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+		if(path.size() == 0) {
+			toFillWithTypesForValidation.setOutputType(this);
+			return TypeDefinitionForPrimitives.identityAccessor;
+		}
+		toFillWithTypesForValidation.addInputType(this.getKeyTypeSpec());
+		String pathToken = path.get(0);
+		assert pathToken.equals("?") : "The path token representing the access to a container element must be that token: \"?\", but was \"" + pathToken +"\"";
+		if(path.size() > 1) {
+			Function<Object, Function<List<Object>, Optional<Object>>> accessor = getContentType().makeAccessorBuilder(path.subList(1, path.size()), toFillWithTypesForValidation);
+			return containerInstance -> keys -> {
+				if(keys.size() == 0)
+					return Optional.empty();
+				Object thisContainerElem = getElem(containerInstance, keys.get(0));
+				if(thisContainerElem == null) //TODO tell that to user
+					return Optional.empty();
+				keys.remove(0);
+				return accessor.apply(thisContainerElem).apply(keys);
+			};
+		} else {
+			toFillWithTypesForValidation.setOutputType(getContentType());
+			return containerInstance -> keys -> Optional.ofNullable(getElem(containerInstance, keys.remove(0)));
+		}
+	}
+	protected abstract Object getElem(Object containerInstance, Object keyInstance);
+	
+	/** returning null is ok, this wont be called, it's intercepted by the "isEquivalent_AccessorParameterType" overriding in all children classes */
+	@Override
+	public TypeExpression getNormalizedTypeForAccessorParameterTypeComparison() {
+		return null;
+	}
 }

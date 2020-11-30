@@ -91,8 +91,14 @@ public class PrimitiveTypeSpecification extends TypeDefinitionForPrimitives impl
 		return parser.apply(string) ;
 	}
 	
-	
-
+	TypeExpression normalizedTypeForAccessorParameterTypeComparison;
+	public void setNormalizedTypeForAccessorParameterTypeComparison(TypeExpression normalizedTypeForAccessorParameterTypeComparison) {
+		this.normalizedTypeForAccessorParameterTypeComparison = normalizedTypeForAccessorParameterTypeComparison;
+	}
+	@Override
+	public TypeExpression getNormalizedTypeForAccessorParameterTypeComparison() {
+		return normalizedTypeForAccessorParameterTypeComparison;
+	}
 }
 
 

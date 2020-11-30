@@ -16,23 +16,40 @@
 package org.gmart.codeGen.javaGen.model;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.lang.model.element.Modifier;
+
+import org.gmart.codeGen.javaGen.model.referenceResolution.AbstractAccessorBuilder;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessorBuilderFactory;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessorBuilderFactoryFromConstructorArgument;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessorConstructorParameter;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessorConstructorParametersDeclarer;
+import org.gmart.codeGen.javaGen.model.referenceResolution.ConstructionArgs;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ConstructionArgumentBuilder;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstance;
+import org.gmart.codeGen.javaLang.JPoetUtil;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
-public abstract class TypeDefinitionForStubbable extends TypeDefinitionForNonPrimitives {
+public abstract class TypeDefinitionForStubbable extends TypeDefinitionForNonPrimitives implements AccessorBuilderFactory, AccessorConstructorParametersDeclarer, ConstructionArgumentBuilder {
 	private final boolean isStubbed;
 	public boolean isStubbed() {
 		return isStubbed;
 	}
-	public TypeDefinitionForStubbable(PackageDefinition packageDef, String name, boolean isStubbed) {
+	protected HashMap<String, Integer> paramNameToItsIndex = new HashMap<>();
+	public TypeDefinitionForStubbable(PackageDefinition packageDef, String name, boolean isStubbed, List<ConstructorParameter> constructorParameters) {
 		super(packageDef, name);
+		this.constructorParameters = constructorParameters;
+		for(int i = 0; i < constructorParameters.size(); i++) {
+			paramNameToItsIndex.put(constructorParameters.get(i).getName(), i);
+		}
 		this.isStubbed = isStubbed;
 	}
 	
@@ -84,5 +101,29 @@ public abstract class TypeDefinitionForStubbable extends TypeDefinitionForNonPri
 	}
 	private File getStubFile(String packageNameForStub) {
 		return new File(new File("").getAbsolutePath(), "src/main/java/" + packageNameForStub.replaceAll("\\.", "/") + ".java");
+	}
+	
+	protected final List<ConstructorParameter> constructorParameters;
+	
+//	public List<ConstructorParameter> getConstructorParameters() {
+//		return constructorParameters;
+//	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<AccessorConstructorParameter> getAccessorConstructorParameters() {
+		return (List)constructorParameters; //if, one day, there is not only "AccessorConstructorParameter" => change that ...
+	}
+	protected Optional<AbstractAccessorBuilder> makeAccessorBuilderFromConstructorParameters(List<String> path) {
+		List<AccessorConstructorParameter> accessorConstructorParameters = getAccessorConstructorParameters();
+		return Optional.ofNullable(paramNameToItsIndex.get(path.get(0))).map(paramIndex -> 
+			(AbstractAccessorBuilder) new AccessorBuilderFactoryFromConstructorArgument(accessorConstructorParameters, path, paramIndex));
+	}
+	protected List<AbstractAccessorBuilder> makeBuilders(AccessorConstructorParametersDeclarer accessorDependentable, List<List<String>> paths) throws Exception {
+		return ConstructionArgs.makeBuilders(this, accessorDependentable, paths);
+	}
+	protected void setAccessorDependenciesCode(TypeSpec.Builder classBuilder, Class<?> interfaceToImpl) {
+		classBuilder.addSuperinterface(interfaceToImpl);
+		
+		JPoetUtil.setBeanProperty(classBuilder, Object.class, DependentInstance.parentContextId);
 	}
 }

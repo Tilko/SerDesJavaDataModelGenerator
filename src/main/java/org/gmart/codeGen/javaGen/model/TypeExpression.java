@@ -15,6 +15,12 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
+import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessPathKeyAndOutputTypes;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 
 import com.squareup.javapoet.TypeName;
@@ -34,6 +40,22 @@ public interface TypeExpression extends InstanceDeserializerFromYamlOrJson {//, 
 
 	<T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize);
 
+	/** 
+	 * Build a function that takes an instance of this TypeExpression and returns the accessor that returns the (Optional) object located by the input: a list of(map key | list index) 
+	 * */
+	Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithIOTypesForValidation);
 	
+	
+	
+	TypeExpression getNormalizedTypeForAccessorParameterTypeComparison();
+	default boolean isEquivalent_AccessorParameterType(TypeExpression other) {
+		return this.getNormalizedTypeForAccessorParameterTypeComparison() == other.getNormalizedTypeForAccessorParameterTypeComparison();
+	}
 
+	boolean isDependent();
+
+	default 
+	void checkReferences_recursive(Object instance, ReferenceCheckResult referenceCheckResult) {}
+	
+	
 }

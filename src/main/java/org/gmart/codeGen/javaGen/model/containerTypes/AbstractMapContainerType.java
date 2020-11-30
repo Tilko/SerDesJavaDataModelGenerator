@@ -19,10 +19,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.LinkedHashMapD;
 import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 
@@ -44,14 +46,15 @@ public abstract class AbstractMapContainerType extends AbstractContainerType { /
 	public FormalGroup formalGroup() {
 		return FormalGroup.map;
 	}
-	public abstract TypeExpression getKeyTypeSpec();
+	
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected Object makeJavaObject_internal(DeserialContext ctx, Object yamlOrJsonValue) {
-		Map fieldYamlMap = (Map)yamlOrJsonValue;
-		LinkedHashMap rez = new LinkedHashMap<>();
-		fieldYamlMap.forEach((key,val) -> {
+		Map yamlOrJsonMap = (Map)yamlOrJsonValue;
+		//LinkedHashMap rez = new LinkedHashMap<>();
+		Map rez = this.isDependent() ? new LinkedHashMapD(yamlOrJsonMap.size()) : new LinkedHashMap(yamlOrJsonMap.size());
+		yamlOrJsonMap.forEach((key,val) -> {
 			assert key instanceof String;	
 			rez.put(makeKey((String)key), contentType.makeModelValue(ctx, val));
 		});
@@ -80,6 +83,26 @@ public abstract class AbstractMapContainerType extends AbstractContainerType { /
 		SerializableObjectBuilder<T> objectSerializer = provider.makeObjectSerializer();
 		mapToSerialize.forEach((key, value) -> objectSerializer.addProperty(key.toString(), elemToT.apply(value)));
 		return objectSerializer.build();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	protected Object getElem(Object containerInstance, Object keyInstance) {
+		return ((Map)containerInstance).get(keyInstance);
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	protected Stream<Object> getAllInstanceValues(Object containerInstance) {
+		return ((Map)containerInstance).values().stream();
+	}
+	@Override
+	public boolean isEquivalent_AccessorParameterType(TypeExpression other) {
+		if(!(other instanceof AbstractMapContainerType)) {
+			return false;
+		}
+		AbstractMapContainerType otherMapContainerType = (AbstractMapContainerType) other;
+		return this.getContentType().isEquivalent_AccessorParameterType(otherMapContainerType.getContentType())
+				&&
+			   this.getKeyTypeSpec().isEquivalent_AccessorParameterType(otherMapContainerType.getKeyTypeSpec());
 	}
 }
 

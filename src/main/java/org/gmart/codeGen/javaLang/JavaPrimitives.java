@@ -64,6 +64,7 @@ public class JavaPrimitives {
 //			return primitiveTypeJP[index];
 //		}
 	}
+	/** Assertion: The following arrays must have same length. */
 	public final static String[] primitiveTypes = new String[] {
 			"char",
 			"byte",

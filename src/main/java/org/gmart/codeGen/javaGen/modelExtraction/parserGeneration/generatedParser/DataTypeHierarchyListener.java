@@ -48,15 +48,25 @@ public interface DataTypeHierarchyListener extends ParseTreeListener {
 	 */
 	void exitOnOneLineTypeDef(DataTypeHierarchyParser.OnOneLineTypeDefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#identifierList}.
+	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#constructorParameters}.
 	 * @param ctx the parse tree
 	 */
-	void enterIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx);
+	void enterConstructorParameters(DataTypeHierarchyParser.ConstructorParametersContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DataTypeHierarchyParser#identifierList}.
+	 * Exit a parse tree produced by {@link DataTypeHierarchyParser#constructorParameters}.
 	 * @param ctx the parse tree
 	 */
-	void exitIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx);
+	void exitConstructorParameters(DataTypeHierarchyParser.ConstructorParametersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#constructorParameter}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstructorParameter(DataTypeHierarchyParser.ConstructorParameterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DataTypeHierarchyParser#constructorParameter}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstructorParameter(DataTypeHierarchyParser.ConstructorParameterContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#mapTypeExpression}.
 	 * @param ctx the parse tree
@@ -77,6 +87,36 @@ public interface DataTypeHierarchyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeExpression(DataTypeHierarchyParser.TypeExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#constructorArguments}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstructorArguments(DataTypeHierarchyParser.ConstructorArgumentsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DataTypeHierarchyParser#constructorArguments}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstructorArguments(DataTypeHierarchyParser.ConstructorArgumentsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#pathWithKeyHole}.
+	 * @param ctx the parse tree
+	 */
+	void enterPathWithKeyHole(DataTypeHierarchyParser.PathWithKeyHoleContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DataTypeHierarchyParser#pathWithKeyHole}.
+	 * @param ctx the parse tree
+	 */
+	void exitPathWithKeyHole(DataTypeHierarchyParser.PathWithKeyHoleContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#idOrKeyHole}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdOrKeyHole(DataTypeHierarchyParser.IdOrKeyHoleContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DataTypeHierarchyParser#idOrKeyHole}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdOrKeyHole(DataTypeHierarchyParser.IdOrKeyHoleContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#anonymousEnumField}.
 	 * @param ctx the parse tree
@@ -107,6 +147,16 @@ public interface DataTypeHierarchyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDiamondTwoArg(DataTypeHierarchyParser.DiamondTwoArgContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#identifierList}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DataTypeHierarchyParser#identifierList}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifierList(DataTypeHierarchyParser.IdentifierListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DataTypeHierarchyParser#qualifiedName}.
 	 * @param ctx the parse tree

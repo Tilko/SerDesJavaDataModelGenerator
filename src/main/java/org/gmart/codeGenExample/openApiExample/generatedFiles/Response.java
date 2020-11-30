@@ -5,11 +5,11 @@ import java.util.Map;
 import javax.annotation.processing.Generated;
 
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
+import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 
 @Generated("")
-public class Response implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class Response implements ClassSerializationToYamlDefaultImpl, ClassInstance {
     private static AbstractClassDefinition classSpecification;
 
     private String description;

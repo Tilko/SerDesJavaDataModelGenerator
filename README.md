@@ -2,8 +2,10 @@ Software to:
 - generate Java classes from a Yaml data types specification file,   
 - deserialize (marshall) a Yaml or JSON file into an instance of one of the generated classes,  
 - serialize (unmarshall) this (possibly modified) instance back to a Yaml or JSON file.  
-
-You can also plug custom stub classes in the generated class hierarchy.  
+Some features in two words:
+  - type polymorphism based on shape (`oneOf`) or enum property (`is`).
+  - internal reference node (an instance node that references an other instance node somewhere in the deserialized tree) that allows programmatic access to the referred node.
+  - ability to plug custom stub classes in the generated class hierarchy.
 
 ## As first input of this tool: 
 A data structure type definition in a Yaml file.
@@ -20,21 +22,91 @@ my.package0:                  # then packages are defined relatively to that roo
     myPropertyName3 ? : int                     # "?" specify that the property is optional
     myPropertyName4: int*                       # "T*" means that the type is a list of T 
                                                 #      (like in EBNF grammar)
-    myPropertyName5: int**                      # list of list (etc)
-    myPropertyName6: Map<MyEnum, Dict<int*>**>* # you can compose an arbitrary number of container types
-    myPropertyName7: Object                     # the "Object" type represents an unknown type,
-                                                #      (like "any" in TypeScript)
+    myPropertyName5: int**                      # List of list (etc).
+    myPropertyName6: Map<MyEnum, Dict<int*>**>* # You can compose an arbitrary number of container types.
+    myPropertyName7: Object                     # The "Object" type represents an unknown type,
+                                                #      (like "any" in TypeScript).
   
-  CardType: Club, Diamond, Heart, Spade         # define an enumeration type
+  CardType: Club, Diamond, Heart, Spade         # Define an enumeration type.
   
   MyTypeName1:
-    myPropertyName8: enum(bla, bli, blu)        #an anonymous enum type for that property only	
+    myPropertyName8: enum(bla, bli, blu)        # An anonymous enum type for that property only.	
   
-  MyPolymorphicType0: oneOf(String, MyTypeName0, ...) # a type of object that can be one of the 
+  MyPolymorphicType0: oneOf(String, MyTypeName0, ...) # A type of object that can be one of the 
                                                       # specified types, the tool checks that 
                                                       # types are not formally ambiguous
-                                                      # with each other (cf. details below)
-                                                      
+                                                      # with each other (cf. details below).
+  MyTypeNameX:
+    a0: Dict<MyReferencedType0>
+    b0: keysFor(a0.?)       # The "keysFor(a0.?)" type means that the "b0" property must contain a key of 
+                            # the "a0" dictionary property. The Java class used to model this reference 
+                            # implements a method "T getReferedObject();" where the generic type "T" is 
+                            # "MyReferencedType0" in this case.
+    a1: MyReferencedType0* 
+    b1: keysFor(a1.?)       # It also works for list, and the "key" is the "index" of an element
+    
+    a2: Dict<Dict<MyReferencedType0**>*>  
+    b2: keysFor(a2.?.?.?)    # You can also reference a arbitrarily deep element 
+                             # (that's why there is an "s" in "keysFor").
+                             # In the Yaml/JSON serialized version of an instance of MyTypeNameX, 
+                             # the "b2" must have Json-pointer format: "myKey0/myKey1/..."
+                             # (with "/" escaped with "~1" and "~" with- "~0")
+                             
+    b22: Dict<keysFor(a2.?)*>*  # collections of references are supported
+   
+    b3: Dict<keysFor(b3.?)>    # So can you can do this wonderful endomorphism type :)
+  MyReferencedType0:
+    ...
+  
+  MyTypeNameX2:
+    a: Dict<MyReferencedTypeContainer0>  
+    b: keysFor(a.?.?)     # deep reference in an other type
+  MyReferencedTypeContainer0:
+    a0Bis: Dict<MyReferencedType0>
+  
+  #### you can also specify the following dependency relation between 2 types (class or oneOf):
+  RootType:
+    a: Dict<MyReferencedType>
+    b: MyDependentType(a.?)
+  MyDependentType(Accessor<String, MyReferencedType> myParamName):
+    c: keysFor(myParamName)
+  ## which is equivalent to:
+  RootType:
+    a: Dict<MyReferencedType>
+    b: MyDependentType(a)
+  MyDependentType(Accessor<Dict<MyReferencedType>> myParamName):
+    c: keysFor(myParamName.?)
+  
+  ## You can pass multiple Accessor:
+  MyDependentType(Accessor<Dict<MyReferencedType>> myParamName0, Accessor<String, MyReferencedType22>> myParamName1):
+    ...
+  
+  ## With multiple level as well:
+  RootType:
+    a: Dict<MyReferencedType*>  // note the "*"
+    b: MyDependentType(a.?.?)
+  MyDependentType(Accessor<String, Integer, MyReferencedType> myParamName):
+    c: keysFor(myParamName)
+```
+In the previous "Accessor<...>", the n-1 first type parameters are the keys (inputs) types
+and the last type is the output type of the accessor, this output type can be used to create a deepest accessor in an other "constructor" or "keysFor" function.
+This "reference" language element not only allow you to access a referred node from a reference node (with the `getReferedObject` method),
+this software can also validate that every keys that should guide to a referred object actually guide to an existing object, this validation is done when an instance is serialized,
+and can be called on a deserialized instance on with:
+```java
+myDeserializedInstance.checkReferences_recursive().getKeysThatPointToNoValues()
+```
+(Under-the-hood note: I used the expression "constructor arguments" but in fact no `Accessor<...>` function is passed to a Java node when it 
+is constructed, in fact, when a node is dependent to its parent, just a reference to the  
+parent is set in the child when the child is set as property of the parent 
+(and also when a dependent the added/set in a List or a Map (that have special implementations in this case)), and it is only when the "getReferedObject" object is called 
+on the reference object that the data will be accessed from that parent reference. 
+If you add a node in a List/Map or assign a property, the generated classes will take 
+care of this dependency by propagating a reference to the parent in the child for you.)
+You can see a concrete example for the use of those internal references ([Here](#a-use-example-of-the-internal-reference))
+
+#### About package names:
+```yaml
 .:                        # an other package, at the root
   MyTypeName2:
     myPropertyName9: MyTypeName0                # you can reference "MyTypeName0" with its simple name 
@@ -43,9 +115,9 @@ my.package0:                  # then packages are defined relatively to that roo
   package3:                                     # package to demonstrate the previous point.
     MyTypeName2:
       myPropertyName11: double
-    
-    
-    
+```
+#### About the "is a" relationship based on enum properties:
+```yaml
 example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
   
   MyTypeThatHaveAFieldWithAnAbstractType:
@@ -59,8 +131,9 @@ example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
     
   Type: aaa, bbb, ccc, ddd          # enum type used previously to specify the "abstract" field
   	
-  ### now, let's see how to specify some concrete types with the "AbstractTypeName0" super-type:
-  
+```
+Now, let's see how to specify some concrete types with the "AbstractTypeName0" super-type:
+```yaml 
   ConcreteTypeName0 is AbstractTypeName0:   # note the "is" clause
     type: enum(aaa, bbb)                    # note that the property name is the same as 
                                             #    the "abstract" one in AbstractTypeName0,
@@ -139,9 +212,9 @@ package1:
   stubbed MyClassA:            # note the `stubbed` modifier here
     ... some properties ...
 ```
-The generated Java class `generatedClass` that corresponds is: 
-  `org.example.generatedFiles.package1.MyClassA`
-and thanks to that modifier, an other file is generated with the same fully qualified name
+So the corresponding generated Java class is: 
+  `org.example.generatedFiles.package1.MyClassA`, let's call this class `generatedClass`,
+thanks to that `stubbed` modifier, an other file is generated with the same fully qualified name
 except that the `generatedFiles` part is replaced by: `generatedFilesCustomizationStubs`. 
 This stub file contains a Java class that *extends* the previous `generatedClass`. 
 In the `generatedFiles` package, it is this stub class that is referred (almost) everywhere the `generatedClass` would be referred if it was not `stubbed`.
@@ -153,7 +226,7 @@ There is a concrete example of use for this feature at the end of the next secti
 ## Now let's take a concrete example:
 If you designed some REST API before, you might have heard about
 the OpenAPI specification (formerly called "swagger"), it describes a way to specify a REST API
-by writing a Yaml (or JSON) document (it's a data tree), of course this document must respect a particular data structure to be valid, 
+by writing a Yaml (or JSON) document, of course this document must respect a particular data structure to be valid, 
 this data structure is described (without a formal syntax) in the OpenAPI documentation (https://swagger.io/docs/specification/about/). 
 From an OpenAPI API description (written in Yaml) you can generate some scaffold code (client and server side) for the API that you desire.
 The present tool addresses 2 things:
@@ -351,8 +424,8 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
     
     public static <T> Function<String, T> makeJsonPathResolver(Object context){
         Function<String, T> convertRefToSchema = ref -> {
-            if(ref.startsWith("#")) {
-                ref = ref.substring(1);
+            if(ref.startsWith("#/")) {
+                ref = ref.substring(2);
                 String[] path = ref.substring(0).split("[/\\\\]");
                 try {
                     return (T) ReflUtil.getDeepFieldValue(context, path);
@@ -367,6 +440,19 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
         return convertRefToSchema;
     }
 }
+```
+### A use example of the internal reference:
+A finite state machine (FSM) data structure can take advantage of this language element,
+indeed a FSM is a directed graph so because of the tree nature of a deserialized instance,
+we have to use some kind of references ... Here is the type definition:
+```yaml
+.:
+  FiniteStateMachine:
+    initialState: keysFor(states.?)
+    states: Dict<Transition(states.?)*>
+  Transition(Accessor<String, Transition*> states):
+    condition: String
+    target: keysFor(states)
 ```
 
 ## Installation:

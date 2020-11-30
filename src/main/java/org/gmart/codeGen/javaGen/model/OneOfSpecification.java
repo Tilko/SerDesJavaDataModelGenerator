@@ -18,19 +18,35 @@ package org.gmart.codeGen.javaGen.model;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.json.JsonNumber;
+import javax.json.JsonString;
+import javax.json.JsonValue;
 import javax.lang.model.element.Modifier;
 
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
+import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 import org.gmart.codeGen.javaGen.model.containerTypes.AbstractMapContainerType;
 import org.gmart.codeGen.javaGen.model.containerTypes.ListContainerType;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AbstractAccessorBuilder;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessPathKeyAndOutputTypes;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessorBuilderFactory;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessorConstructorParametersDeclarer;
+import org.gmart.codeGen.javaGen.model.referenceResolution.ConstructionArgs;
+import org.gmart.codeGen.javaGen.model.referenceResolution.TypeExpressionWithArgs;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ConstructionArgumentBuilder;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ConstructionArgumentBuilderOwner;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstance;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstanceSource;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaGen.model.typeRecognition.oneOf.ClassRecognition;
 import org.gmart.codeGen.javaGen.model.typeRecognition.oneOf.TypeRecognizer;
@@ -42,24 +58,95 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import api_global.logUtility.L;
 import api_global.strUtil.StringFunctions;
 
-public class OneOfSpecification extends TypeDefinitionForStubbable {
-	List<TypeExpression> alternatives;
+public class OneOfSpecification extends TypeDefinitionForStubbable implements AccessorBuilderFactory {
 
-	public OneOfSpecification(PackageDefinition packageDef, String name, boolean isStubbed, List<TypeExpression> alternatives) {
-		super(packageDef, name, isStubbed);
+	public void initDependentAlternatives(int codeLine) {
+		developDependent().forEach(typeAndArgs -> {
+			try {
+				alternativeTypeToAccessorBuilders.put(
+						typeAndArgs.getInstantiatedType(), 
+						ConstructionArgs.makeBuilders(this, (AccessorConstructorParametersDeclarer) typeAndArgs.getInstantiatedType(), typeAndArgs.getPaths())
+				);
+			} catch (Exception e) {
+				e.printStackTrace();
+				assert false : "at line:" + codeLine + ": " + e.getMessage();
+			}
+		});
+	}
+	private List<TypeExpressionWithArgs> developDependent(){
+		return alternativesWithArgs.stream().filter(type -> type.getInstantiatedType() instanceof OneOfSpecification)
+			.flatMap(type -> ((OneOfSpecification) type.getInstantiatedType()).developDependent(type.getPaths())).collect(Collectors.toCollection(ArrayList::new));
+	}
+
+	private Stream<TypeExpressionWithArgs> developDependent(List<List<String>> arguments) {
+		return alternativesWithArgs.stream().flatMap(t -> {
+			TypeDefinitionForStubbable typeExpression = t.getInstantiatedType();
+			List<List<String>> developpedPath = t.getPaths().stream().map(childArgs -> 
+				Stream.concat(arguments.get(paramNameToItsIndex.get(childArgs.get(0))).stream(), childArgs.subList(1, childArgs.size()).stream())
+				.collect(Collectors.toCollection(ArrayList::new)))
+				.collect(Collectors.toCollection(ArrayList::new));
+			
+			if(typeExpression instanceof OneOfSpecification) {
+				return ((OneOfSpecification)typeExpression).developDependent(developpedPath);
+			} else {
+				return Stream.of(new TypeExpressionWithArgs(developpedPath, typeExpression));
+			}
+		});
+	}
+	private HashMap<TypeExpression, List<AbstractAccessorBuilder>> alternativeTypeToAccessorBuilders = new HashMap<>();
+	@Override
+	public Function<List<Object>, Optional<Object>> getConstructionArgument(DependentInstanceSource thisInstance, DependentInstance childInstance, int argIndex) {
+		return alternativeTypeToAccessorBuilders.get(((OneOfInstance) thisInstance).getPayloadType()).get(argIndex).makeAccessor(thisInstance);
+	}
+	@Override
+	public boolean isDependent() {
+		return constructorParameters.size() != 0;
+	}
+	@Override
+	public void checkReferences_recursive(Object instance, ReferenceCheckResult referenceCheckResult) {
+		OneOfInstance oneOfInstance = (OneOfInstance)instance;
+		oneOfInstance.getPayloadType().checkReferences_recursive(oneOfInstance.getPayload(), referenceCheckResult);
+	}
+	
+	private final List<TypeExpression> alternatives;
+	private final List<TypeExpressionWithArgs> alternativesWithArgs;
+	
+	public OneOfSpecification(PackageDefinition packageDef, String name, boolean isStubbed, List<TypeExpression> alternatives, List<TypeExpressionWithArgs> alternativesWithArgs, List<ConstructorParameter> constructorParameters) {
+		super(packageDef, name, isStubbed, constructorParameters);
+		this.alternativesWithArgs = alternativesWithArgs;
 		this.alternatives = alternatives;
 	}
+	
 	public void compile() {
 		this.nonOneOfFormalGroups = developToNonOneOfGroups(alternatives, null);
 		this.typeRecognizer = makeTypeRecognizer(nonOneOfFormalGroups);
 		assert !this.typeRecognizer.hasError() : this.typeRecognizer.getErrorMessage();
 	}
+	private Map<FormalGroup, List<TypeExpression>> developToNonOneOfGroups(Map<FormalGroup, List<TypeExpression>> accumulator){
+		return developToNonOneOfGroups(alternatives, accumulator);
+	}
+	private static Map<FormalGroup, List<TypeExpression>> developToNonOneOfGroups(List<TypeExpression> alternatives, Map<FormalGroup, List<TypeExpression>> accumulator){
+		Map<FormalGroup, List<TypeExpression>> typeExprByFormalGroup = alternatives.stream().collect(Collectors.groupingBy(alt -> alt.formalGroup()));
+		List<TypeExpression> oneOfs_Group = typeExprByFormalGroup.remove(FormalGroup.oneOf);
+		if(accumulator == null)
+			accumulator = typeExprByFormalGroup;
+		final var final_accumulator = accumulator;
+		if(oneOfs_Group != null) {
+			oneOfs_Group.stream().map(te -> (OneOfSpecification)te).forEach(oneOf -> oneOf.developToNonOneOfGroups(final_accumulator));
+		}
+		if(accumulator != typeExprByFormalGroup)
+			typeExprByFormalGroup.forEach((formalGroup, typeExpressions) -> final_accumulator.merge(formalGroup, typeExpressions, (te0,te1)-> {te0.addAll(te1);return te0;}));
+		return accumulator;
+	}
+	
+	
+	
 	TypeRecognizer<Object> typeRecognizer;
 	Map<FormalGroup, List<TypeExpression>> nonOneOfFormalGroups;
 	private static final String payloadId = "payload";
@@ -67,7 +154,6 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	private static final String oneOfSpecificationId = "oneOfSpecification";
 	
 	private static final String deserialContextId = "deserialContext";
-	@SuppressWarnings("rawtypes")
 	@Override
 	public Optional<TypeSpec.Builder> initJPoetTypeSpec() {
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(this.getName());
@@ -92,30 +178,57 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 		JPoetUtil.setFieldAndGetter(classBuilder, ClassName.get(Object.class), payloadId);
 		//String paramId = payloadId;//"raw" + StringFunctions.capitalize(payloadId);
 		Builder initSetter = JPoetUtil.initSetterWithoutStmt(ClassName.get(Object.class), payloadId);
-		initSetter.addStatement("$T<$T, $T> makePayload = $L.makePayload($L, $L)", Pair.class, TypeExpression.class, Object.class, oneOfSpecificationId, deserialContextId, payloadId);
+		initSetter.addStatement("$T<$T, $T> makePayload = $L.makePayload($L, $L, this)", Pair.class, TypeExpression.class, Object.class, oneOfSpecificationId, deserialContextId, payloadId);
 		initSetter.addStatement("this.$L = makePayload.getValue0()", payloadTypeId);
 		initSetter.addStatement("this.$L = makePayload.getValue1()", payloadId);
-		classBuilder.addMethod(initSetter.build());
+//		if(isDependent())
+//			initSetter.beginControlFlow("if($L.isDependent())", payloadTypeId)
+//			.addStatement("(($T)$L).$L(this)", DependentInstance.class, payloadId, DependentInstance.setParentContextId)
+//			.endControlFlow();
 		
+		classBuilder.addMethod(initSetter.build());
+
 		//JPoetUtil.setBeanProperty(classBuilder, Object.class, payloadId);
 		JPoetUtil.initFieldPrivate(OneOfSpecification.class, oneOfSpecificationId);
 		//classBuilder.addMethod(MethodSpec.methodBuilder(JPoetUtil.makeSetterName(payloadId)).addParameter(Object.class, payloadId).addStatement("this.$L = $L", payloadId, payloadId).build());
 		//classBuilder.addField(Object.class, payloadId, Modifier.PRIVATE);
 		nonOneOfFormalGroups.forEach((formalGroup, types) -> {
-			if(formalGroup.isFormalLeaf()) {
-				TypeDefinition typeDefinition = (TypeDefinition)types.get(0);
-				String alternativeTypeName = typeDefinition.getName();
-				Class returnType = typeDefinition.getReferenceClass();
-				addConverterMethod(classBuilder, alternativeTypeName, TypeName.get(returnType));
-			} else {
-				types.forEach(type -> {
-					//MethodSpec.Builder meth = makeTypeDefinitionConverterMethodBuilder(type);
-					addConverterMethod(classBuilder, type.getJavaIdentifier(), type.getReferenceJPoetTypeName(true));
-				});
-			}
+			types.forEach(type -> {
+				//MethodSpec.Builder meth = makeTypeDefinitionConverterMethodBuilder(type);
+				addConverterMethod(classBuilder, type.getJavaIdentifier(), type.getReferenceJPoetTypeName(true));
+			});
+//			if(formalGroup.isFormalLeaf()) {
+//				TypeDefinition typeDefinition = (TypeDefinition) types.get(0);
+//				String alternativeTypeName = typeDefinition.getName();
+//				Class returnType = typeDefinition.getReferenceClass();
+//				addConverterMethod(classBuilder, alternativeTypeName, TypeName.get(returnType));
+//			} else {
+//				types.forEach(type -> {
+//					//MethodSpec.Builder meth = makeTypeDefinitionConverterMethodBuilder(type);
+//					addConverterMethod(classBuilder, type.getJavaIdentifier(), type.getReferenceJPoetTypeName(true));
+//				});
+//			}
 		});
+		
+		if(this.isDependent()) {
+			setAccessorDependenciesCode(classBuilder, DependentOneOfInstance.class);
+			classBuilder.addSuperinterface(DependentInstanceSourceOneOf.class);
+		}
+			
+		
 		return Optional.of(classBuilder);
 	}
+
+	
+	public interface DependentOneOfInstance extends OneOfInstance, DependentInstance, ConstructionArgumentBuilderOwner {
+		default ConstructionArgumentBuilder getConstructionArgumentBuilder() {
+			return this.getOneOfSpecification();
+		}
+	}
+	public interface DependentInstanceSourceOneOf extends DependentInstanceSource, DependentOneOfInstance {
+
+	}
+
 	private static void addConverterMethod(TypeSpec.Builder classBuilder, String typeNameInMethodName, TypeName returnType) {
 		MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("as" + StringFunctions.capitalize(typeNameInMethodName));
 		addStmt(methodBuilder, returnType);
@@ -123,9 +236,10 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 		classBuilder.addMethod(methodBuilder.build());
 	}
 	private static void addStmt(MethodSpec.Builder methodBuilder, TypeName typeName) {
+		TypeName typeNameWithoutParameters = typeName instanceof ParameterizedTypeName ? ((ParameterizedTypeName)typeName).rawType : typeName;
 		methodBuilder.addCode(
 				CodeBlock.builder()
-				    .beginControlFlow("if($L instanceof $T)", payloadId, typeName)
+				    .beginControlFlow("if($L instanceof $T)", payloadId, typeNameWithoutParameters)
 			        		.addStatement("return ($T) $L", typeName, payloadId)
 			        .endControlFlow()
 			        //.addStatement("return null")
@@ -141,17 +255,18 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlValue, boolean boxedPrimitive) {
+	public Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlOrJsonValue, boolean boxedPrimitive) {
 		Class instanciatedClass = this.getInstanciationClass();
 		try {
 			Object newInstance = instanciatedClass.getConstructor(DeserialContext.class).newInstance(ctx);//jClass.getConstructor(OneOfSpecification.class).newInstance(this);
-			Pair<TypeExpression, Object> payload = makePayloadFromYamlObject(ctx, yamlValue);
+			Pair<TypeExpression, Object> payload = makePayloadFromYamlObject(ctx, yamlOrJsonValue);
 			TypeExpression resolvedType = payload.getValue0();
 			Object resolvedInstance = payload.getValue1();
 			Class classWithPayload = isStubbed() ? instanciatedClass.getSuperclass() : instanciatedClass;
 			Field payloadField = classWithPayload.getDeclaredField(payloadId);
 			payloadField.setAccessible(true);
 			payloadField.set(newInstance, resolvedInstance);
+			setParentContext(payload, newInstance);
 			//newInstance.getClass().getMethod(JPoetUtil.makeSetterName(payloadId), Object.class).invoke(newInstance, resolvedInstance);
 			classWithPayload.getMethod(JPoetUtil.makeSetterName(payloadTypeId), TypeExpression.class).invoke(newInstance, resolvedType);
 			return Pair.with(instanciatedClass, newInstance);
@@ -160,8 +275,17 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 			return null;
 		}		
 	}
-	
-	public Pair<TypeExpression, Object> makePayload(DeserialContext ctx, Object newPayload){
+	public Pair<TypeExpression, Object> makePayload(DeserialContext ctx, Object newPayload, OneOfInstance host){
+		Pair<TypeExpression, Object> makePayload_internal = makePayload_internal(ctx, newPayload);
+		setParentContext(makePayload_internal, host);
+		return makePayload_internal;
+	}
+	private static void setParentContext(Pair<TypeExpression, Object> payload, Object host) {
+		if(payload.getValue0().isDependent()) {
+            ((DependentInstance)payload.getValue1()).setParentContext(host);
+        }
+	}
+	public Pair<TypeExpression, Object> makePayload_internal(DeserialContext ctx, Object newPayload){
 		if(newPayload instanceof ClassSerializationToYamlDefaultImpl) {
 			TypeExpression resolvedType = ((ClassSerializationToYamlDefaultImpl) newPayload).getClassDefinition();
 			return Pair.with(resolvedType, newPayload);
@@ -169,10 +293,10 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 			return makePayloadFromYamlObject(ctx, newPayload);
 		}
 	}
-	public Pair<TypeExpression, Object> makePayloadFromYamlObject(DeserialContext ctx, Object rawYamlObject){
-		TypeExpression resolvedType = typeRecognizer.getRecognizer().apply(rawYamlObject);
-		assert resolvedType != null : "impossible to infer the type for:"  + rawYamlObject + "\n (verify property name spelling, maybe ...)"; 
-		Object resolvedInstance = resolvedType != null ? resolvedType.makeModelValue(ctx, rawYamlObject) : null;
+	public Pair<TypeExpression, Object> makePayloadFromYamlObject(DeserialContext ctx, Object yamlOrJsonValue){
+		TypeExpression resolvedType = typeRecognizer.getRecognizer().apply(yamlOrJsonValue);
+		assert resolvedType != null : "impossible to infer the type for:"  + yamlOrJsonValue + "\n (verify property name spelling, maybe ...)"; 
+		Object resolvedInstance = resolvedType != null ? resolvedType.makeModelValue(ctx, yamlOrJsonValue) : null;
 		return Pair.with(resolvedType, resolvedInstance);
 	}
 	
@@ -188,8 +312,8 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 		if(stringFormal.size() > 1) {
 			typeRecognizer.setErrorMessage("only one String or enum type is supported here.");
 		} else if(stringFormal.size() == 1) {
-			tests.add(snakeYamlObject -> {
-				return snakeYamlObject instanceof String ? stringFormal.get(0) : null;
+			tests.add(yamlOrJsonValue -> {
+				return yamlOrJsonValue instanceof String  || yamlOrJsonValue instanceof JsonString ? stringFormal.get(0) : null;
 			});
 		}
 		
@@ -197,24 +321,24 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 		if(decGroup.size() > 1) {
 			typeRecognizer.setErrorMessage("only one decimal form type is supported here.");
 		} else if(decGroup.size() == 1) {
-			tests.add(snakeYamlObject -> {
-				return snakeYamlObject instanceof Double ? decGroup.get(0) : null;
+			tests.add(yamlOrJsonValue -> {
+				return yamlOrJsonValue instanceof Double || (yamlOrJsonValue instanceof JsonNumber && !((JsonNumber)yamlOrJsonValue).isIntegral()) ? decGroup.get(0) : null;
 			});
 		}
 		List<TypeExpression> intGroup = nonOneOfFormalGroups.getOrDefault(FormalGroup.integer, empty);
 		if(intGroup.size() > 1) {
 			typeRecognizer.setErrorMessage("only one integer form type is supported here.");
 		} else if(intGroup.size() == 1) {
-			tests.add(snakeYamlObject -> {
-				return snakeYamlObject instanceof Integer ? intGroup.get(0) : null;
+			tests.add(yamlOrJsonValue -> {
+				return yamlOrJsonValue instanceof Integer || (yamlOrJsonValue instanceof JsonNumber && ((JsonNumber)yamlOrJsonValue).isIntegral())? intGroup.get(0) : null;
 			});
 		}
 		List<TypeExpression> boolGroup = nonOneOfFormalGroups.getOrDefault(FormalGroup.bool, empty);
 		if(boolGroup.size() > 1) {
 			typeRecognizer.setErrorMessage("only one boolean form type is supported here.");
 		} else if(boolGroup.size() == 1) {
-			tests.add(snakeYamlObject -> {
-				return snakeYamlObject instanceof Boolean ? boolGroup.get(0) : null;
+			tests.add(yamlOrJsonValue -> {
+				return yamlOrJsonValue instanceof Boolean || (yamlOrJsonValue instanceof JsonValue  && (yamlOrJsonValue == JsonValue.TRUE || yamlOrJsonValue == JsonValue.FALSE)) ? boolGroup.get(0) : null;
 			});
 		}
 
@@ -222,17 +346,17 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 				.map(listType -> listType.getContentType()).collect(Collectors.toCollection(ArrayList::new));
 		if(listsTypeContentTypes.size() != 0) {
 			if(listsTypeContentTypes.size() == 1) {
-				tests.add(snakeYamlObject -> {
-					return snakeYamlObject instanceof List ? listsTypeContentTypes.get(0) : null;
+				tests.add(yamlOrJsonValue -> {
+					return yamlOrJsonValue instanceof List ? listsTypeContentTypes.get(0) : null;
 				});
 			} else {
 				TypeRecognizer<Object> makeTypeRecognizer = makeTypeRecognizer(developToNonOneOfGroups(listsTypeContentTypes, null));
 				if(makeTypeRecognizer.hasError()) {
 					typeRecognizer.prependErrorMessage(makeTypeRecognizer.getErrorMessage());
 				} else {
-					tests.add(snakeYamlObject -> {
-						if(snakeYamlObject instanceof List) {
-							return makeTypeRecognizer.getRecognizer().apply(((List)snakeYamlObject).get(0));
+					tests.add(yamlOrJsonValue -> {
+						if(yamlOrJsonValue instanceof List) {
+							return makeTypeRecognizer.getRecognizer().apply(((List)yamlOrJsonValue).get(0));
 						} else return null;
 					});
 				}
@@ -251,8 +375,8 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 			if(classTypeExpression.size() != 0)
 				typeRecognizer.setErrorMessage("no class type are supported if Map/Dict alternatives are present.");
 			else 
-				tests.add(snakeYamlObject -> {
-					return snakeYamlObject instanceof Map ? mapOrObjectSubGroups.get(true).get(0) : null;
+				tests.add(yamlOrJsonValue -> {
+					return yamlOrJsonValue instanceof Map ? mapOrObjectSubGroups.get(true).get(0) : null;
 				});
 		} else {
 			HashSet<TypeExpression> hashSet = new HashSet<>();
@@ -263,16 +387,16 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 				if(recog.hasError()) {
 					typeRecognizer.setErrorMessage(recog.getErrorMessage());
 				} else {
-					tests.add(snakeYamlObject -> {
-						return snakeYamlObject instanceof Map ? recog.getRecognizer().apply((Map<String, ?>)snakeYamlObject) : null;
+					tests.add(yamlOrJsonValue -> {
+						return yamlOrJsonValue instanceof Map ? recog.getRecognizer().apply((Map<String, ?>)yamlOrJsonValue) : null;
 					});
 				}
 			});
 		}
 		
-		Function<Object, TypeExpression> recog = snakeYamlObject -> {
+		Function<Object, TypeExpression> recog = yamlOrJsonValue -> {
 			for(Function<Object, TypeExpression> test : tests) {
-				TypeExpression apply = test.apply(snakeYamlObject);
+				TypeExpression apply = test.apply(yamlOrJsonValue);
 				if(apply != null)
 					return apply;
 			}
@@ -283,22 +407,6 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	}
 	
 	
-	private Map<FormalGroup, List<TypeExpression>> developToNonOneOfGroups(Map<FormalGroup, List<TypeExpression>> accumulator){
-		return developToNonOneOfGroups(alternatives, accumulator);
-	}
-	private static Map<FormalGroup, List<TypeExpression>> developToNonOneOfGroups(List<TypeExpression> alternatives, Map<FormalGroup, List<TypeExpression>> accumulator){
-		Map<FormalGroup, List<TypeExpression>> typeExprByFormalGroup = alternatives.stream().collect(Collectors.groupingBy(alt -> alt.formalGroup()));
-		List<TypeExpression> oneOfs_Group = typeExprByFormalGroup.remove(FormalGroup.oneOf);
-		if(accumulator == null)
-			accumulator = typeExprByFormalGroup;
-		final var final_accumulator = accumulator;
-		if(oneOfs_Group != null) {
-			oneOfs_Group.stream().map(te -> (OneOfSpecification)te).forEach(oneOf -> oneOf.developToNonOneOfGroups(final_accumulator));
-		}
-		if(accumulator != typeExprByFormalGroup)
-			typeExprByFormalGroup.forEach((formalGroup, typeExpressions) -> final_accumulator.merge(formalGroup, typeExpressions, (te0,te1)-> {te0.addAll(te1);return te0;}));
-		return accumulator;
-	}
 	
 	
 
@@ -314,6 +422,30 @@ public class OneOfSpecification extends TypeDefinitionForStubbable {
 	public FormalGroup formalGroup() {
 		return FormalGroup.oneOf;
 	}
+	
+	
+	@Override
+	public AbstractAccessorBuilder makeAbstractAccessorBuilder(List<String> path) {
+		return makeAccessorBuilderFromConstructorParameters(path).get();
+	}
+
+	@Override
+	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+		assert false : "\"construction arguments\" are not supported on \"oneOf\" types (it may be possible later for some particular \"oneOf\" types, like a oneOf type with only List alternatives)";
+//		boolean isOneOfListType = alternatives.stream().allMatch(te -> te instanceof ListContainerType);//TUDO take into account the list in OneOf alternatives (use developped version ...)
+//		if(isOneOfListType) {
+//			return instance -> {
+//				Object payload = ((OneOfInstance)instance).getPayload();
+//				if(payload == null)
+//					return keys -> Optional.empty();
+//				return ((ListContainerType)((OneOfInstance)instance).getPayloadType()).makeAccessorBuilder(path, toFillWithTypesForValidation).apply(payload);
+//			};
+//		}
+//		assert false : "Non-empty accessor path on a \"oneOf\" type where alternatives are not only \"List\" containers.";
+		return null;
+	}
+
+
 
 }
 

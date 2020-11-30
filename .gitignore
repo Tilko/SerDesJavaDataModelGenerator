@@ -28,5 +28,8 @@ src/main/java/org/gmart/codeGenExample/featuresTestExample/temp/
 src/main/java/org/gmart/codeGenExample/fsmExample/
 src/main/java/org/gmart/codeGenExample/fsmExample/FSM.yaml
 
+src/main/java/org/gmart/codeGen/javaGen/modelExtraction/parserGenTestForDebug
 src/main/java/org/gmart/codeGen/javaGen/model/old/
+src/main/java/org/gmart/codeGen/javaGen/model/old_referenceResolution/
+
 src/main/java/org/gmart/codeGen/javaGen/model/old/yamlAppender/

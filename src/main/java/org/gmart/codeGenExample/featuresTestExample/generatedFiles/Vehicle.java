@@ -1,14 +1,14 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
-import java.lang.String;
 import javax.annotation.processing.Generated;
+
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
+import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.SchemaOrRef;
 
 @Generated("")
-public class Vehicle implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class Vehicle implements ClassSerializationToYamlDefaultImpl, ClassInstance {
     private static AbstractClassDefinition classSpecification;
 
     private int wheelCard;

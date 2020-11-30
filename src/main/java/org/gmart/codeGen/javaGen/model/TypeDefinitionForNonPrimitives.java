@@ -61,4 +61,9 @@ public abstract class TypeDefinitionForNonPrimitives extends TypeDefinition impl
 		typeBuilder.addAnnotation(AnnotationSpec.builder(Generated.class).addMember("value", "$S", "").build());
 		return JavaFile.builder(this.getPackageName(), typeBuilder.build()).indent("    ").build();
 	}
+	
+	@Override
+	public TypeExpression getNormalizedTypeForAccessorParameterTypeComparison() {
+		return this;
+	}
 }

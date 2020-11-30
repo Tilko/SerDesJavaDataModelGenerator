@@ -19,10 +19,10 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
     }
     
 	 public Schema getSchema() {
-        Schema schema = toSchema();   //this method has been generated in the parent "oneOf" class.
+        Schema schema = asSchema();   //this method has been generated in the parent "oneOf" class.
         if (schema != null)
             return schema;
-        String ref = toSchemaRef().get$ref(); //this one too, 
+        String ref = asSchemaRef().get$ref(); //this one too, 
         // ref must be a path to a member of a JSON (or Yaml) data-structure,
         // in this OpenAPI example it can be: "#components/schemas/<name of the schema>"
         

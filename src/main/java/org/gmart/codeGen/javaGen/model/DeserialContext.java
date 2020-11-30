@@ -15,9 +15,12 @@
  ******************************************************************************/
 package org.gmart.codeGen.javaGen.model;
 
+//import org.gmart.codeGen.javaGen.model.old_referenceResolution.HostClassWithConstructorArgsContext;
 import org.gmart.codeGen.javaGen.model.reporting.NonOptionalNotInitializedCollection;
 
-public interface DeserialContext extends DeserialRootObjectSupplier {
+public interface DeserialContext extends DeserialRootObjectSupplier {//, HostClassWithConstructorArgsContext {
 	
 	NonOptionalNotInitializedCollection getNonOptionalNotInitializedCollection();
+
+	
 }

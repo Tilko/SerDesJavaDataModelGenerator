@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import org.gmart.codeGen.javaGen.model.ConstructorParameter;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
@@ -27,15 +28,14 @@ import org.javatuples.Pair;
 
 public class ClassDefinition extends AbstractClassDefinition  {
 
-	public ClassDefinition(PackageDefinition packageDef, String className, boolean isStubbed, List<AbstractTypedField> fieldSpecifications) {
-		super(packageDef, className, isStubbed, fieldSpecifications);
+	public ClassDefinition(PackageDefinition packageDef, String className, boolean isStubbed, List<AbstractTypedField> fieldSpecifications, List<ConstructorParameter> constructorParameters) {
+		super(packageDef, className, isStubbed, fieldSpecifications, constructorParameters);
 	}
 	
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Pair<Class<?>, Object> yamlToJavaObjectFromSubClassesOrThisLeaf(DeserialContext ctx, Map<String, ?> yamlProps, Map<String, ?> remainingYamlProps, boolean boxedPrimitive){
 		Class instanciatedClass = this.getInstanciationClass();
-		
 		try {
 			Object newInstance = instanciatedClass.getConstructor().newInstance();//jCLass.getConstructor(ClassDefinition.class).newInstance(this);
 			return Pair.with(instanciatedClass, newInstance);
@@ -49,7 +49,6 @@ public class ClassDefinition extends AbstractClassDefinition  {
 	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
 		return makeSerializableValue_abstract(provider, toSerialize);
 	}
-
-
 	
+
 }

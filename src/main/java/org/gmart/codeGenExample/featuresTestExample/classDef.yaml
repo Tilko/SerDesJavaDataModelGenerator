@@ -12,6 +12,29 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
     bla: TypeWithAUniqueSimpleNameInThisPackagesSet
     obj: Object
     obj2: Object
+    states:  Dict<Transition(states.?)*>
+    states2: Dict<Transition2(states2)*>
+    states3: Dict<Dict<Transition3(states3)*>>
+    states4: Dict<Dict<Transition4(states4.?.?)*>>
+    states5: Dict<Dict<Transition5(states5.?)*>>
+    oneOfAndAccessorTest: A(states.?)
+  
+  Transition(Accessor<String, Transition*> states):
+    condition: String
+    target: keysFor(states)
+  Transition2(Accessor<Dict<Transition2*>> states):
+    condition: String
+    target: keysFor(states.?)
+  Transition3(Accessor<Dict<Dict<Transition3*>>> states):
+    condition: String
+    target: keysFor(states.?.?)
+  Transition4(Accessor<String, String, Transition4*> states):
+    condition: String
+    target: keysFor(states)
+  Transition5(Accessor<String, Dict<Transition5*>> states):
+    condition: String
+    target: keysFor(states.?)
+  A(Accessor<String, Transition*> states): oneOf(int*, keysFor(states)) 
     
   Components:
     schemas: Dict<Schema>
@@ -38,6 +61,7 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
     schema: SchemaOrRef
     
   CardType: Club, Diamond, Heart, Spade, int
+  
   HttpMethodTypes: POST, PUT, GET
 
 .bidulePackage:

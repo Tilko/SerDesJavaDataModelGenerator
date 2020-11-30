@@ -18,14 +18,26 @@ package org.gmart.codeGen.javaGen.model.classTypes.fields;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
+import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
+import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
+import org.gmart.codeGen.javaGen.model.containerTypes.AbstractContainerType;
+import org.gmart.codeGen.javaGen.model.referenceResolution.AbstractAccessorBuilder;
+import org.gmart.codeGen.javaGen.model.referenceResolution.ConstructionArgs;
+import org.gmart.codeGen.javaGen.model.referenceResolution.TypeExpressionWithArgs;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstance;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstanceSource;
 import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.javatuples.Pair;
 
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeName;
 
 public abstract class AbstractTypedField extends AbstractField {
@@ -36,24 +48,69 @@ public abstract class AbstractTypedField extends AbstractField {
 		super(name, isOptional);
 	}
 
-	public void initJavaObjectField(DeserialContext ctx, Class<?> newInstanceGeneratedClass, Object newInstance, Object fieldYamlValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-		if(fieldYamlValue == null) {
-			if(isOptional()) {
-				return;
-			} else {
-				ctx.getNonOptionalNotInitializedCollection().addNonOptionalFieldNonInitialized(this.getName());
-				return;
-			}
+	private AbstractClassDefinition hostClassDef;
+	public AbstractClassDefinition getHostClassDef() {
+		return hostClassDef;
+	}
+	public void setHostClass(AbstractClassDefinition hostClassDef) {
+		this.hostClassDef = hostClassDef;
+	}
+	
+	private boolean isDependent;
+	public boolean isDependent() {
+		return isDependent;
+	}
+	public void checkReferences_recursive(Object instance, Field javaField, ReferenceCheckResult referenceCheckResult) {
+		try {
+			getTypeExpression().checkReferences_recursive(javaField.get(instance), referenceCheckResult);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+			//should not happened ...
 		}
-		Pair<Class<?>, Object> rez = getTypeExpression().yamlOrJsonToModelValue(ctx, fieldYamlValue, false);//.initObjectFromYamlInput(fieldYamlValue);
-		newInstanceGeneratedClass.getMethod(JPoetUtil.makeSetterName(this.getNameInCode()), rez.getValue0()).invoke(newInstance, rez.getValue1());		
+	}
+	
+	
+	
+	List<AbstractAccessorBuilder> accessorBuilders;
+	public void initDependentField(TypeExpressionWithArgs constrArg) throws Exception {
+		this.isDependent = true;
+		if(constrArg != null)
+			this.accessorBuilders = ConstructionArgs.makeBuilders(getHostClassDef(), constrArg.getInstantiatedType(), constrArg.getPaths());
+		if(getTypeExpression() instanceof AbstractContainerType) {
+			((AbstractContainerType)getTypeExpression()).setIsDependent(true);
+		}
+	}
+	public Function<List<Object>, Optional<Object>> makeAccessor(DependentInstanceSource thisHostClassInstance, int argIndex) {
+		return accessorBuilders.get(argIndex).makeAccessor(thisHostClassInstance);
+	}
+	//private static String parentContextId = "parentContext";//InstanceContext parentContext
+	public MethodSpec.Builder toJPoetSetter(){
+		Builder jPoetSetter = super.toJPoetSetter();
+		if(isDependent())
+			jPoetSetter.addStatement("(($T)$L).$L(this)", DependentInstance.class, getNameInCode(), DependentInstance.setParentContextId);
+		return jPoetSetter;
+	}
+	
+	public void initJavaObjectField(DeserialContext ctx, Class<?> newInstanceGeneratedClass, Object hostClassNewInstance, Object fieldYamlValue ) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+		if(fieldYamlValue == null) {
+			if(!isOptional()) 
+				ctx.getNonOptionalNotInitializedCollection().addNonOptionalFieldNonInitialized(this.getName());
+			//else nothing todo
+		} else {
+			Pair<Class<?>, Object> rez = getTypeExpression().yamlOrJsonToModelValue(ctx, fieldYamlValue, false);
+			//not necessary (the next setter "invoke" does that):
+//			if(this.isDependent()) {
+//				((InstanceContext)rez.getValue1()).setParentContext(hostClassNewInstance);
+//			}
+			newInstanceGeneratedClass.getMethod(JPoetUtil.makeSetterName(this.getNameInCode()), rez.getValue0()).invoke(hostClassNewInstance, rez.getValue1());			
+		}
 	}
 	
 	public <T> void addPropertyToObjectSerializer(SerializerProvider<T> provider, SerializableObjectBuilder<T> builder, Class<?> generatedClass, Object toSerialize, List<String> nonOptionalNotInitializedCollection) {
 		if(this.isDiscriminant())
 			return;
 		try {
-			Class<?> toSerialize_Class = generatedClass;//((ClassDefinitionOwner)toSerialize).getClassDefinition().getGeneratedClass(); //toSerialize.getClass();
+			Class<?> toSerialize_Class = generatedClass;
 			Field field = toSerialize_Class.getDeclaredField(getNameInCode());
 			field.setAccessible(true);
 			Object childToSerialize = field.get(toSerialize);
@@ -70,9 +127,17 @@ public abstract class AbstractTypedField extends AbstractField {
 	}
 	
 	
+	public Object get(Object hostInstance) {
+		try {
+			Field declaredField = getHostClassDef().getGeneratedClass().getDeclaredField(this.getNameInCode());
+			declaredField.setAccessible(true);
+			return declaredField.get(hostInstance);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
-	
-	//private Field getFieldInAllHier
 	
 	@Override
 	public TypeName getReferenceJPoetType(boolean boxPrimitive){
@@ -87,8 +152,6 @@ public abstract class AbstractTypedField extends AbstractField {
 	public void setIsDiscriminant(boolean isDiscriminant) {
 		this.isDiscriminant = isDiscriminant;
 	}
-	
-	
 	
 }
 

@@ -4,7 +4,7 @@
     "wheelCard": 4,
     "fuel": "E85",
     "schema": {
-      "$ref": "#components/schemas/A"
+      "$ref": "#/components/schemas/A"
     }
   },
   "preferredNumbers": [

@@ -22,10 +22,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.json.JsonString;
 
+import org.gmart.codeGen.javaGen.model.referenceResolution.AccessPathKeyAndOutputTypes;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaLang.JPoetUtil;
 import org.gmart.codeGen.javaLang.JavaKeywords;
@@ -173,10 +175,14 @@ public class EnumSpecification extends TypeDefinitionForNonPrimitives implements
 	public void initGeneratedClasses() {
 		//nothing to do
 	}
-	
-	
-
-	
+	@Override
+	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+		return TypeDefinitionForPrimitives.makeAccessor_static(path, toFillWithTypesForValidation, this, "enum");
+	}
+	@Override
+	public boolean isDependent() {
+		return false;
+	}
 }
 
 

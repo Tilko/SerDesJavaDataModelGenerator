@@ -17,6 +17,7 @@ package org.gmart.codeGen.javaGen.model;
 
 import java.util.Optional;
 
+//import org.gmart.codeGen.javaGen.model.old_referenceResolution.HostClassWithConstructorArgs;
 import org.gmart.codeGen.javaGen.model.reporting.NonOptionalNotInitializedCollection;
 
 public class DeserialContextImpl implements DeserialContext  {
@@ -41,5 +42,17 @@ public class DeserialContextImpl implements DeserialContext  {
 	public Optional<String> buildReport() {
 		return nonOptionalNotInitializedCollection.buildReport();
 	}
+//	Stack<HostClassWithConstructorArgs> hostClassContextStack = new Stack<>();
+//	@Override
+//	public <T> T pushConstructorArgs(AbstractClassDefinition hostClass, List<Function<List<Object>, Optional<Object>>> args, Supplier<T> callBack) {
+//		hostClassContextStack.add(new HostClassWithConstructorArgs(hostClass, args));
+//		T t = callBack.get();
+//		hostClassContextStack.pop();
+//		return t;
+//	}
+//	@Override
+//	public HostClassWithConstructorArgs getHostClassContext() {
+//		return hostClassContextStack.peek();
+//	}
 	
 }

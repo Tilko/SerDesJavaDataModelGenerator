@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import javax.json.JsonString;
 
+import org.gmart.codeGen.javaGen.model.ConstructorParameter;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.EnumSpecification;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
@@ -50,8 +51,8 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 	public List<ClassAbstractEnumField> getAbstractEnumFields() {
 		return abstractEnumFields;
 	}
-	public Concrete_AbstractClassDefinition(PackageDefinition packageDef, String className, boolean isStubbed, List<AbstractTypedField> fields) {
-		super(packageDef, className, isStubbed, fields);
+	public Concrete_AbstractClassDefinition(PackageDefinition packageDef, String className, boolean isStubbed, List<AbstractTypedField> fields, List<ConstructorParameter> constructorParameters) {
+		super(packageDef, className, isStubbed, fields, constructorParameters);
 		this.abstractEnumFields = fields.stream().filter(e-> e instanceof ClassAbstractEnumField).map(e->(ClassAbstractEnumField)e).collect(Collectors.toCollection(ArrayList::new));
 	}
 
@@ -60,7 +61,7 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 //		((SerializableToYaml) toSerialize).appendToYaml(bui);
 //	}
 	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
-		return ((ClassDefinitionOwner) toSerialize).getClassDefinition().makeSerializableValue_abstract(provider, toSerialize);
+		return ((ClassInstance) toSerialize).getClassDefinition().makeSerializableValue_abstract(provider, toSerialize);
 	}
 
 	public void initAndvalidateSubEnumSpacesDisjunction() {

@@ -6,12 +6,12 @@ import java.util.Map;
 import javax.annotation.processing.Generated;
 
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
-import org.gmart.codeGen.javaGen.model.classTypes.ClassDefinitionOwner;
+import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
 import org.gmart.codeGenExample.openApiExample.generatedFilesCustomizationStubs.SchemaOrRef;
 
 @Generated("")
-public class ObjectType extends Schema implements ClassSerializationToYamlDefaultImpl, ClassDefinitionOwner {
+public class ObjectType extends Schema implements ClassSerializationToYamlDefaultImpl, ClassInstance {
     private static AbstractClassDefinition classSpecification;
 
     private Map<String, SchemaOrRef> properties;
