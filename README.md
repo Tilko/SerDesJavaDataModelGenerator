@@ -1,4 +1,4 @@
-Software to:  
+Software to basically:  
 - generate Java classes from a Yaml data types specification file,   
 - deserialize (marshall) a Yaml or JSON file into an instance of one of the generated classes,  
 - serialize (unmarshall) this (possibly modified) instance back to a Yaml or JSON file.      
