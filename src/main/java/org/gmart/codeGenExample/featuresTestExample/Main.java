@@ -80,27 +80,27 @@ public class Main {
 			
 			KeysFor_Object<List<Transition>> target = person.getStates().get("sleepy").get(0).getTarget();
 			L.l("target.getKeys():" + target.getKeys());
-			L.l("target.getReferedObject():" + target.getReferedObject().get(0).getCondition());//.ifPresent(state -> L.l("state.get(0).getCondition():" + state.get(0).getCondition()));
+			L.l("target.getReferedObject():" + target.getReferredObject().get(0).getCondition());//.ifPresent(state -> L.l("state.get(0).getCondition():" + state.get(0).getCondition()));
 			
 			KeysFor_Object<List<Transition2>> target2 = person.getStates2().get("sleepy").get(0).getTarget();
 			L.l("target2.getKeys():" + target2.getKeys());
-			L.l("target2.getReferedObject():" + target2.getReferedObject().get(0).getCondition());
+			L.l("target2.getReferedObject():" + target2.getReferredObject().get(0).getCondition());
 			
 			KeysFor_Object<List<Transition3>> target3 = person.getStates3().get("sleepy").get("trucish").get(0).getTarget();
 			L.l("target3.getKeys():" + target3.getKeys());
-			L.l("target3.getReferedObject():" + target3.getReferedObject().get(0).getCondition());
+			L.l("target3.getReferedObject():" + target3.getReferredObject().get(0).getCondition());
 			
 			KeysFor_Object<List<Transition4>> target4 = person.getStates4().get("sleepy").get("trucish").get(0).getTarget();
 			L.l("target4.getKeys():" + target4.getKeys());
-			L.l("target4.getReferedObject():" + target4.getReferedObject().get(0).getCondition());
+			L.l("target4.getReferedObject():" + target4.getReferredObject().get(0).getCondition());
 			
 			KeysFor_Object<List<Transition5>> target5 = person.getStates5().get("sleepy").get("trucish").get(0).getTarget();
 			L.l("target5.getKeys():" + target5.getKeys());
-			List<Transition5> referedObject = target5.getReferedObject();
+			List<Transition5> referedObject = target5.getReferredObject();
 			L.l("referedObject:" + referedObject);
 			L.l("target5.getReferedObject():" + referedObject.get(0).getCondition());
 			
-			L.l("OneOfAndAccessorTest:" + person.getOneOfAndAccessorTest().asKeysFor_states().getReferedObject());
+			L.l("OneOfAndAccessorTest:" + person.getOneOfAndAccessorTest().asKeysFor_states().getReferredObject());
 			
 			assert person.checkReferences_recursive().getKeysThatPointToNoValues().toString().equals("[sleepy/trucish2]");
 		} catch(Exception e) {

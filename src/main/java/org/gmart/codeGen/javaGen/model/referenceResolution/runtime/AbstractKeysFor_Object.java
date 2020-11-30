@@ -32,7 +32,7 @@ public abstract class AbstractKeysFor_Object<T> implements KeysFor_Object<T>, De
 		this.accessorToReferedObject = accessorToReferedObject;
 	}
 	@SuppressWarnings("unchecked")
-	public T getReferedObject() {
+	public T getReferredObject() {
 		List<Object> keysCopy = new ArrayList<>(getKeys());
 		return keysFor_TypeExpression.makeAccessor(this).apply(keysCopy).map(t -> (T) t).orElse(null);
 	}

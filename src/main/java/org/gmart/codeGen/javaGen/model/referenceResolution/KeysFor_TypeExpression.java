@@ -64,7 +64,7 @@ public class KeysFor_TypeExpression implements TypeExpression {
 	public void checkReferences_recursive(Object instance, ReferenceCheckResult referenceCheckResult) {
 		@SuppressWarnings("rawtypes")
 		KeysFor_Object keysFor_Object = (KeysFor_Object)instance;
-		if(keysFor_Object.getReferedObject() == null) {
+		if(keysFor_Object.getReferredObject() == null) {
 			referenceCheckResult.setKeyThatPointToNoValue(serializeKeys(keysFor_Object.getKeys()));
 		}
 	}
