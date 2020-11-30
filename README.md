@@ -13,7 +13,7 @@ Some features in two words:
 ## As first input of this tool: 
 A data structure type definition in a Yaml file.  
 Here is an example file that demonstrates the syntax and its associated meaning:
-  - the basic language elements:
+#### The basic language elements:
 ```yaml
 rootPackage: org.my.example   # root for all generated files
 
@@ -41,7 +41,7 @@ my.package0:                  # then packages are defined relatively to that roo
                                                       # types are not formally ambiguous
                                                       # with each other (cf. details below).
 ```
-  - the internal reference language element:
+#### The internal reference language element:
 ```yaml
   MyTypeNameX:
     a0: Dict<MyReferencedType0>
@@ -113,7 +113,7 @@ on the reference object that the data will be accessed from that parent referenc
 If you add a node in a List/Map or assign a property, the generated classes will take 
 care of this dependency by propagating a reference to the parent in the child for you.)
 
-  - about package names:
+#### About package names:
 ```yaml
 .:                        # An other package, at the root
   MyTypeName2:
@@ -124,7 +124,7 @@ care of this dependency by propagating a reference to the parent in the child fo
     MyTypeName2:
       myPropertyName11: double
 ```
-  - the "is a" language element that is based on enum properties:
+#### The "is a" language element that is based on enum properties:
 ```yaml
 example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
   
