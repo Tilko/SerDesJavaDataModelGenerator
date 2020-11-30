@@ -7,7 +7,7 @@ Software to:
 Some features in two words:
   - type polymorphism based on shape (`oneOf`) or enum property (`is`).
   - internal reference node (an instance node that references an other instance node somewhere in the deserialized tree) that allows programmatic access to the referred node 
-    and referred nodes existence validation.
+    and the validation of referred nodes existence.
   - ability to plug custom stub classes in the generated class hierarchy.
 
 ## As first input of this tool: 
@@ -43,7 +43,7 @@ my.package0:                  # then packages are defined relatively to that roo
     a0: Dict<MyReferencedType0>
     b0: keysFor(a0.?)       # The "keysFor(a0.?)" type means that the "b0" property must contain a key of 
                             # the "a0" dictionary property. The Java class used to model this reference 
-                            # implements a method "T getReferedObject();" where the generic type "T" is 
+                            # implements a method "T getReferredObject();" where the generic type "T" is 
                             # "MyReferencedType0" in this case.
     a1: MyReferencedType0* 
     b1: keysFor(a1.?)       # It also works for list, and the "key" is the "index" of an element
@@ -94,7 +94,7 @@ my.package0:                  # then packages are defined relatively to that roo
 ```
 In the previous "Accessor<...>", the n-1 first type parameters are the keys (inputs) types
 and the last type is the output type of the accessor, this output type can be used to create a deepest accessor in an other "constructor" or "keysFor" function.
-This "reference" language element not only allow you to access a referred node from a reference node (with the `getReferedObject` method),
+This "reference" language element not only allow you to access a referred node from a reference node (with the `getReferredObject` method),
 this software can also validate that every keys that should guide to a referred object actually guide to an existing object, this validation is done when an instance is serialized,
 and can be called on a deserialized instance on with:
 ```java
@@ -104,7 +104,7 @@ You can see a concrete example for the use of those internal references ([Here](
 (Under-the-hood note: I used the expression "constructor arguments" but in fact no `Accessor<...>` function is passed to a Java node when it 
 is constructed, in fact, when a node is dependent to its parent, just a reference to the  
 parent is set in the child when the child is set as property of the parent 
-(and also when a dependent the added/set in a List or a Map (that have special implementations in this case)), and it is only when the "getReferedObject" object is called 
+(and also when a dependent element is added/set in a List or a Map (that have special implementations in this case)); and it is only when the "getReferredObject" object is called 
 on the reference object that the data will be accessed from that parent reference. 
 If you add a node in a List/Map or assign a property, the generated classes will take 
 care of this dependency by propagating a reference to the parent in the child for you.)
