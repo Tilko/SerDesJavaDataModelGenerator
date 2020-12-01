@@ -126,7 +126,7 @@ care of this dependency by propagating a reference to the parent in the child fo
     MyTypeName2:
       myPropertyName11: double
 ```
-#### The "is a" language element that is based on enum properties:
+#### The "is a" language element that is based on enum properties discriminants:
 ```yaml
 example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
   
@@ -493,9 +493,9 @@ User errors are thrown by Java assertion (`assert` keyword), so, for each `main`
 - Verify that you enabled assertions (cf. Installation)
 
 ## Features/work that might came later:
-- to do regression tests for all features  
-- to improve user error feedbacks  
+- to do regression tests for all features (current tests do not cover everything and are not completely automated) 
+- to improve user error feedbacks (always ongoing)
 - ability to import types  
-- reference resolution (ongoing)   
+- implicit accessor dependencies (for less verbose but less decoupled internal reference definitions) (ongoing)   
 - ...   
 ...
