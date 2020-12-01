@@ -58,9 +58,9 @@ my.package0:                  # then packages are defined relatively to that roo
                              # In the Yaml/JSON serialized version of an instance of MyTypeNameX, 
                              # the "b2" format is the Json-pointer format: "myKey0/myKey1/..."
                              # (with "/" escaped with "~1" and "~" with "~0")
-                             
-    b21:  keysFor(a2.?.?.?.p0)    # You can point to a particular property of a container element.
-    b212: keysFor(a2.?.?.?.p0.?)  # You can point to an even deeper node.                 
+    a22: Dict<Dict<MyReferencedType1>*>                           
+    b21:  keysFor(a22.?.?.?.p0)    # You can point to a particular property of a container element.
+    b212: keysFor(a22.?.?.?.p0.?)  # You can point to an even deeper node.                 
     
     b22: Dict<keysFor(a2.?)*>*  # Containers of references are supported.
    
