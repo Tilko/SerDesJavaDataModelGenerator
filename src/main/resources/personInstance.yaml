@@ -47,6 +47,13 @@ states:
   active:
     - condition: sand in the face
       target: sleepy
+states1:
+  sleepy:
+    - condition: hammer in the face
+      forTestField: active/0
+  active:
+    - condition: sand in the face
+      forTestField: sleepy/0
 states2:
   sleepy:
     - condition: hammer in the face

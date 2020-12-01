@@ -13,6 +13,7 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
     obj: Object
     obj2: Object
     states:  Dict<Transition(states.?)*>
+    states1:  Dict<Transition1(states1.?.?.condition)*>
     states2: Dict<Transition2(states2)*>
     states3: Dict<Dict<Transition3(states3)*>>
     states4: Dict<Dict<Transition4(states4.?.?)*>>
@@ -22,6 +23,9 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
   Transition(Accessor<String, Transition*> states):
     condition: String
     target: keysFor(states)
+  Transition1(Accessor<String, Integer, String> condition):
+    condition: String
+    forTestField: keysFor(condition)
   Transition2(Accessor<Dict<Transition2*>> states):
     condition: String
     target: keysFor(states.?)

@@ -23,7 +23,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
-import org.gmart.codeGen.javaGen.model.TypeDefinitionForPrimitives;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
 import org.gmart.codeGen.javaGen.model.referenceResolution.AccessPathKeyAndOutputTypes;

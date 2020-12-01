@@ -116,7 +116,7 @@ public abstract class TypeDefinitionForStubbable extends TypeDefinitionForNonPri
 	protected Optional<AbstractAccessorBuilder> makeAccessorBuilderFromConstructorParameters(List<String> path) {
 		List<AccessorConstructorParameter> accessorConstructorParameters = getAccessorConstructorParameters();
 		return Optional.ofNullable(paramNameToItsIndex.get(path.get(0))).map(paramIndex -> 
-			(AbstractAccessorBuilder) new AccessorBuilderFactoryFromConstructorArgument(accessorConstructorParameters, path, paramIndex));
+			(AbstractAccessorBuilder) new AccessorBuilderFactoryFromConstructorArgument(accessorConstructorParameters, path.subList(1, path.size()), paramIndex));
 	}
 	protected List<AbstractAccessorBuilder> makeBuilders(AccessorConstructorParametersDeclarer accessorDependentable, List<List<String>> paths) throws Exception {
 		return ConstructionArgs.makeBuilders(this, accessorDependentable, paths);

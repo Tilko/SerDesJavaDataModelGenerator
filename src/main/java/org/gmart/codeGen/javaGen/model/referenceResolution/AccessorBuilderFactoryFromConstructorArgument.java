@@ -31,12 +31,10 @@ public class AccessorBuilderFactoryFromConstructorArgument extends AbstractAcces
 		super();
 		this.accessor = makeAccessorBuilder(
 			constructorParameters.get(paramIndex).getOutputTypeParameter(),
-			path.subList(1, path.size()), 
+			path, 
 			this.toFillWithIOTypesForValidation
 		);
 		this.paramIndex = paramIndex;
-		//the call of the current constructor in superclass factory method ensure that the following
-		//hostClass.getConstructorParameters().stream().filter(param -> param.getName().equals(path.get(0))).findFirst();
 	}
 	private Function<Function<List<Object>, Optional<Object>>, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(TypeExpression accessorParamOutputType, List<String> path, AccessPathKeyAndOutputTypes toFillWithIOTypesForValidation) {
 		if(path.size() > 0) {

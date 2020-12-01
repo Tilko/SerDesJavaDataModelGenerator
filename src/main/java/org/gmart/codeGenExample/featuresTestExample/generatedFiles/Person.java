@@ -40,6 +40,8 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstanc
 
     private Map<String, List<Transition>> states;
 
+    private Map<String, List<Transition1>> states1;
+
     private Map<String, List<Transition2>> states2;
 
     private Map<String, Map<String, List<Transition3>>> states3;
@@ -148,6 +150,15 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstanc
     public void setStates(Map<String, List<Transition>> states) {
         this.states = states;
         ((DependentInstance)states).setParentContext(this);
+    }
+
+    public Map<String, List<Transition1>> getStates1() {
+        return states1;
+    }
+
+    public void setStates1(Map<String, List<Transition1>> states1) {
+        this.states1 = states1;
+        ((DependentInstance)states1).setParentContext(this);
     }
 
     public Map<String, List<Transition2>> getStates2() {

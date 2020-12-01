@@ -59,13 +59,16 @@ my.package0:                  # then packages are defined relatively to that roo
                              # the "b2" format is the Json-pointer format: "myKey0/myKey1/..."
                              # (with "/" escaped with "~1" and "~" with "~0")
                              
-    b22: Dict<keysFor(a2.?)*>*  # Collections of references are supported.
+    b21:  keysFor(a2.?.?.?.p0)    # You can point to a particular property of a container element.
+    b212: keysFor(a2.?.?.?.p0.?)  # You can point to an even deeper node.                 
+    
+    b22: Dict<keysFor(a2.?)*>*  # Containers of references are supported.
    
     b3: Dict<keysFor(b3.?)>    # So you can do this wonderful endomorphism type :)
   MyReferencedType0:
     ...
   MyReferencedType1:
-    ...
+    p0: Dict<AAA>
   
   MyTypeNameX2:
     a: Dict<MyReferencedTypeContainer0>  

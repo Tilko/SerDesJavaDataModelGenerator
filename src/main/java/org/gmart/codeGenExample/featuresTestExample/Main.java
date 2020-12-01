@@ -82,6 +82,10 @@ public class Main {
 			L.l("target.getKeys():" + target.getKeys());
 			L.l("target.getReferedObject():" + target.getReferredObject().get(0).getCondition());//.ifPresent(state -> L.l("state.get(0).getCondition():" + state.get(0).getCondition()));
 			
+			KeysFor_Object<String> forTestField = person.getStates1().get("sleepy").get(0).getForTestField();
+			L.l("forTestField.getKeys():" + forTestField.getKeys());
+			L.l("forTestField.getReferedObject():" + forTestField.getReferredObject());
+			
 			KeysFor_Object<List<Transition2>> target2 = person.getStates2().get("sleepy").get(0).getTarget();
 			L.l("target2.getKeys():" + target2.getKeys());
 			L.l("target2.getReferedObject():" + target2.getReferredObject().get(0).getCondition());
