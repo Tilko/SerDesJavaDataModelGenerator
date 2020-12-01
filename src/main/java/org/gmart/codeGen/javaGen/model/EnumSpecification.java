@@ -45,7 +45,7 @@ public class EnumSpecification extends TypeDefinitionForNonPrimitives implements
 
 	public static final HashSet<String> javaKeyword = new HashSet<>(Arrays.asList(JavaKeywords.get));
 	
-	private class Value {
+	private static class Value {
 		String originalValue;
 		String escapedValue;
 		public String getOriginalValue() {

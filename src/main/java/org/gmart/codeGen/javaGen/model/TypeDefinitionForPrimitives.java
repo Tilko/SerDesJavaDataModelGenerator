@@ -45,12 +45,7 @@ public abstract class TypeDefinitionForPrimitives extends TypeDefinition {
 	protected Stream<String> getAllQualifiedNames(){
 		return Stream.of(this.getQualifiedName());
 	}
-	//public static final Function<List<Object>, Optional<Object>> lAccessor = list -> Optional.of(instance);
 	public static final Function<Object, Function<List<Object>, Optional<Object>>> identityAccessor = instance -> list -> Optional.of(instance);
-
-//	public static final Function<Object, Function<List<Object>, Optional<Object>>> identityAccessor2 = instance -> list -> Optional.of(instance);
-//	public static final Function<Object, Function<List<Object>, Optional<Object>>> identityAccessor3 = instance -> list -> Optional.of(instance);
-//	public static final Function<Object, Function<List<Object>, Optional<Object>>> identityAccessor4 = instance -> list -> Optional.of(instance);
 	@Override
 	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
 		return makeAccessor_static(path, toFillWithTypesForValidation, this, "primitive (or Object)");

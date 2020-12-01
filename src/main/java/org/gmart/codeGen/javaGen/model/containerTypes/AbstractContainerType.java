@@ -90,10 +90,10 @@ public abstract class AbstractContainerType implements ContainerType {
 	
 	@Override
 	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
-		if(path.size() == 0) {
-			toFillWithTypesForValidation.setOutputType(this);
-			return TypeDefinitionForPrimitives.identityAccessor;
-		}
+//		if(path.size() == 0) {
+//			toFillWithTypesForValidation.setOutputType(this);
+//			return TypeDefinitionForPrimitives.identityAccessor;
+//		}
 		toFillWithTypesForValidation.addInputType(this.getKeyTypeSpec());
 		String pathToken = path.get(0);
 		assert pathToken.equals("?") : "The path token representing the access to a container element must be that token: \"?\", but was \"" + pathToken +"\"";

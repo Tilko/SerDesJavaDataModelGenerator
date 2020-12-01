@@ -1,4 +1,4 @@
-Software to basically:  
+Basically, software to:  
 - generate Java classes from a Yaml data types specification file,   
 - deserialize (marshall) a Yaml or JSON file into an instance of one of the generated classes,  
 - serialize (unmarshall) this (possibly modified) instance back to a Yaml or JSON file.      
@@ -6,16 +6,16 @@ Software to basically:
 
 Some features in two words:
   - type polymorphism based on shape (`oneOf`) or enum property (`is`).
-  - internal reference node (an instance node that references an other instance node somewhere in the deserialized tree) that allows programmatic access to the referred node 
-    and the validation of referred nodes existence.
+  - internal reference node (an instance node that references an other instance node somewhere in the deserialized tree) that allows programmatic access to the referred node,
+    the validation of referred nodes existence, and reference type safety.
   - ability to plug custom stub classes in the generated class hierarchy.
 
 ## As first input of this tool: 
 A data structure type definition in a Yaml file.  
-Here is an example file that demonstrates the syntax and its associated meaning:
+Here is a file example that demonstrates the syntax and its associated meaning:
 #### The basic language elements:
 ```yaml
-rootPackage: org.my.example   # root for all generated files
+rootPackage: org.my.example   # The root for all generated files,
 
 my.package0:                  # then packages are defined relatively to that root
   MyTypeName0:                # a class definition: org.my.example.generatedFiles.my.package0.MyTypeName0
@@ -25,7 +25,7 @@ my.package0:                  # then packages are defined relatively to that roo
     myPropertyName1: Dict<ValueType>            # "Dict<T>" is the shorthand for Map<String, T>
     myPropertyName3 ? : int                     # "?" specify that the property is optional
     myPropertyName4: int*                       # "T*" means that the type is a list of T 
-                                                #      (like in EBNF grammar)
+                                                #      (like in EBNF grammar).
     myPropertyName5: int**                      # List of list (etc).
     myPropertyName6: Map<MyEnum, Dict<int*>**>* # You can compose an arbitrary number of container types.
     myPropertyName7: Object                     # The "Object" type represents an unknown type,
@@ -52,17 +52,19 @@ my.package0:                  # then packages are defined relatively to that roo
     a1: MyReferencedType0* 
     b1: keysFor(a1.?)       # It also works for list, and the "key" is the "index" of an element
     
-    a2: Dict<Dict<MyReferencedType0**>*>  
+    a2: Dict<Dict<MyReferencedType1**>*>  
     b2: keysFor(a2.?.?.?)    # You can also reference a arbitrarily deep element 
                              # (that's why there is an "s" in "keysFor").
                              # In the Yaml/JSON serialized version of an instance of MyTypeNameX, 
-                             # the "b2" must have Json-pointer format: "myKey0/myKey1/..."
-                             # (with "/" escaped with "~1" and "~" with- "~0")
+                             # the "b2" format is the Json-pointer format: "myKey0/myKey1/..."
+                             # (with "/" escaped with "~1" and "~" with "~0")
                              
     b22: Dict<keysFor(a2.?)*>*  # Collections of references are supported.
    
-    b3: Dict<keysFor(b3.?)>    # So can you can do this wonderful endomorphism type :)
+    b3: Dict<keysFor(b3.?)>    # So you can do this wonderful endomorphism type :)
   MyReferencedType0:
+    ...
+  MyReferencedType1:
     ...
   
   MyTypeNameX2:
@@ -76,7 +78,7 @@ my.package0:                  # then packages are defined relatively to that roo
   RootType:
     a: Dict<MyReferencedType>
     b: MyDependentType(a.?)
-  MyDependentType(Accessor<String, MyReferencedType> myParamName):
+  MyDependentType(Accessor<String, MyReferencedType> myParamName):  # The tool ensures type-safety.
     c: keysFor(myParamName)
   ## which is equivalent to:
   RootType:
@@ -85,7 +87,7 @@ my.package0:                  # then packages are defined relatively to that roo
   MyDependentType(Accessor<Dict<MyReferencedType>> myParamName):
     c: keysFor(myParamName.?)
   
-  ## You can pass multiple Accessor:
+  ## You can pass multiple accessors:
   MyDependentType(Accessor<Dict<MyReferencedType>> myParamName0, Accessor<String, MyReferencedType22>> myParamName1):
     ...
   
@@ -97,10 +99,10 @@ my.package0:                  # then packages are defined relatively to that roo
     c: keysFor(myParamName)
 ```
 In the previous "Accessor<...>", the n-1 first type parameters are the keys (inputs) types
-and the last type is the output type of the accessor, this output type can be used to create a deepest accessor in an other "constructor" or "keysFor" function.
+and the last type is the output type of the accessor, from this output type you can create a deepest accessor in an other "constructor" or "keysFor" function (ie: keysFor(myParamName.?.?)).
 This "reference" language element not only allow you to access a referred node from a reference node (with the `getReferredObject` method),
-this software can also validate that every keys that should guide to a referred object actually guide to an existing object, this validation is done when an instance is serialized,
-and can be called on a deserialized instance on with:
+this tool can also validate that every keys that should guide to a referred object actually guide to an existing object, this validation is done when an instance is serialized,
+and can be called on a deserialized instance with:
 ```java
 myDeserializedInstance.checkReferences_recursive().getKeysThatPointToNoValues()
 ```  
@@ -165,7 +167,7 @@ Now, let's see how to specify some concrete types with the "AbstractTypeName0" s
   OtherAbstractTypeName:       # You can specify multiple "abstract" fields,
     type0: abstract Type       #    the tool will verify that all concrete classes can not       
     type1: abstract OtherType  #    have a common combination of enum, cf. following example
-                               #    with ConcreteA and ConcreteB                                          
+                               #    with ConcreteA and ConcreteB.                                
     someCommonProperty: String
   OtherType: eee, fff, ggg, hhh 
   
@@ -450,8 +452,8 @@ public class SchemaOrRef extends org.gmart.codeGenExample.openApiExample.generat
 }
 ```
 ### A use example of the internal reference:
-A finite state machine (FSM) data structure can take advantage of this language element,
-indeed a FSM is a directed graph so because of the tree nature of a deserialized instance,
+A finite state machine (FSM) data structure can take advantage of this language element.
+Indeed a FSM can be almost any directed graph, so, because of the tree nature of a deserialized instance,
 we have to use some kind of references ...    
 Here is the type definition:
 ```yaml
