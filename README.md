@@ -101,7 +101,7 @@ my.package0:                  # then packages are defined relatively to that roo
   MyDependentType(Accessor<String, Integer, MyReferencedType> myParamName):
     c: keysFor(myParamName)
   
-  ## To pass the whole instance of the currently defined type:
+  ## Use the "this" keyword to pass the whole instance of the currently defined type:
   RootType2:
     a: MyDependentType(this)
     b: Dict<String>
