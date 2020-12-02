@@ -507,6 +507,7 @@ User errors are thrown by Java assertion (`assert` keyword), so, for each `main`
 - to do regression tests for all features (current tests do not cover everything and are not completely automated) 
 - to improve user error feedbacks (always ongoing)
 - ability to import types  
-- implicit accessor dependencies (for less verbose but less decoupled internal reference definitions) (ongoing)   
+- implicit accessor dependencies (for less verbose but less decoupled internal reference definitions) (ongoing)
+- `InlinedOrKeysFor(<path>)` construct 
 - ...   
 ...
