@@ -60,12 +60,15 @@ public class KeysFor_TypeExpression implements TypeExpression {
 	public Function<List<Object>, Optional<Object>> makeAccessor(AbstractKeysFor_Object abstractKeysFor_Object) {
 		return accessorBuilder.makeAccessor(abstractKeysFor_Object.getParentDependentInstanceSource());
 	}
+	@SuppressWarnings("rawtypes")
 	@Override 
 	public void checkReferences_recursive(Object instance, ReferenceCheckResult referenceCheckResult) {
-		@SuppressWarnings("rawtypes")
 		KeysFor keysFor_Object = (KeysFor)instance;
+		List keys = keysFor_Object.getKeys();
+		if(keys == null || keys.isEmpty()) 
+			return;
 		if(keysFor_Object.getReferredObject() == null) {
-			referenceCheckResult.setKeyThatPointToNoValue(serializeKeys(keysFor_Object.getKeys()));
+			referenceCheckResult.setKeyThatPointToNoValue(serializeKeys(keys));
 		}
 	}
 	
@@ -140,6 +143,8 @@ public class KeysFor_TypeExpression implements TypeExpression {
 	@Override
 	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
 		List keys = ((KeysFor)toSerialize).getKeys();
+		if(keys == null  ||  keys.isEmpty())
+			return null;
 		String serializedKeys = serializeKeys(keys);
 		return provider.makeSerializableString(serializedKeys);
 //if we serialize keys as a yaml/json sequence/array:
