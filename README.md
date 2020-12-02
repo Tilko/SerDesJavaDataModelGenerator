@@ -100,6 +100,13 @@ my.package0:                  # then packages are defined relatively to that roo
     b: MyDependentType(a.?.?)
   MyDependentType(Accessor<String, Integer, MyReferencedType> myParamName):
     c: keysFor(myParamName)
+  
+  ## To pass the whole instance of the currently defined type:
+  RootType2:
+    a: MyDependentType(this)
+    b: Dict<String>
+  MyDependentType(Accessor<RootType2> myParamName):
+    a: keysFor(myParamName.b.?)
 ```
 In the previous "Accessor<...>", the n-1 first type parameters are the keys (inputs) types
 and the last type is the output type of the accessor, from this output type you can create a deepest accessor in an other "constructor" or "keysFor" function (ie: keysFor(myParamName.?.?)).

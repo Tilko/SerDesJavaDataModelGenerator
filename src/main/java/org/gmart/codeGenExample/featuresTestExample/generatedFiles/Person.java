@@ -54,6 +54,8 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstanc
 
     private A oneOfAndAccessorTest;
 
+    private MyThisTestType forThisTest;
+
     public Person() {
     }
 
@@ -206,6 +208,15 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstanc
     public void setOneOfAndAccessorTest(A oneOfAndAccessorTest) {
         this.oneOfAndAccessorTest = oneOfAndAccessorTest;
         oneOfAndAccessorTest.setParentContext(this);
+    }
+
+    public MyThisTestType getForThisTest() {
+        return forThisTest;
+    }
+
+    public void setForThisTest(MyThisTestType forThisTest) {
+        this.forThisTest = forThisTest;
+        forThisTest.setParentContext(this);
     }
 
     public AbstractClassDefinition getClassDefinition() {

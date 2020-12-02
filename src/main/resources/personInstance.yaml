@@ -40,6 +40,8 @@ obj2:
     - s
 here: true
 oneOfAndAccessorTest: sleepy
+forThisTest: 
+  a: sleepy
 states:
   sleepy:
     - condition: hammer in the face

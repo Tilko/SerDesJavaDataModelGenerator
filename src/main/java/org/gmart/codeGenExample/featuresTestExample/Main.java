@@ -105,6 +105,10 @@ public class Main {
 			L.l("target5.getReferedObject():" + referedObject.get(0).getCondition());
 			
 			L.l("OneOfAndAccessorTest:" + person.getOneOfAndAccessorTest().asKeysFor_states().getReferredObject());
+			assert person.getOneOfAndAccessorTest().asKeysFor_states().getReferredObject().get(0).getCondition().equals("hammer in the face");
+			
+			L.l("getForThisTest:" + person.getForThisTest().getA().getReferredObject().get(0).getCondition());
+			assert person.getForThisTest().getA().getReferredObject().get(0).getCondition().equals("hammer in the face");
 			
 			assert person.checkReferences_recursive().getKeysThatPointToNoValues().toString().equals("[sleepy/trucish2]");
 		} catch(Exception e) {

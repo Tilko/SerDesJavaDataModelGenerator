@@ -19,6 +19,7 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
     states4: Dict<Dict<Transition4(states4.?.?)*>>
     states5: Dict<Dict<Transition5(states5.?)*>>
     oneOfAndAccessorTest: A(states.?)
+    forThisTest: MyThisTestType(this)
   
   Transition(Accessor<String, Transition*> states):
     condition: String
@@ -39,7 +40,9 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
     condition: String
     target: keysFor(states.?)
   A(Accessor<String, Transition*> states): oneOf(int*, keysFor(states)) 
-    
+  MyThisTestType(Accessor<Person> a):
+    a: keysFor(a.states.?)
+  
   Components:
     schemas: Dict<Schema>
     

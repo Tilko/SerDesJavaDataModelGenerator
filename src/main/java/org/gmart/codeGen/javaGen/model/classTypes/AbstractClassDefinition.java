@@ -36,6 +36,7 @@ import org.gmart.codeGen.javaGen.model.ConstructorParameter;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
+import org.gmart.codeGen.javaGen.model.TypeDefinitionForPrimitives;
 import org.gmart.codeGen.javaGen.model.TypeDefinitionForStubbable;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.referenceResolution.AbstractAccessorBuilder;
@@ -377,10 +378,11 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 	}
 	@Override
 	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
-//		if(path.size() == 0) {
-//			toFillWithTypesForValidation.setOutputType(this);
-//			return TypeDefinitionForPrimitives.identityAccessor;
-//		}
+		//The following case is possible when the path is "this":
+		if(path.size() == 0) {
+			toFillWithTypesForValidation.setOutputType(this);
+			return TypeDefinitionForPrimitives.identityAccessor;
+		}
 		String pathToken = path.get(0);
 		AbstractTypedField field = this.getField_SuperclassesIncluded(pathToken);
 		if(path.size() > 1 ) {
