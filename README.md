@@ -103,7 +103,7 @@ my.package0:                  # then packages are defined relatively to that roo
   
   ## With multiple level as well:
   RootType:
-    a: Dict<MyReferencedType*>  // note the "*"
+    a: Dict<MyReferencedType*>  # note the "*"
     b: MyDependentType(a.?.?)
   MyDependentType(Accessor<String, Integer, MyReferencedType> myParamName):
     c: keysFor(myParamName)
