@@ -25,6 +25,7 @@ import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.LinkedHashMapD;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.MapD;
 import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 
@@ -61,15 +62,21 @@ public abstract class AbstractMapContainerType extends AbstractContainerType { /
 		return rez;
 	}
 	protected abstract Object makeKey(String key);
+	
+	private final static Class<?> mapClass = Map.class;
+	private final static Class<?> dependentMapClass = MapD.class;
 	@Override
 	public Class<?> getContainerClass() {
-		return Map.class;
+		return this.isDependent() ? dependentMapClass : mapClass;
 	}
-	private final static ClassName mapClassName = ClassName.get(Map.class);
+	
+	private final static ClassName mapClassName = ClassName.get(mapClass);
+	private final static ClassName dependentMapClassName = ClassName.get(dependentMapClass);
 	@Override
 	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive){
 		//ClassName.get(keyType.getPackageName(), keyType.getName())
-		return ParameterizedTypeName.get(mapClassName, this.getKeyTypeSpec().getReferenceJPoetTypeName(true), this.contentType.getReferenceJPoetTypeName(true));
+		ClassName containerClass = this.isDependent() ? dependentMapClassName : mapClassName;
+		return ParameterizedTypeName.get(containerClass, this.getKeyTypeSpec().getReferenceJPoetTypeName(true), this.contentType.getReferenceJPoetTypeName(true));
 	}
 	
 	@Override

@@ -18,6 +18,7 @@ package org.gmart.codeGen.javaGen.model.containerTypes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -27,6 +28,8 @@ import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ArrayListD;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ListD;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.MapD;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 
 import com.squareup.javapoet.ClassName;
@@ -55,17 +58,27 @@ public class ListContainerType extends AbstractContainerType {
 		for(Object fieldYaml : fieldYamlList) 
 			rez.add(contentType.makeModelValue(ctx, fieldYaml));
 		return rez;
-	}
-	private final static ClassName listClassName = ClassName.get(List.class);
-	@Override
-	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive){
-		return ParameterizedTypeName.get(listClassName, contentType.getReferenceJPoetTypeName(true));
-	}
+	}	
+	
+	private final static Class<?> listClass = List.class;
+	private final static Class<?> dependentListClass = ListD.class;
 	@Override
 	public Class<?> getContainerClass() {
-		return List.class;
+		return this.isDependent() ? dependentListClass : listClass;
 	}
-	
+	@Override
+	public String getContainerTypeName() {
+		return "List";
+	}
+
+	private final static ClassName listClassName = ClassName.get(List.class);
+	private final static ClassName dependentListClassName = ClassName.get(ListD.class);
+	@Override
+	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive){
+		ClassName containerClass = this.isDependent() ? dependentListClassName : listClassName;
+		return ParameterizedTypeName.get(containerClass, contentType.getReferenceJPoetTypeName(true));
+	}
+
 	@Override
 	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
 		return makeSerializableValue_static(provider, toSerialize, elem ->  this.contentType.makeSerializableValue(provider, elem));
@@ -76,10 +89,7 @@ public class ListContainerType extends AbstractContainerType {
 		return provider.makeSerializableList(((Collection<?>) toSerialize).stream().map(elem -> elemToT.apply(elem)));
 	}
 
-	@Override
-	public String getContainerTypeName() {
-		return "List";
-	}
+	
 	
 	@SuppressWarnings("rawtypes")
 	@Override

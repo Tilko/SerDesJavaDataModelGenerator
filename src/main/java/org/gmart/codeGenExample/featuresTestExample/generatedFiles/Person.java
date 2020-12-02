@@ -1,14 +1,16 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
+import java.lang.Integer;
+import java.lang.Object;
+import java.lang.String;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
-import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstance;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ListD;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.MapD;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.bidulePackage.Bidule;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.bidulePackage.TypeWithAUniqueSimpleNameInThisPackagesSet;
 
@@ -38,17 +40,17 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstanc
 
     private Object obj2;
 
-    private Map<String, List<Transition>> states;
+    private MapD<String, ListD<Transition>> states;
 
-    private Map<String, List<Transition1>> states1;
+    private MapD<String, ListD<Transition1>> states1;
 
-    private Map<String, List<Transition2>> states2;
+    private MapD<String, ListD<Transition2>> states2;
 
-    private Map<String, Map<String, List<Transition3>>> states3;
+    private MapD<String, MapD<String, ListD<Transition3>>> states3;
 
-    private Map<String, Map<String, List<Transition4>>> states4;
+    private MapD<String, MapD<String, ListD<Transition4>>> states4;
 
-    private Map<String, Map<String, List<Transition5>>> states5;
+    private MapD<String, MapD<String, ListD<Transition5>>> states5;
 
     private A oneOfAndAccessorTest;
 
@@ -143,58 +145,58 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstanc
         this.obj2 = obj2;
     }
 
-    public Map<String, List<Transition>> getStates() {
+    public MapD<String, ListD<Transition>> getStates() {
         return states;
     }
 
-    public void setStates(Map<String, List<Transition>> states) {
+    public void setStates(MapD<String, ListD<Transition>> states) {
         this.states = states;
-        ((DependentInstance)states).setParentContext(this);
+        states.setParentContext(this);
     }
 
-    public Map<String, List<Transition1>> getStates1() {
+    public MapD<String, ListD<Transition1>> getStates1() {
         return states1;
     }
 
-    public void setStates1(Map<String, List<Transition1>> states1) {
+    public void setStates1(MapD<String, ListD<Transition1>> states1) {
         this.states1 = states1;
-        ((DependentInstance)states1).setParentContext(this);
+        states1.setParentContext(this);
     }
 
-    public Map<String, List<Transition2>> getStates2() {
+    public MapD<String, ListD<Transition2>> getStates2() {
         return states2;
     }
 
-    public void setStates2(Map<String, List<Transition2>> states2) {
+    public void setStates2(MapD<String, ListD<Transition2>> states2) {
         this.states2 = states2;
-        ((DependentInstance)states2).setParentContext(this);
+        states2.setParentContext(this);
     }
 
-    public Map<String, Map<String, List<Transition3>>> getStates3() {
+    public MapD<String, MapD<String, ListD<Transition3>>> getStates3() {
         return states3;
     }
 
-    public void setStates3(Map<String, Map<String, List<Transition3>>> states3) {
+    public void setStates3(MapD<String, MapD<String, ListD<Transition3>>> states3) {
         this.states3 = states3;
-        ((DependentInstance)states3).setParentContext(this);
+        states3.setParentContext(this);
     }
 
-    public Map<String, Map<String, List<Transition4>>> getStates4() {
+    public MapD<String, MapD<String, ListD<Transition4>>> getStates4() {
         return states4;
     }
 
-    public void setStates4(Map<String, Map<String, List<Transition4>>> states4) {
+    public void setStates4(MapD<String, MapD<String, ListD<Transition4>>> states4) {
         this.states4 = states4;
-        ((DependentInstance)states4).setParentContext(this);
+        states4.setParentContext(this);
     }
 
-    public Map<String, Map<String, List<Transition5>>> getStates5() {
+    public MapD<String, MapD<String, ListD<Transition5>>> getStates5() {
         return states5;
     }
 
-    public void setStates5(Map<String, Map<String, List<Transition5>>> states5) {
+    public void setStates5(MapD<String, MapD<String, ListD<Transition5>>> states5) {
         this.states5 = states5;
-        ((DependentInstance)states5).setParentContext(this);
+        states5.setParentContext(this);
     }
 
     public A getOneOfAndAccessorTest() {
@@ -203,7 +205,7 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstanc
 
     public void setOneOfAndAccessorTest(A oneOfAndAccessorTest) {
         this.oneOfAndAccessorTest = oneOfAndAccessorTest;
-        ((DependentInstance)oneOfAndAccessorTest).setParentContext(this);
+        oneOfAndAccessorTest.setParentContext(this);
     }
 
     public AbstractClassDefinition getClassDefinition() {

@@ -22,7 +22,7 @@ import java.util.function.Function;
 
 import org.gmart.codeGen.javaGen.model.referenceResolution.KeysFor_TypeExpression;
 
-public abstract class AbstractKeysFor_Object<T> implements KeysFor_Object<T>, DependentInstance {
+public abstract class AbstractKeysFor_Object<T> implements KeysFor<T>, DependentInstance {
 	Function<List<Object>, Optional<T>> accessorToReferedObject;
 	private final KeysFor_TypeExpression keysFor_TypeExpression;
 	public AbstractKeysFor_Object(KeysFor_TypeExpression keysFor_TypeExpression) {

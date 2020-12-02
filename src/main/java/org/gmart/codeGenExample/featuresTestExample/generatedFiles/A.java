@@ -1,14 +1,14 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
+import java.lang.Integer;
+import java.lang.Object;
 import java.util.List;
-
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.OneOfInstance;
 import org.gmart.codeGen.javaGen.model.OneOfSpecification;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
-import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor_Object;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor;
 import org.javatuples.Pair;
 
 @Generated("")
@@ -53,9 +53,9 @@ public class A implements OneOfInstance, OneOfSpecification.DependentOneOfInstan
         this.payload = makePayload.getValue1();
     }
 
-    public KeysFor_Object<List<Transition>> asKeysFor_states() {
-        if(payload instanceof KeysFor_Object) {
-            return (KeysFor_Object<List<Transition>>) payload;
+    public KeysFor<List<Transition>> asKeysFor_states() {
+        if(payload instanceof KeysFor) {
+            return (KeysFor<List<Transition>>) payload;
         }
         return null;
     }

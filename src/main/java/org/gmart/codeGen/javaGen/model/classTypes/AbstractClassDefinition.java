@@ -18,7 +18,6 @@ package org.gmart.codeGen.javaGen.model.classTypes;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -64,15 +63,27 @@ import com.squareup.javapoet.TypeSpec;
 
 public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable {
 
-
-	
-
 	private List<AbstractTypedField> fields;
 	
 	public List<AbstractTypedField> getFields() {
 		return fields;
 	}
-	
+	protected <T> Stream<T> getFields_superClassIncluded_leafFirst_gen(Function<AbstractClassDefinition, Stream<T>> fieldsSource) {
+		return Stream.concat(fieldsSource.apply(this), this.parentClass.map(p -> p.getFields_superClassIncluded_leafFirst_gen(fieldsSource)).orElse(Stream.empty()));
+	}
+	private Stream<Pair<Field, AbstractTypedField>> getReflFieldForFields(Stream<AbstractTypedField> fields){
+		return fields.map(field -> {
+			try {
+				Field field2 = this.getGeneratedClass().getDeclaredField(field.getNameInCode());
+				field2.setAccessible(true);
+				return Pair.with(field2, field);
+			} catch (NoSuchFieldException | SecurityException e) {
+				e.printStackTrace();
+				return null;
+			}
+		});
+	}
+
 	protected LinkedHashMap<String, AbstractTypedField> nameToField;
 	protected LinkedHashMap<String, AbstractTypedField> getFieldsMap() {
 		if(nameToField == null) {
@@ -90,28 +101,16 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 	}
 	
 	private HashMap<String, AbstractTypedField> nameToField_ParentClassIncluded;
-	public HashMap<String, AbstractTypedField> getFields_SuperClassesIncluded(){
+	protected HashMap<String, AbstractTypedField> getFieldsMap_SuperClassesIncluded(){
 		if(this.nameToField_ParentClassIncluded == null) {
 			this.nameToField_ParentClassIncluded = new HashMap<>(getFieldsMap());
-			this.parentClass.ifPresent(parent -> this.nameToField_ParentClassIncluded.putAll(parent.getFields_SuperClassesIncluded()));
+			this.parentClass.ifPresent(parent -> this.nameToField_ParentClassIncluded.putAll(parent.getFieldsMap_SuperClassesIncluded()));
 		}
 		return nameToField_ParentClassIncluded;
 	}
-	Collection<AbstractTypedField> nameToField_ParentClassIncluded_Col;
-	public Collection<AbstractTypedField> getFields_SuperClassesIncluded_Col(){
-		if(nameToField_ParentClassIncluded_Col == null) {
-			if(nameToField_ParentClassIncluded != null) {
-				nameToField_ParentClassIncluded_Col = nameToField_ParentClassIncluded.values();
-			} else {
-				nameToField_ParentClassIncluded_Col = new ArrayList<>(getFields());
-				this.parentClass.ifPresent(parent -> this.nameToField_ParentClassIncluded_Col.addAll(parent.getFields_SuperClassesIncluded_Col()));
-			}
-		}
-		return nameToField_ParentClassIncluded_Col;		
-	}
 	
-	public AbstractTypedField getField_SuperclassesIncluded(String fieldName) {
-		return getFields_SuperClassesIncluded().get(fieldName);
+	protected AbstractTypedField getField_SuperclassesIncluded(String fieldName) {
+		return getFieldsMap_SuperClassesIncluded().get(fieldName);
 	}
 	
 	private TreeSet<AbstractTypedField> fieldsSortedByName;
@@ -123,10 +122,22 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 		}
 		return fieldsSortedByName;
 	}
+	
 	@Override
 	public Function<List<Object>, Optional<Object>> getConstructionArgument(DependentInstanceSource thisClassInstance, DependentInstance childInstance, int argIndex) {
 		return getDependentFieldWithValue(thisClassInstance, childInstance).makeAccessor(thisClassInstance, argIndex);
 	}
+	private AbstractTypedField getDependentFieldWithValue(Object thisClassInstance, Object childContextValue) {
+		return getFields_superClassIncluded_leafFirst_gen(p -> p.getDeclaredDependentFields().stream()).filter(field ->  {
+			try {
+				return field.getValue0().get(thisClassInstance) == childContextValue;
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}).findFirst().get().getValue1();
+	}
+	
 	@Override
 	public AbstractAccessorBuilder makeAbstractAccessorBuilder(List<String> path) {
 		return makeAccessorBuilderFromConstructorParameters(path).orElseGet(() ->
@@ -138,42 +149,17 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 	 		)
 		);
 	}
-	public AbstractTypedField getDependentFieldWithValue(Object thisClassInstance, Object childContextValue) {
-		return getDependentFields_superClassIncluded_leafFirst().filter(field ->  {
-			try {
-				return field.getValue0().get(thisClassInstance) == childContextValue;
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-				return false;
-			}
-		}).findFirst().get().getValue1();
-	}
-	//List<Field> declaredDependentFields;
-	public Stream<Pair<Field, AbstractTypedField>> getDependentFields_superClassIncluded_leafFirst() {
-		return Stream.concat(getDeclaredDependentFields().stream(), this.parentClass.map(p -> p.getDependentFields_superClassIncluded_leafFirst()).orElse(Stream.empty()));
-	}
+	
+
 	List<Pair<Field, AbstractTypedField>> declaredDependentFields;
-	public List<Pair<Field, AbstractTypedField>> getDeclaredDependentFields() {
+	private List<Pair<Field, AbstractTypedField>> getDeclaredDependentFields() {
 		if(declaredDependentFields == null)
-			declaredDependentFields = getDependentFields().stream().map(field -> {
-				try {
-					Field field2 = this.getGeneratedClass().getDeclaredField(field.getNameInCode());
-					field2.setAccessible(true);
-					return Pair.with(field2, field);
-				} catch (NoSuchFieldException | SecurityException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}).collect(Collectors.toCollection(ArrayList::new));
+			declaredDependentFields = getReflFieldForFields(getFields().stream().filter(f -> f.isDependent())).collect(Collectors.toCollection(ArrayList::new));
 		return declaredDependentFields;
 	}
-	List<AbstractTypedField> dependentFields;
-	public List<AbstractTypedField> getDependentFields() {
-		if(dependentFields == null) {
-			dependentFields = fields.stream().filter(f -> f.isDependent()).collect(Collectors.toCollection(ArrayList::new));
-		}
-		return dependentFields;
-	}
+	
+	
+	
 	public static class ReferenceCheckResult {
 		private List<String> keysThatPointToNoValues = new ArrayList<>();
 		public List<String> getKeysThatPointToNoValues() {
@@ -194,7 +180,8 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 	}
 	@Override
 	public void checkReferences_recursive(Object instance, ReferenceCheckResult referenceCheckResult) {
-		getDependentFields_superClassIncluded_leafFirst().forEach(field -> field.getValue1().checkReferences_recursive(instance, field.getValue0(), referenceCheckResult));
+		getReflFieldForFields(getFields_superClassIncluded_leafFirst_gen(def -> def.getFields().stream()))
+		    .forEach(field -> field.getValue1().checkReferences_recursive(instance, field.getValue0(), referenceCheckResult));
 	}
 //	public void initDependentFields() {
 //		getFields().forEach(field -> {if(field.initIsDependent()) dependentFields.add(field);});
@@ -353,7 +340,7 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 			typeSpecBuilder.addSuperinterface(DependentInstanceSourceClass.class);			
 		}
 		else {
-			if(this.getFields_SuperClassesIncluded().values().stream().anyMatch(field -> field.isDependent()))
+			if(this.getFieldsMap_SuperClassesIncluded().values().stream().anyMatch(field -> field.isDependent()))
 				typeSpecBuilder.addSuperinterface(DependentInstanceSourceClass.class);
 		}
 //		Builder classSerializationToYamlDefaultImplBuilder = JPoetUtil.initMethodImpl(ClassSerializationToYamlDefaultImpl.class);

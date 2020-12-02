@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class LinkedHashMapD<K, V extends DependentInstance> extends LinkedHashMap<K,V> implements DependentInstance {
+public class LinkedHashMapD<K, V extends DependentInstance> extends LinkedHashMap<K,V> implements MapD<K,V> {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -225320879795167016L;
 	Object parentContext;

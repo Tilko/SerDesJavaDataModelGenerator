@@ -1,14 +1,13 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
+import java.lang.Object;
+import java.lang.String;
 import java.util.List;
-
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
-import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstance;
-import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor_Object;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor;
 
 @Generated("")
 public class Transition5 implements ClassSerializationToYamlDefaultImpl, ClassInstance, AbstractClassDefinition.DependentClassInstance, AbstractClassDefinition.DependentInstanceSourceClass {
@@ -16,7 +15,7 @@ public class Transition5 implements ClassSerializationToYamlDefaultImpl, ClassIn
 
     private String condition;
 
-    private KeysFor_Object<List<Transition5>> target;
+    private KeysFor<List<Transition5>> target;
 
     private Object parentContext;
 
@@ -31,13 +30,13 @@ public class Transition5 implements ClassSerializationToYamlDefaultImpl, ClassIn
         this.condition = condition;
     }
 
-    public KeysFor_Object<List<Transition5>> getTarget() {
+    public KeysFor<List<Transition5>> getTarget() {
         return target;
     }
 
-    public void setTarget(KeysFor_Object<List<Transition5>> target) {
+    public void setTarget(KeysFor<List<Transition5>> target) {
         this.target = target;
-        ((DependentInstance)target).setParentContext(this);
+        target.setParentContext(this);
     }
 
     public AbstractClassDefinition getClassDefinition() {

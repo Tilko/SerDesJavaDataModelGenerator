@@ -18,7 +18,7 @@ package org.gmart.codeGen.javaGen.model.referenceResolution.runtime;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class ArrayListD<E extends DependentInstance> extends ArrayList<E> implements DependentInstance {
+public class ArrayListD<E extends DependentInstance> extends ArrayList<E> implements ListD<E> {
 	/**
 	 * 
 	 */

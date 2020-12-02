@@ -31,7 +31,7 @@ import org.gmart.codeGen.javaGen.model.TypeDefinitionForPrimitives;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.AbstractKeysFor_Object;
-import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor_Object;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor_Object_Impl;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.javatuples.Pair;
@@ -63,7 +63,7 @@ public class KeysFor_TypeExpression implements TypeExpression {
 	@Override 
 	public void checkReferences_recursive(Object instance, ReferenceCheckResult referenceCheckResult) {
 		@SuppressWarnings("rawtypes")
-		KeysFor_Object keysFor_Object = (KeysFor_Object)instance;
+		KeysFor keysFor_Object = (KeysFor)instance;
 		if(keysFor_Object.getReferredObject() == null) {
 			referenceCheckResult.setKeyThatPointToNoValue(serializeKeys(keysFor_Object.getKeys()));
 		}
@@ -117,13 +117,13 @@ public class KeysFor_TypeExpression implements TypeExpression {
 //			refInstance.setKeys(keys);
 		}
 		
-		return Pair.with(KeysFor_Object.class, refInstance);
+		return Pair.with(KeysFor.class, refInstance);
 	}
 
 	@Override
 	public TypeName getReferenceJPoetTypeName(boolean boxPrimitive) {
 		TypeExpression outputType = this.accessorBuilder.getIOTypes().getOutputType();
-		return ParameterizedTypeName.get(ClassName.get(KeysFor_Object.class), outputType.getReferenceJPoetTypeName(true));
+		return ParameterizedTypeName.get(ClassName.get(KeysFor.class), outputType.getReferenceJPoetTypeName(true));
 	}
 
 	@Override
@@ -139,7 +139,7 @@ public class KeysFor_TypeExpression implements TypeExpression {
 	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public <T> T makeSerializableValue(SerializerProvider<T> provider, Object toSerialize) {
-		List keys = ((KeysFor_Object)toSerialize).getKeys();
+		List keys = ((KeysFor)toSerialize).getKeys();
 		String serializedKeys = serializeKeys(keys);
 		return provider.makeSerializableString(serializedKeys);
 //if we serialize keys as a yaml/json sequence/array:

@@ -87,7 +87,8 @@ public abstract class AbstractTypedField extends AbstractField {
 	public MethodSpec.Builder toJPoetSetter(){
 		Builder jPoetSetter = super.toJPoetSetter();
 		if(isDependent())
-			jPoetSetter.addStatement("(($T)$L).$L(this)", DependentInstance.class, getNameInCode(), DependentInstance.setParentContextId);
+			jPoetSetter.addStatement("$L.$L(this)", getNameInCode(), DependentInstance.setParentContextId);
+//			jPoetSetter.addStatement("(($T)$L).$L(this)", DependentInstance.class, getNameInCode(), DependentInstance.setParentContextId);
 		return jPoetSetter;
 	}
 	

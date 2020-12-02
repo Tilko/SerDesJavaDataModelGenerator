@@ -1,7 +1,7 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles.bidulePackage;
 
+import java.lang.String;
 import javax.annotation.processing.Generated;
-
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
