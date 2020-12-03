@@ -43,6 +43,11 @@ my.package0:                  # then packages are defined relatively to that roo
 ```
 #### The internal reference language element:
 ```yaml
+  MyReferencedType0:  # for following demo
+    ...
+  MyReferencedType1:  # for following demo
+    p0: Dict<AAA>
+  
   MyTypeNameX:
     a0: Dict<MyReferencedType0>
     b0: keysFor(a0.?)       # The "keysFor(a0.?)" type means that the "b0" property must contain a key of 
@@ -65,10 +70,7 @@ my.package0:                  # then packages are defined relatively to that roo
     b22: Dict<keysFor(a2.?)*>*  # Containers of references are supported.
    
     b3: Dict<keysFor(b3.?)>    # So you can do this wonderful endomorphism type :)
-  MyReferencedType0:
-    ...
-  MyReferencedType1:
-    p0: Dict<AAA>
+  
   
   
   #### You can also specify the following dependency relation between 2 types (class or oneOf)
