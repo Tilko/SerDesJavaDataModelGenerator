@@ -70,11 +70,6 @@ my.package0:                  # then packages are defined relatively to that roo
   MyReferencedType1:
     p0: Dict<AAA>
   
-  MyTypeNameX2:
-    a: Dict<MyReferencedTypeContainer0>  
-    b: keysFor(a.?.?)     # Deep reference in an other type
-  MyReferencedTypeContainer0:
-    a0Bis: Dict<MyReferencedType0>
   
   #### You can also specify the following dependency relation between 2 types (class or oneOf)
   ##   with what looks like a contructor construct:
