@@ -130,9 +130,9 @@ care of this dependency by propagating a reference to the parent in the child fo
     myPropertyName9: MyTypeName0                # You can reference "MyTypeName0" with its simple name 
                                                 # because it's a unique name in this file
     myPropertyName10: package3.MyTypeName2      # else give its relative fully qualified name.
-  package3:                                     # Package to demonstrate the previous point.
-    MyTypeName2:
-      myPropertyName11: double
+package3:                                     # Package to demonstrate the previous point.
+  MyTypeName2:
+    myPropertyName11: double
 ```
 #### The "is a" language element that is based on enum properties discriminants:
 ```yaml
