@@ -506,6 +506,7 @@ User errors are thrown by Java assertion (`assert` keyword), so, for each `main`
 - ability to import types  
 - implicit accessor dependencies (for less verbose but less decoupled internal reference definitions)
 - `InlinedOrKeysFor(<path>)` construct
+- `keyFor` `getReferredObject` memoization modes for higher performance (in case some kinds of changes are not expected in an instance ...)
 - fully immutable types mode (for undo/redo and multithread processing ease ...), with builders classes and "with..." methods (that recycle immutable nodes).
 - ...   
 ...
