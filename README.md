@@ -507,7 +507,7 @@ User errors are thrown by Java assertion (`assert` keyword), so, for each `main`
 - implicit accessor dependencies (for less verbose but less decoupled internal reference definitions)
 - `InlinedOrKeysFor(<path>)` construct
 - fully immutable types mode (for undo/redo and multithread processing ease ...), with builders classes and "with..." methods (that recycle immutable nodes).
-- ability to define a "component" as a type with at least one computed property (from other properties that are the component "inputs") (ongoing)
+- ability to define a "component" as a type that has at least one *computed* property (from other properties that are the component "inputs") (ongoing)
 <!---(- `keyFor` `getReferredObject` memoization modes for higher performance (in case some kinds of changes are not expected in an instance ...)) -->
 - ...   
 ...
