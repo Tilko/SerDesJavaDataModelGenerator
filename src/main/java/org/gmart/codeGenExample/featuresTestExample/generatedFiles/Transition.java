@@ -1,5 +1,6 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
+import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
 import java.util.List;
@@ -16,6 +17,8 @@ public class Transition implements ClassSerializationToYamlDefaultImpl, ClassIns
     private String condition;
 
     private KeysFor<List<Transition>> target;
+
+    private KeysFor<Boolean> forMonoRefableTest2;
 
     private Object parentContext;
 
@@ -37,6 +40,15 @@ public class Transition implements ClassSerializationToYamlDefaultImpl, ClassIns
     public void setTarget(KeysFor<List<Transition>> target) {
         this.target = target;
         target.setParentContext(this);
+    }
+
+    public KeysFor<Boolean> getForMonoRefableTest2() {
+        return forMonoRefableTest2;
+    }
+
+    public void setForMonoRefableTest2(KeysFor<Boolean> forMonoRefableTest2) {
+        this.forMonoRefableTest2 = forMonoRefableTest2;
+        forMonoRefableTest2.setParentContext(this);
     }
 
     public AbstractClassDefinition getClassDefinition() {

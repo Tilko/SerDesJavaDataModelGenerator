@@ -108,7 +108,7 @@ my.package0:                  # then packages are defined relatively to that roo
 ```
 In the previous "Accessor<...>", the n-1 first type parameters are the keys (inputs) types
 and the last type is the output type of the accessor, from this output type you can create a deepest accessor in an other "constructor" or "keysFor" function (ie: keysFor(myParamName.?.?)).
-This "reference" language element not only allow you to access a referred node from a reference node (with the `getReferredObject` method),
+This "reference" language element does not just allow you to access a referred node from a reference node (with the `getReferredObject` method),
 this tool can also validate that every keys that should guide to a referred object actually guide to an existing object, this validation is done when an instance is serialized,
 and can be called on a deserialized instance with:
 ```java
@@ -506,7 +506,8 @@ User errors are thrown by Java assertion (`assert` keyword), so, for each `main`
 - ability to import types  
 - implicit accessor dependencies (for less verbose but less decoupled internal reference definitions)
 - `InlinedOrKeysFor(<path>)` construct
-- `keyFor` `getReferredObject` memoization modes for higher performance (in case some kinds of changes are not expected in an instance ...)
 - fully immutable types mode (for undo/redo and multithread processing ease ...), with builders classes and "with..." methods (that recycle immutable nodes).
+- ability to define a "component" as a type with at least one computed property (from other properties that are the component "inputs") (ongoing)
+[comment]: <> (- `keyFor` `getReferredObject` memoization modes for higher performance (in case some kinds of changes are not expected in an instance ...))
 - ...   
 ...

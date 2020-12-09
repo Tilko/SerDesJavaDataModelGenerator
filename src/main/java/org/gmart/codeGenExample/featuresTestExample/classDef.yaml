@@ -12,7 +12,7 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
     bla: TypeWithAUniqueSimpleNameInThisPackagesSet
     obj: Object
     obj2: Object
-    states:  Dict<Transition(states.?)*>
+    states:  Dict<Transition(states.?, here)*>
     states1:  Dict<Transition1(states1.?.?.condition)*>
     states2: Dict<Transition2(states2)*>
     states3: Dict<Dict<Transition3(states3)*>>
@@ -20,10 +20,12 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
     states5: Dict<Dict<Transition5(states5.?)*>>
     oneOfAndAccessorTest: A(states.?)
     forThisTest: MyThisTestType(this)
+    forMonoRefableTest: keysFor(here)
   
-  Transition(Accessor<String, Transition*> states):
+  Transition(Accessor<String, Transition*> states, Accessor<Boolean> forMonoRefableTest):
     condition: String
     target: keysFor(states)
+    forMonoRefableTest2: keysFor(forMonoRefableTest)
   Transition1(Accessor<String, Integer, String> condition):
     condition: String
     forTestField: keysFor(condition)

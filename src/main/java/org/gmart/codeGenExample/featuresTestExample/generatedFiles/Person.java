@@ -1,5 +1,6 @@
 package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
+import java.lang.Boolean;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
@@ -9,6 +10,7 @@ import javax.annotation.processing.Generated;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassInstance;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
+import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ListD;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.MapD;
 import org.gmart.codeGenExample.featuresTestExample.generatedFiles.bidulePackage.Bidule;
@@ -55,6 +57,8 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstanc
     private A oneOfAndAccessorTest;
 
     private MyThisTestType forThisTest;
+
+    private KeysFor<Boolean> forMonoRefableTest;
 
     public Person() {
     }
@@ -217,6 +221,15 @@ public class Person implements ClassSerializationToYamlDefaultImpl, ClassInstanc
     public void setForThisTest(MyThisTestType forThisTest) {
         this.forThisTest = forThisTest;
         forThisTest.setParentContext(this);
+    }
+
+    public KeysFor<Boolean> getForMonoRefableTest() {
+        return forMonoRefableTest;
+    }
+
+    public void setForMonoRefableTest(KeysFor<Boolean> forMonoRefableTest) {
+        this.forMonoRefableTest = forMonoRefableTest;
+        forMonoRefableTest.setParentContext(this);
     }
 
     public AbstractClassDefinition getClassDefinition() {

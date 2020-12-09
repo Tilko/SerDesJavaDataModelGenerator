@@ -63,13 +63,16 @@ public class KeysFor_TypeExpression implements TypeExpression {
 	@SuppressWarnings("rawtypes")
 	@Override 
 	public void checkReferences_recursive(Object instance, ReferenceCheckResult referenceCheckResult) {
-		KeysFor keysFor_Object = (KeysFor)instance;
-		List keys = keysFor_Object.getKeys();
-		if(keys == null || keys.isEmpty()) 
-			return;
-		if(keysFor_Object.getReferredObject() == null) {
-			referenceCheckResult.setKeyThatPointToNoValue(serializeKeys(keys));
+		if(accessorBuilder.getIOTypes().getInputTypes().size() != 0) {
+			KeysFor keysFor_Object = (KeysFor)instance;
+			List keys = keysFor_Object.getKeys();
+			if(keys == null || keys.isEmpty()) 
+				return;
+			if(keysFor_Object.getReferredObject() == null) {
+				referenceCheckResult.setKeyThatPointToNoValue(serializeKeys(keys));
+			}
 		}
+		
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
