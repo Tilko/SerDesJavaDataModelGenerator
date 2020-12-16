@@ -43,7 +43,7 @@ public interface DependentInstance {
 //		return (ClassInstance) parentContext;
 //	}
 	
-	default Function<List<Object>, Optional<Object>> getConstructionArgument(int argIndex) {
+	default Function<List<String>, Optional<Object>> getConstructionArgument(int argIndex) {
 		Pair<DependentInstanceSource, DependentInstance> parentAndChild = 
 				this.getParentConstructionArgumentBuilderOwnerAndChildInstance();
 		DependentInstanceSource parentInstance = parentAndChild.getValue0();

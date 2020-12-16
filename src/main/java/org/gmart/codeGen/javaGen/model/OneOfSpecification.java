@@ -101,7 +101,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable implements Ac
 	}
 	private HashMap<TypeExpression, List<AbstractAccessorBuilder>> alternativeTypeToAccessorBuilders = new HashMap<>();
 	@Override
-	public Function<List<Object>, Optional<Object>> getConstructionArgument(DependentInstanceSource thisInstance, DependentInstance childInstance, int argIndex) {
+	public Function<List<String>, Optional<Object>> getConstructionArgument(DependentInstanceSource thisInstance, DependentInstance childInstance, int argIndex) {
 		return alternativeTypeToAccessorBuilders.get(((OneOfInstance) thisInstance).getPayloadType()).get(argIndex).makeAccessor(thisInstance);
 	}
 	@Override
@@ -430,7 +430,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable implements Ac
 	}
 
 	@Override
-	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+	public Function<Object, Function<List<String>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
 		assert false : "\"construction arguments\" are not supported on \"oneOf\" types (it may be possible later for some particular \"oneOf\" types, like a oneOf type with only List alternatives)";
 //		boolean isOneOfListType = alternatives.stream().allMatch(te -> te instanceof ListContainerType);//TUDO take into account the list in OneOf alternatives (use developped version ...)
 //		if(isOneOfListType) {

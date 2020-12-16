@@ -18,7 +18,10 @@ package org.gmart.codeGen.javaGen.modelExtraction;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,6 +83,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.Mark;
 import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.ScalarNode;
 import org.yaml.snakeyaml.nodes.Tag;
 
 import api_global.strUtil.StringFunctions;
@@ -87,7 +91,30 @@ import api_global.strUtil.StringFunctions;
 
 public class YamlToModel {
 	
+	private static String getText(Node n) {
+		return getText(n.getStartMark(), n.getEndMark());
+	}
+	private static String getText(Mark b, Mark e) {
+		return getText(b.getIndex(), e.getIndex());
+	}
+	private static String getText(int b, int e) {
+		return getText().substring(b, e);
+	}
+	private static String text_ForTest;
+	private static File yamlFile_ForTest;
+	private static String getText() {
+		if(text_ForTest == null)
+			try {
+				text_ForTest = new String(Files.readAllBytes(yamlFile_ForTest.toPath()), StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		return text_ForTest;
+	}
+	
 	public PackageSetSpec read(File yamlFile) throws FileNotFoundException {
+		yamlFile_ForTest = yamlFile;
+		
 		List<PackageDefinition> read = read(new FileReader(yamlFile));
 		this.packageSetSpec = new PackageSetSpec(read);
 		typeReferenceResolutions.forEach(Runnable::run);
@@ -113,8 +140,16 @@ public class YamlToModel {
 		public int getLine() {
 			return startMark.getLine();
 		}
+		@Override
+		public String toString() {
+			return getString();
+		}
 	}
-	
+	private static class WithedMap {//extends HashMap<Object,Object>{
+		Map<Object, Object> originalMap;
+		Map<String, Object> g;
+	}
+	private static final String withKeyWordCode = "5/X¤bV£YéiBz=4Qs";
 	private static class YamlConstructor extends Constructor {
 		  @Override
 		  protected Object constructObject(Node node) {
@@ -123,13 +158,46 @@ public class YamlToModel {
 		    }
 		    return super.constructObject(node);
 		  }
+		  int i = 0; 
+		  @Override
+		  protected String constructScalar(ScalarNode node) {
+			  String constructScalar = super.constructScalar(node);
+			  if(constructScalar.equals("with")) {
+				  return withKeyWordCode + i++;
+			  }
+			  return constructScalar;
+		  }
+//		  @Override
+//		  protected Map<Object,Object> constructMapping(MappingNode node) {
+//			  //the following test show that getKeyNode returns duplicate keys and that the order of the keys in the same object is persisted
+//			  //so the "with" decoration of a keyValuePair with an other one is possible here by filtering and mapping all "with" keyValuePair to the previous non-"with" keyValuePair key.
+//			  node.getValue().forEach(n -> L.l(n.getKeyNode().getClass()));
+//			  ///node.getValue().forEach(n -> L.l(getText(n.getKeyNode())));
+//			  node.getValue();
+//			  List<NodeTuple> value = node.getValue();
+//			  int size = value.size();
+//			  for(int i = 0; i < size; i++) {
+//				  NodeTuple nodeTuple = value.get(i);
+//				  Node keyNode = nodeTuple.getKeyNode();
+//				  if(getText(nodeTuple.getKeyNode()).equals("with")) {
+//					  //nodeTuple.getKeyNode().
+//				  }
+//			  }
+//			  return super.constructMapping(node);
+//		  }
 	}
+	
 	private String error(String message, ParserRuleContext mark) {
-		return "at line:" + mark.start.getLine() + ", " + message;
+		return error_internal(mark.start.getLine(), message);
 	}
 	private String error(String message, MarkedString mark) {
-		return "at line:" + mark.getLine() + ", " + message;
+		return error_internal(mark.getLine(), message);
 	}
+	private String error_internal(int lineNumber, String message) {
+		return "at line:" +lineNumber + ", " + message;
+	}
+	
+	
 	PackageDefinition currentPackage;
 	String rootPackage;
 	String rootPackageForGeneratedFiles;
@@ -185,7 +253,7 @@ public class YamlToModel {
 			} else {
 				TypeNamePartContext typeNamePart = parse(obj.getKey()).typeNamePart();
 				
-				AbstractClassDefinition classDef = makeClassSpec(typeNamePart, (Map<MarkedString, MarkedString>) value);//typeNamePart.Identifier().getText(), typeNamePart.stubbedMark != null, (Map<String, String>) value);
+				AbstractClassDefinition classDef = makeClassSpec(typeNamePart, (Map<MarkedString, Object>) value);//typeNamePart.Identifier().getText(), typeNamePart.stubbedMark != null, (Map<String, String>) value);
 				newlyCreatedAccessorBuilderFactoryListeners.forEach(listener -> listener.accept(classDef));
 				newlyCreatedAccessorBuilderFactoryListeners.clear();
 				
@@ -231,15 +299,61 @@ public class YamlToModel {
 		List<String> ids = identifier.stream().map(tok -> tok.getText()).collect(Collectors.toCollection(ArrayList::new));
 		return new EnumSpecification(currentPackage, typeName, ids);
 	}
-	private AbstractClassDefinition makeClassSpec(TypeNamePartContext typeNamePart, Map<MarkedString, MarkedString> propertiesDef) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private AbstractClassDefinition makeClassSpec(TypeNamePartContext typeNamePart, Map<MarkedString, Object> propertiesDef) {
 		String typeName = typeNamePart.Identifier().getText();
 		boolean isStubbed = typeNamePart.stubbedMark != null;
 		ConstructorParametersContext constructorParameters = typeNamePart.constructorParameters();
 		assert propertiesDef != null  &&  !propertiesDef.isEmpty()  :  error("A class definition must have at least 1 property", typeNamePart);
+
+		//cf javadoc of next function
+		extract_withKeyWord_DefaultValues(propertiesDef);
+		
 		return AbstractClassDefinition.makeInstance(currentPackage, typeName, isStubbed, 
-				propertiesDef.entrySet().stream().map(e -> makeFieldSpec(typeName, e)).collect(Collectors.toCollection(ArrayList::new)),
+				((Map<MarkedString, RawPropertyTypeWithRawDefaultValue>)((Map)propertiesDef)).entrySet().stream().map(e -> makeFieldSpec(typeName, e)).collect(Collectors.toCollection(ArrayList::new)),
 				makeConstructorParameters(constructorParameters)
 			);
+	}
+	private static class RawPropertyTypeWithRawDefaultValue {
+		MarkedString rawPropertyType;
+		Object rawDefaultValue;
+		public MarkedString getRawPropertyType() {
+			return rawPropertyType;
+		}
+		public Object getRawDefaultValue() {
+			return rawDefaultValue;
+		}
+		public void setRawDefaultValue(Object rawDefaultValue) {
+			this.rawDefaultValue = rawDefaultValue;
+		}
+		public RawPropertyTypeWithRawDefaultValue(MarkedString rawPropertyType) {
+			super();
+			this.rawPropertyType = rawPropertyType;
+		}
+	}
+	/** 
+	 * The input is mutated, the input map values are decorated with the "with" default values, so this Map values can be casted into "RawPropertyTypeWithRawDefaultValue".
+	 * And the "with" "properties" are removed from the Map.
+	 */
+	private void extract_withKeyWord_DefaultValues(Map<MarkedString, Object> propertiesDef){
+		//HashMap<MarkedString, Object> propertyNameToDefaultValue = new HashMap<>();
+		Iterator<Entry<MarkedString, Object>> iterator = propertiesDef.entrySet().iterator();
+		Map.Entry<MarkedString, Object> prevEntry = null;
+		while(iterator.hasNext()) {
+			Entry<MarkedString, Object> keyValPair = iterator.next();			
+			if(keyValPair.getKey().getString().startsWith(withKeyWordCode)) {
+				assert prevEntry != null : error("in this class definition context, \"with\" is a keyword to specify the default "
+						+ "values of the preceding property, but the preceding property is missing.", keyValPair.getKey());
+				//propertyNameToDefaultValue.put(prevEntry.getKey(), keyValPair.getValue());
+				iterator.remove();
+				((RawPropertyTypeWithRawDefaultValue) prevEntry.getValue()).setRawDefaultValue(keyValPair.getValue());
+				prevEntry = null;
+			} else {
+				keyValPair.setValue(new RawPropertyTypeWithRawDefaultValue((MarkedString) keyValPair.getValue()));
+				prevEntry = keyValPair;
+			}
+		}
+		///return propertyNameToDefaultValue;
 	}
 	private List<ConstructorParameter> makeConstructorParameters(ConstructorParametersContext constructorParameters) {
 		 List<ConstructorParameter> list = constructorParameters == null ? new ArrayList<>() : constructorParameters.constructorParameter().stream().map(this::makeConstructorParameter).collect(Collectors.toCollection(ArrayList::new));
@@ -255,9 +369,9 @@ public class YamlToModel {
 		setTypeExpression(outputTypeCtx, param::setOutputTypeParameter, null);
 		return param;
 	}
-	private AbstractTypedField makeFieldSpec(String typeName, Entry<MarkedString, MarkedString> entry) {
-		MarkedString typeExprStr = entry.getValue();
-		PropertyNamePartContext keyContext = parse(entry.getKey()).propertyNamePart();
+	private AbstractTypedField makeFieldSpec(String typeName, Entry<MarkedString, RawPropertyTypeWithRawDefaultValue> propertyEntry) {
+		MarkedString typeExprStr = propertyEntry.getValue().getRawPropertyType();
+		PropertyNamePartContext keyContext = parse(propertyEntry.getKey()).propertyNamePart();
 		String propertyName = keyContext.Identifier().getText();
 		boolean isOptional = keyContext.optionalMark != null;
 		TypeExpressionContext typeExprTree = parse(typeExprStr).typeExpression();

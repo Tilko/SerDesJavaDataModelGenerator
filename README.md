@@ -501,13 +501,15 @@ User errors are thrown by Java assertion (`assert` keyword), so, for each `main`
 - Verify that you enabled assertions (cf. Installation)
 
 ## Features/work that might came later:
-- to do regression tests for all features (current tests do not cover everything and are not completely automated) 
-- to improve user error feedbacks (always ongoing)
-- ability to import types  
-- implicit accessor dependencies (for less verbose but less decoupled *internal reference* definitions)
-- `InlinedOrKeysFor(<path>)` construct
-- fully immutable types mode (for undo/redo and multithread processing ease and memoization performance ...), with builders classes and "with..." methods (that recycle immutable nodes).
-- ability to define a "component" as a type that has at least one *computed* property (from other properties that are the component "inputs") (ongoing)
+* to do regression tests for all features (current tests do not cover everything and are not completely automated) 
+* to improve user error feedbacks (always ongoing)
+* ability to import types  
+* implicit accessor dependencies (for less verbose but less decoupled *internal reference* definitions)
+* `InlinedOrKeysFor(<path>)` construct
+* fully immutable types mode (for undo/redo and multithread processing ease and memoization performance ...), with builders classes and "with..." methods (that recycle immutable nodes).
+* ability to define a "component" as a type that has at least one *computed* property (from other properties that are the component "inputs") 
+    * this begins by making the ability to specify property initializer in the type definition (ongoing)
+    * then, by the ability to assign the output of a *computed property* as the "initial value" of a property (a component *input*)
 <!---(- `keyFor` `getReferredObject` memoization modes for higher performance (in case some kinds of changes are not expected in an instance ...)) -->
 - ...   
 ...

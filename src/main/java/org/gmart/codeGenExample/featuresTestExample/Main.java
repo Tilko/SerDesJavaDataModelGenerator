@@ -112,8 +112,9 @@ public class Main {
 			
 			assert person.checkReferences_recursive().getKeysThatPointToNoValues().toString().equals("[sleepy/trucish2]");
 			
-			L.l("here in person from person:" + person.getForMonoRefableTest().getReferredObject());
-			L.l("here in person from person:" + person.getStates().get("sleepy").get(0).getForMonoRefableTest2().getReferredObject());
+			//crash cause no keys ... Todo ..:
+			//L.l("here in person from person:" + person.getForMonoRefableTest().getReferredObject());
+			//L.l("here in person from person:" + person.getStates().get("sleepy").get(0).getForMonoRefableTest2().getReferredObject());
 		} catch(Exception e) {
 			e.printStackTrace();
 			Schema schema = person.getVehicle().getSchema().asSchema();

@@ -57,7 +57,7 @@ public class KeysFor_TypeExpression implements TypeExpression {
 		this.accessorBuilder = accessorBuilderFactory.makeAbstractAccessorBuilder(path);
 	}
 	@SuppressWarnings("rawtypes")
-	public Function<List<Object>, Optional<Object>> makeAccessor(AbstractKeysFor_Object abstractKeysFor_Object) {
+	public Function<List<String>, Optional<Object>> makeAccessor(AbstractKeysFor_Object abstractKeysFor_Object) {
 		return accessorBuilder.makeAccessor(abstractKeysFor_Object.getParentDependentInstanceSource());
 	}
 	@SuppressWarnings("rawtypes")
@@ -89,15 +89,8 @@ public class KeysFor_TypeExpression implements TypeExpression {
 				//assert yamlOrJsonValue instanceof String : "A \"" + keyword +"\" type must be represented by a string in the serialized document";
 				stringRep = (String) yamlOrJsonValue;
 			}
-			ArrayList<Object> keys = Stream.of(stringRep.split("/")).map(token -> {
-				String unescapedTokens = token.replaceAll("~1", "/").replaceAll("~0", "~"); //the order matter (https://tools.ietf.org/html/rfc6901#section-4)
-				Object key;
-				try {
-					key = Integer.valueOf(unescapedTokens);
-				} catch(Exception e){
-					key = unescapedTokens;
-				}
-				return key;
+			ArrayList<String> keys = Stream.of(stringRep.split("/")).map(token -> {
+				return token.replaceAll("~1", "/").replaceAll("~0", "~"); //the order matter (https://tools.ietf.org/html/rfc6901#section-4)
 			}).collect(Collectors.toCollection(ArrayList::new));
 			refInstance.setKeys(keys);
 		} else {
@@ -160,7 +153,7 @@ public class KeysFor_TypeExpression implements TypeExpression {
 				  .collect(Collectors.joining("/"));
 	}
 	@Override
-	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+	public Function<Object, Function<List<String>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
 		return TypeDefinitionForPrimitives.makeAccessor_static(path, toFillWithTypesForValidation, this, "\"" + keyword + "\"");
 	}
 	

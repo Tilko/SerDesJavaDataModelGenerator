@@ -23,13 +23,13 @@ import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstanceSource;
 
 public class AccessorBuilderFactoryFromHostClassInstance extends AbstractAccessorBuilder {
-	private Function<Object, Function<List<Object>, Optional<Object>>> accessor;
+	private Function<Object, Function<List<String>, Optional<Object>>> accessor;
 	public AccessorBuilderFactoryFromHostClassInstance(AbstractClassDefinition hostClass, List<String> path){
 		super();
 		this.accessor = hostClass.makeAccessorBuilder(path, this.toFillWithIOTypesForValidation);
 	}
 	@Override
-	public Function<List<Object>, Optional<Object>> makeAccessor(DependentInstanceSource source) {
+	public Function<List<String>, Optional<Object>> makeAccessor(DependentInstanceSource source) {
 		return this.accessor.apply(source);
 	}
 }

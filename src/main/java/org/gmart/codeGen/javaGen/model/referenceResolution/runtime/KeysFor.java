@@ -20,9 +20,9 @@ import java.util.List;
 
 public interface KeysFor<T> extends DependentInstance {
 	T getReferredObject();
-	List<Object> getKeys();
-	void setKeys(List<Object> referenceVector);
-	default void setKeys(Object ... referenceVector) {
+	List<String> getKeys();
+	void setKeys(List<String> referenceVector);
+	default void setKeys(String ... referenceVector) {
 		setKeys(Arrays.asList(referenceVector));
 	}
 }

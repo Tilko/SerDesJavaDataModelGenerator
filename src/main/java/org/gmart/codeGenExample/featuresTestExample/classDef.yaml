@@ -3,7 +3,10 @@ rootPackage: org.gmart.codeGenExample.featuresTestExample
   stubbed Person:
     name?: String
     vehicle: Vehicle
+    #vehicle: int #to test duplicate keys ...
+    with: int
     preferredNumbers: int**
+    with: long
     here: boolean
     preferredCardType: CardType
     httpMethods: Map<HttpMethodTypes, String*> #Map<String, Map<CardType, Vehicle**>*>*

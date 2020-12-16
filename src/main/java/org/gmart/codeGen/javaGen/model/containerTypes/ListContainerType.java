@@ -18,7 +18,6 @@ package org.gmart.codeGen.javaGen.model.containerTypes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -29,7 +28,6 @@ import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ArrayListD;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ListD;
-import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.MapD;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 
 import com.squareup.javapoet.ClassName;
@@ -93,8 +91,8 @@ public class ListContainerType extends AbstractContainerType {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	protected Object getElem(Object containerInstance, Object keyInstance) {
-		return ((List)containerInstance).get((Integer)keyInstance);
+	protected Object getElem(Object containerInstance, String keyInstance) {
+		return ((List)containerInstance).get(Integer.valueOf(keyInstance));
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override

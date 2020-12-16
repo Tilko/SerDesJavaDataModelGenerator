@@ -53,16 +53,16 @@ public class A implements OneOfInstance, OneOfSpecification.DependentOneOfInstan
         this.payload = makePayload.getValue1();
     }
 
-    public KeysFor<List<Transition>> asKeysFor_states() {
-        if(payload instanceof KeysFor) {
-            return (KeysFor<List<Transition>>) payload;
+    public List<Integer> asListOfint() {
+        if(payload instanceof List) {
+            return (List<Integer>) payload;
         }
         return null;
     }
 
-    public List<Integer> asListOfint() {
-        if(payload instanceof List) {
-            return (List<Integer>) payload;
+    public KeysFor<List<Transition>> asKeysFor_states() {
+        if(payload instanceof KeysFor) {
+            return (KeysFor<List<Transition>>) payload;
         }
         return null;
     }

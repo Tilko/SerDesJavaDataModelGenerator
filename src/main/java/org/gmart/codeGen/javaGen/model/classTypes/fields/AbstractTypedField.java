@@ -80,7 +80,7 @@ public abstract class AbstractTypedField extends AbstractField {
 			((AbstractContainerType)getTypeExpression()).setIsDependent(true);
 		}
 	}
-	public Function<List<Object>, Optional<Object>> makeAccessor(DependentInstanceSource thisHostClassInstance, int argIndex) {
+	public Function<List<String>, Optional<Object>> makeAccessor(DependentInstanceSource thisHostClassInstance, int argIndex) {
 		return accessorBuilders.get(argIndex).makeAccessor(thisHostClassInstance);
 	}
 	//private static String parentContextId = "parentContext";//InstanceContext parentContext
