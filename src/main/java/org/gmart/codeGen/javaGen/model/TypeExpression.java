@@ -43,7 +43,7 @@ public interface TypeExpression extends InstanceDeserializerFromYamlOrJson {//, 
 	/** 
 	 * Build a function that takes an instance of this TypeExpression and returns the accessor that returns the (Optional) object located by the input: a list of(map key | list index) 
 	 * */
-	Function<Object, Function<List<String>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithIOTypesForValidation);
+	Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithIOTypesForValidation);
 	
 	
 	

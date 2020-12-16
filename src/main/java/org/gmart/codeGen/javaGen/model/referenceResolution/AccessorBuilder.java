@@ -22,5 +22,5 @@ import java.util.function.Function;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInstanceSource;
 
 public interface AccessorBuilder {
-	Function<List<String>, Optional<Object>> makeAccessor(DependentInstanceSource constructionArgumentBuilder);
+	Function<List<Object>, Optional<Object>> makeAccessor(DependentInstanceSource constructionArgumentBuilder);
 }

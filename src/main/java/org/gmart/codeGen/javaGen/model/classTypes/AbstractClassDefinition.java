@@ -125,7 +125,7 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 	}
 	
 	@Override
-	public Function<List<String>, Optional<Object>> getConstructionArgument(DependentInstanceSource thisClassInstance, DependentInstance childInstance, int argIndex) {
+	public Function<List<Object>, Optional<Object>> getConstructionArgument(DependentInstanceSource thisClassInstance, DependentInstance childInstance, int argIndex) {
 		return getDependentFieldWithValue(thisClassInstance, childInstance).makeAccessor(thisClassInstance, argIndex);
 	}
 	private AbstractTypedField getDependentFieldWithValue(Object thisClassInstance, Object childContextValue) {
@@ -377,7 +377,7 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 		}
 	}
 	@Override
-	public Function<Object, Function<List<String>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
 		//The following case is possible when the path is "this":
 		if(path.size() == 0) {
 			toFillWithTypesForValidation.setOutputType(this);
@@ -386,19 +386,19 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 		String pathToken = path.get(0);
 		AbstractTypedField field = this.getField_SuperclassesIncluded(pathToken);
 		if(path.size() > 1 ) {
-			Function<Object, Function<List<String>, Optional<Object>>> accessor = field.getTypeExpression().makeAccessorBuilder(path.subList(1, path.size()), toFillWithTypesForValidation);
+			Function<Object, Function<List<Object>, Optional<Object>>> accessor = field.getTypeExpression().makeAccessorBuilder(path.subList(1, path.size()), toFillWithTypesForValidation);
 			return instance -> {
 				Object fieldValue = field.get(instance);
 				if(fieldValue == null) 
 					return keys -> Optional.empty();
 					
-				Function<List<String>, Optional<Object>> apply = accessor.apply(fieldValue);
+				Function<List<Object>, Optional<Object>> apply = accessor.apply(fieldValue);
 				return apply;
 			};
 		} else {
 			toFillWithTypesForValidation.setOutputType(field.getTypeExpression());
-			Function<Object, Function<List<String>, Optional<Object>>> function = instance -> {
-				Function<List<String>, Optional<Object>> function2 = keys -> Optional.ofNullable(field.get(instance));
+			Function<Object, Function<List<Object>, Optional<Object>>> function = instance -> {
+				Function<List<Object>, Optional<Object>> function2 = keys -> Optional.ofNullable(field.get(instance));
 				return function2;
 			};
 			return function;

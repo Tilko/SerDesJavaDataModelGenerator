@@ -45,12 +45,12 @@ public abstract class TypeDefinitionForPrimitives extends TypeDefinition {
 	protected Stream<String> getAllQualifiedNames(){
 		return Stream.of(this.getQualifiedName());
 	}
-	public static final Function<Object, Function<List<String>, Optional<Object>>> identityAccessor = instance -> list -> Optional.of(instance);
+	public static final Function<Object, Function<List<Object>, Optional<Object>>> identityAccessor = instance -> list -> Optional.of(instance);
 	@Override
-	public Function<Object, Function<List<String>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
 		return makeAccessor_static(path, toFillWithTypesForValidation, this, "primitive (or Object)");
 	}
-	public static Function<Object, Function<List<String>, Optional<Object>>> makeAccessor_static(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation, TypeExpression thisType, String typesNameForErrorMessage) {
+	public static Function<Object, Function<List<Object>, Optional<Object>>> makeAccessor_static(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation, TypeExpression thisType, String typesNameForErrorMessage) {
 		assert path.size() == 0 : "The following non-empty accessor path is written on a " + typesNameForErrorMessage + " type: " + path.stream().collect(Collectors.joining("."));
 		toFillWithTypesForValidation.setOutputType(thisType);
 		return identityAccessor;

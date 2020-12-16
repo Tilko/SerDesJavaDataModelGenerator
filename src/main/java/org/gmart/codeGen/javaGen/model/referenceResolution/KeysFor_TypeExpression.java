@@ -26,6 +26,7 @@ import javax.json.JsonString;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.FormalGroup;
+import org.gmart.codeGen.javaGen.model.StringToValueConverter;
 import org.gmart.codeGen.javaGen.model.StringTypeSpec;
 import org.gmart.codeGen.javaGen.model.TypeDefinitionForPrimitives;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
@@ -57,7 +58,7 @@ public class KeysFor_TypeExpression implements TypeExpression {
 		this.accessorBuilder = accessorBuilderFactory.makeAbstractAccessorBuilder(path);
 	}
 	@SuppressWarnings("rawtypes")
-	public Function<List<String>, Optional<Object>> makeAccessor(AbstractKeysFor_Object abstractKeysFor_Object) {
+	public Function<List<Object>, Optional<Object>> makeAccessor(AbstractKeysFor_Object abstractKeysFor_Object) {
 		return accessorBuilder.makeAccessor(abstractKeysFor_Object.getParentDependentInstanceSource());
 	}
 	@SuppressWarnings("rawtypes")
@@ -89,9 +90,16 @@ public class KeysFor_TypeExpression implements TypeExpression {
 				//assert yamlOrJsonValue instanceof String : "A \"" + keyword +"\" type must be represented by a string in the serialized document";
 				stringRep = (String) yamlOrJsonValue;
 			}
-			ArrayList<String> keys = Stream.of(stringRep.split("/")).map(token -> {
+			List<TypeExpression> inputTypes = accessorBuilder.getIOTypes().getInputTypes();
+			
+			ArrayList<String> rawKeys = Stream.of(stringRep.split("/")).map(token -> {
 				return token.replaceAll("~1", "/").replaceAll("~0", "~"); //the order matter (https://tools.ietf.org/html/rfc6901#section-4)
 			}).collect(Collectors.toCollection(ArrayList::new));
+			assert inputTypes.size() == rawKeys.size() : "error: wrong number of the supplied key in this \"keysFor\", expected number of keys: " + inputTypes.size();
+			ArrayList<Object> keys = new ArrayList<>();
+			for(int i = 0; i < inputTypes.size(); i++) {
+				keys.add(((StringToValueConverter)inputTypes.get(i)).fromString(rawKeys.get(i)));
+			}
 			refInstance.setKeys(keys);
 		} else {
 			assert false : "error: in the yaml/json serialized version, keys must be represented as in a string, "
@@ -153,7 +161,7 @@ public class KeysFor_TypeExpression implements TypeExpression {
 				  .collect(Collectors.joining("/"));
 	}
 	@Override
-	public Function<Object, Function<List<String>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
 		return TypeDefinitionForPrimitives.makeAccessor_static(path, toFillWithTypesForValidation, this, "\"" + keyword + "\"");
 	}
 	

@@ -176,7 +176,7 @@ public class EnumSpecification extends TypeDefinitionForNonPrimitives implements
 		//nothing to do
 	}
 	@Override
-	public Function<Object, Function<List<String>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
 		return TypeDefinitionForPrimitives.makeAccessor_static(path, toFillWithTypesForValidation, this, "enum");
 	}
 	@Override

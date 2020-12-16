@@ -91,8 +91,8 @@ public class ListContainerType extends AbstractContainerType {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	protected Object getElem(Object containerInstance, String keyInstance) {
-		return ((List)containerInstance).get(Integer.valueOf(keyInstance));
+	protected Object getElem(Object containerInstance, Object keyInstance) {
+		return ((List)containerInstance).get((Integer)keyInstance);
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override

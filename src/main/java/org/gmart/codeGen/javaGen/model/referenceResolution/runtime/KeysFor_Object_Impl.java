@@ -20,16 +20,16 @@ import java.util.List;
 import org.gmart.codeGen.javaGen.model.referenceResolution.KeysFor_TypeExpression;
 
 public class KeysFor_Object_Impl<T> extends AbstractKeysFor_Object<T> {
-	List<String> referenceVector;
+	List<Object> referenceVector;
 	public KeysFor_Object_Impl(KeysFor_TypeExpression keysFor_TypeExpression) {
 		super(keysFor_TypeExpression);
 	}
 	@Override
-	public List<String> getKeys() {
+	public List<Object> getKeys() {
 		return referenceVector;
 	}
 	@Override
-	public void setKeys(List<String> referenceVector) {
+	public void setKeys(List<Object> referenceVector) {
 		this.referenceVector = referenceVector;
 	}
 	

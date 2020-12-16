@@ -93,8 +93,9 @@ public abstract class AbstractMapContainerType extends AbstractContainerType { /
 	}
 	
 	@SuppressWarnings("rawtypes")
-	protected Object getElem(Object containerInstance, String keyInstance) {
-		return ((Map)containerInstance).get(this.makeKey(keyInstance));
+	@Override
+	protected Object getElem(Object containerInstance, Object keyInstance) {
+		return ((Map)containerInstance).get(keyInstance);
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override

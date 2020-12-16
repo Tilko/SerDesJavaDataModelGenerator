@@ -88,12 +88,12 @@ public abstract class AbstractContainerType implements ContainerType {
 	
 	
 	@Override
-	public Function<Object, Function<List<String>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
+	public Function<Object, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(List<String> path, AccessPathKeyAndOutputTypes toFillWithTypesForValidation) {
 		String pathToken = path.get(0);
 		assert pathToken.equals("?") : "The path token representing the access to a container element must be that token: \"?\", but was \"" + pathToken +"\"";
 		toFillWithTypesForValidation.addInputType(this.getKeyTypeSpec());
 		if(path.size() > 1) {
-			Function<Object, Function<List<String>, Optional<Object>>> accessor = getContentType().makeAccessorBuilder(path.subList(1, path.size()), toFillWithTypesForValidation);
+			Function<Object, Function<List<Object>, Optional<Object>>> accessor = getContentType().makeAccessorBuilder(path.subList(1, path.size()), toFillWithTypesForValidation);
 			return containerInstance -> keys -> {
 				if(keys.size() == 0)
 					return Optional.empty();
@@ -111,7 +111,7 @@ public abstract class AbstractContainerType implements ContainerType {
 //	protected Object getElem(Object containerInstance, Object keyInstance) {
 //		return getElem_internal(containerInstance, this.make)
 //	}
-	protected abstract Object getElem(Object containerInstance, String keyInstance);
+	protected abstract Object getElem(Object containerInstance, Object keyInstance);
 	
 	/** returning null is ok, this wont be called, it's intercepted by the "isEquivalent_AccessorParameterType" overriding in all children classes */
 	@Override

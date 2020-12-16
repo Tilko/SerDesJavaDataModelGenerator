@@ -23,17 +23,17 @@ import java.util.function.Function;
 import org.gmart.codeGen.javaGen.model.referenceResolution.KeysFor_TypeExpression;
 
 public abstract class AbstractKeysFor_Object<T> implements KeysFor<T>, DependentInstance {
-	Function<List<String>, Optional<T>> accessorToReferedObject;
+	Function<List<Object>, Optional<T>> accessorToReferedObject;
 	private final KeysFor_TypeExpression keysFor_TypeExpression;
 	public AbstractKeysFor_Object(KeysFor_TypeExpression keysFor_TypeExpression) {
 		this.keysFor_TypeExpression = keysFor_TypeExpression;
 	}
-	public void setAccessorToReferedObject(Function<List<String>, Optional<T>> accessorToReferedObject) {
+	public void setAccessorToReferedObject(Function<List<Object>, Optional<T>> accessorToReferedObject) {
 		this.accessorToReferedObject = accessorToReferedObject;
 	}
 	@SuppressWarnings("unchecked")
 	public T getReferredObject() {
-		List<String> keysCopy = new ArrayList<>(getKeys());
+		List<Object> keysCopy = new ArrayList<>(getKeys());
 		return keysFor_TypeExpression.makeAccessor(this).apply(keysCopy).map(t -> (T) t).orElse(null);
 	}
 }

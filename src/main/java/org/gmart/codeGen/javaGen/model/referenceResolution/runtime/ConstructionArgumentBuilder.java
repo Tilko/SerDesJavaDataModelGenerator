@@ -20,5 +20,5 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public interface ConstructionArgumentBuilder {
-	Function<List<String>, Optional<Object>> getConstructionArgument(DependentInstanceSource thisInstance, DependentInstance childInstance, int argIndex);
+	Function<List<Object>, Optional<Object>> getConstructionArgument(DependentInstanceSource thisInstance, DependentInstance childInstance, int argIndex);
 }

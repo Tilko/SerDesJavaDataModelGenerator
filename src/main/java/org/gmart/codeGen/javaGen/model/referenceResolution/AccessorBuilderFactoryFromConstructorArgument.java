@@ -25,7 +25,7 @@ import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInst
 
 public class AccessorBuilderFactoryFromConstructorArgument extends AbstractAccessorBuilder {
 
-	private final Function<Function<List<String>, Optional<Object>>, Function<List<String>, Optional<Object>>> accessor;
+	private final Function<Function<List<Object>, Optional<Object>>, Function<List<Object>, Optional<Object>>> accessor;
 	private final int paramIndex;
 	public AccessorBuilderFactoryFromConstructorArgument(List<AccessorConstructorParameter> constructorParameters, List<String> path, int paramIndex){
 		super();
@@ -36,11 +36,11 @@ public class AccessorBuilderFactoryFromConstructorArgument extends AbstractAcces
 		);
 		this.paramIndex = paramIndex;
 	}
-	private Function<Function<List<String>, Optional<Object>>, Function<List<String>, Optional<Object>>> makeAccessorBuilder(TypeExpression accessorParamOutputType, List<String> path, AccessPathKeyAndOutputTypes toFillWithIOTypesForValidation) {
+	private Function<Function<List<Object>, Optional<Object>>, Function<List<Object>, Optional<Object>>> makeAccessorBuilder(TypeExpression accessorParamOutputType, List<String> path, AccessPathKeyAndOutputTypes toFillWithIOTypesForValidation) {
 		if(path.size() > 0) {
-			Function<Object, Function<List<String>, Optional<Object>>> accessor = accessorParamOutputType.makeAccessorBuilder(path, toFillWithIOTypesForValidation);
-			Function<Function<List<String>, Optional<Object>>, Function<List<String>, Optional<Object>>> f = (Function<List<String>, Optional<Object>> keysToObj) -> {
-				Function<List<String>, Optional<Object>> k = (List<String> keys) -> {
+			Function<Object, Function<List<Object>, Optional<Object>>> accessor = accessorParamOutputType.makeAccessorBuilder(path, toFillWithIOTypesForValidation);
+			Function<Function<List<Object>, Optional<Object>>, Function<List<Object>, Optional<Object>>> f = (Function<List<Object>, Optional<Object>> keysToObj) -> {
+				Function<List<Object>, Optional<Object>> k = (List<Object> keys) -> {
 					return keysToObj.apply(keys).flatMap(containerInstance -> accessor.apply(containerInstance).apply(keys));
 				};
 				return k;
@@ -54,8 +54,8 @@ public class AccessorBuilderFactoryFromConstructorArgument extends AbstractAcces
 	}
 	/** about "instantiatedInstance": by analogy with the "constructor" syntax in the code that defines types */
 	@Override
-	public Function<List<String>, Optional<Object>> makeAccessor(DependentInstanceSource instantiatedInstance) {
-		Function<List<String>, Optional<Object>> constructionArgument = ((DependentInstance)instantiatedInstance).getConstructionArgument(paramIndex);
+	public Function<List<Object>, Optional<Object>> makeAccessor(DependentInstanceSource instantiatedInstance) {
+		Function<List<Object>, Optional<Object>> constructionArgument = ((DependentInstance)instantiatedInstance).getConstructionArgument(paramIndex);
 		return this.accessor.apply(constructionArgument);
 	}
 }
