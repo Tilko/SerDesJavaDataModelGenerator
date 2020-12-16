@@ -41,6 +41,8 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
+import api_global.logUtility.L;
+
 
 public class KeysFor_TypeExpression implements TypeExpression {
 	public final static String keyword = "keysFor";
@@ -95,7 +97,8 @@ public class KeysFor_TypeExpression implements TypeExpression {
 			ArrayList<String> rawKeys = Stream.of(stringRep.split("/")).map(token -> {
 				return token.replaceAll("~1", "/").replaceAll("~0", "~"); //the order matter (https://tools.ietf.org/html/rfc6901#section-4)
 			}).collect(Collectors.toCollection(ArrayList::new));
-			assert inputTypes.size() == rawKeys.size() : "error: wrong number of the supplied key in this \"keysFor\", expected number of keys: " + inputTypes.size();
+			L.l("stringRep:" + stringRep);
+			assert inputTypes.size() == rawKeys.size() : "error: wrong number of the supplied keys in this \"keysFor\", expected number of keys: " + inputTypes.size();
 			ArrayList<Object> keys = new ArrayList<>();
 			for(int i = 0; i < inputTypes.size(); i++) {
 				keys.add(((StringToValueConverter)inputTypes.get(i)).fromString(rawKeys.get(i)));

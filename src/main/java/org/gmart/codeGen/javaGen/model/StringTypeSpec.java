@@ -20,7 +20,7 @@ import javax.json.JsonString;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.javatuples.Pair;
 
-public class StringTypeSpec extends TypeDefinitionForPrimitives {
+public class StringTypeSpec extends TypeDefinitionForPrimitives implements StringToValueConverter {
 
 	private StringTypeSpec() {
 		super(PackageDefinition.javaLangPackageName, "String");
@@ -57,6 +57,11 @@ public class StringTypeSpec extends TypeDefinitionForPrimitives {
 	@Override
 	public TypeExpression getNormalizedTypeForAccessorParameterTypeComparison() {
 		return this;
+	}
+
+	@Override
+	public Object fromString(String string) {
+		return string;
 	}
 }
 

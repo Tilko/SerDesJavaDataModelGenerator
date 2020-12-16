@@ -29,8 +29,10 @@ public class AccessorBuilderFactoryFromConstructorArgument extends AbstractAcces
 	private final int paramIndex;
 	public AccessorBuilderFactoryFromConstructorArgument(List<AccessorConstructorParameter> constructorParameters, List<String> path, int paramIndex){
 		super();
+		AccessorConstructorParameter accessorConstructorParameter = constructorParameters.get(paramIndex);
+		this.toFillWithIOTypesForValidation.inputTypes.addAll(accessorConstructorParameter.getInputTypeParameters());
 		this.accessor = makeAccessorBuilder(
-			constructorParameters.get(paramIndex).getOutputTypeParameter(),
+			accessorConstructorParameter.getOutputTypeParameter(),
 			path, 
 			this.toFillWithIOTypesForValidation
 		);
