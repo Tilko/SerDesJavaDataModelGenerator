@@ -107,7 +107,7 @@ my.package0:                  # then packages are defined relatively to that roo
   
 ```
 In the previous "Accessor<...>", the n-1 first type parameters are the keys (inputs) types
-and the last type is the output type of the accessor, from this output type you can create a deepest accessor in an other "constructor" or "keysFor" function (ie: keysFor(myParamName.?.?)).
+and the last type is the output type of the accessor, from this output type you can create a deepest accessor in an other "constructor" or "keysFor" function (ie: keysFor(myParamName.?.?)).  
 This "reference" language element does not just allow you to access a referred node from a reference node (with the `getReferredObject` method),
 this tool can also validate that every keys that should guide to a referred object actually guide to an existing object, this validation is done when an instance is serialized,
 and can be called on a deserialized instance with:
@@ -115,25 +115,16 @@ and can be called on a deserialized instance with:
 myDeserializedInstance.checkReferences_recursive().getKeysThatPointToNoValues()
 ```  
 You can see a concrete example for the use of those internal references ([Here](#a-use-example-of-the-internal-reference)).  
-(Under-the-hood note: I used the expression "constructor arguments" but in fact no `Accessor<...>` function is passed to a Java node when it 
+##### *Under-the-hood* note: 
+I used the expression "constructor arguments" but in fact no `Accessor<...>` function is passed to a Java node when it 
 is constructed, in fact, when a node is dependent to its parent, just a reference to the  
 parent is set in the child when the child is set as property of the parent 
-(and also when a dependent element is added/set in a List or a Map (that have special implementations in this case)); and it is only when the "getReferredObject" object is called 
-on the reference object that the data will be accessed from that parent reference. 
+(and also when a dependent element is added/set in a List or a Map (that have special implementations in this case)); and it is only when the "getReferredObject" method (of a reference object)
+ is called that the data will be accessed from that parent reference. 
 If you add a node in a List/Map or assign a property, the generated classes will take 
-care of this dependency by propagating a reference to the parent in the child for you.)
+care of this dependency by propagating a reference to the parent in the child for you.
 
-#### About package names:
-```yaml
-.:                        # An other package, at the root
-  MyTypeName2:
-    myPropertyName9: MyTypeName0                # You can reference "MyTypeName0" with its simple name 
-                                                # because it's a unique name in this file
-    myPropertyName10: package3.MyTypeName2      # else give its relative fully qualified name.
-package3:                                     # Package to demonstrate the previous point.
-  MyTypeName2:
-    myPropertyName11: double
-```
+
 #### The "is a" language element that is based on enum properties discriminants:
 ```yaml
 example.package.that.demonstrates.some.kind.of.abstract.classes.definitions:
@@ -240,6 +231,18 @@ In the `generatedFiles` package, it is this stub class that is referred (almost)
 The stub file will be generated (almost empty) only if there is no files with the same qualified name. If you want that file to be regenerated, you have to delete it.
 
 There is a concrete example of use for this feature at the end of the next section ([Here](#an-example-for-the-stubbed-modifier)).
+
+#### About package names:
+```yaml
+.:                        # An other package, at the root
+  MyTypeName2:
+    myPropertyName9: MyTypeName0                # You can reference "MyTypeName0" with its simple name 
+                                                # because it's a unique name in this file
+    myPropertyName10: package3.MyTypeName2      # else give its relative fully qualified name.
+package3:                                     # Package to demonstrate the previous point.
+  MyTypeName2:
+    myPropertyName11: double
+```
 
 ## Now let's take a concrete example:
 If you designed some REST API before, you might have heard about
