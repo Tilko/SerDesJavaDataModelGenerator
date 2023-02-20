@@ -32,9 +32,10 @@ import java.util.stream.Stream;
 //import java.lang.reflect.Modifier;
 import javax.lang.model.element.Modifier;
 
+import org.gmart.base.data.storage.property.optional.OptPropertyImpl;
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.ConstructorParameter;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
-import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.TypeDefinitionForPrimitives;
 import org.gmart.codeGen.javaGen.model.TypeDefinitionForStubbable;
@@ -50,8 +51,7 @@ import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
 import org.gmart.codeGen.javaLang.JPoetUtil;
-import org.gmart.util.functionalProg.properties.OptProperty;
-import org.javatuples.Pair;
+import org.gmart.lang.java.FormalGroup;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -191,7 +191,7 @@ public abstract class AbstractClassDefinition extends TypeDefinitionForStubbable
 //		dependentFields.forEach(dependentField -> dependentField.initInstanceDependencies(instance));
 //	}
 	
-	public final OptProperty<Concrete_AbstractClassDefinition> parentClass = OptProperty.newProperty();
+	public final OptPropertyImpl<Concrete_AbstractClassDefinition> parentClass = OptPropertyImpl.of();
 	
 	EnumSubSpace enumSubSpace;
 	protected void setEnumSubSpace(EnumSubSpace enumSubSpace) {

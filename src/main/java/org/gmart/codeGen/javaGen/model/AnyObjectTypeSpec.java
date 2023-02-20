@@ -26,10 +26,11 @@ import javax.json.JsonObject;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.containerTypes.AbstractMapContainerType;
 import org.gmart.codeGen.javaGen.model.containerTypes.ListContainerType;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
-import org.javatuples.Pair;
+import org.gmart.lang.java.FormalGroup;
 
 
 

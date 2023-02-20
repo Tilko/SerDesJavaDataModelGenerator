@@ -19,10 +19,11 @@ import java.util.function.Function;
 
 import javax.json.JsonValue;
 
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
-import org.gmart.codeGen.javaLang.JavaPrimitives;
-import org.gmart.codeGen.javaLang.JavaPrimitives.Primitive;
-import org.javatuples.Pair;
+import org.gmart.lang.java.FormalGroup;
+import org.gmart.lang.java.JavaPrimitives;
+import org.gmart.lang.java.JavaPrimitives.Primitive;
 
 import com.squareup.javapoet.TypeName;
 

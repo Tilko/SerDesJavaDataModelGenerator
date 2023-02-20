@@ -16,7 +16,7 @@
 package org.gmart.codeGen.javaGen.model;
 
 
-import org.javatuples.Pair;
+import org.gmart.base.data.structure.tuple.Pair;
 
 public interface InstanceDeserializerFromYamlOrJson {
 	Pair<Class<?>, Object> yamlOrJsonToModelValue(DeserialContext ctx, Object yamlOrJsonValue, boolean boxedPrimitive);

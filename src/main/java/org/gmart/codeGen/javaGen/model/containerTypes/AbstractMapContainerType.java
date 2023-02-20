@@ -22,12 +22,12 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
-import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.LinkedHashMapD;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.MapD;
 import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
+import org.gmart.lang.java.FormalGroup;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;

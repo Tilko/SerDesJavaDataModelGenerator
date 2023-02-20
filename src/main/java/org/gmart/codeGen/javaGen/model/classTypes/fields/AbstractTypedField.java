@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
@@ -34,7 +35,6 @@ import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.DependentInst
 import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaLang.JPoetUtil;
-import org.javatuples.Pair;
 
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;

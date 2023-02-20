@@ -22,11 +22,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
 import org.gmart.codeGen.javaGen.model.referenceResolution.AccessPathKeyAndOutputTypes;
-import org.javatuples.Pair;
 
 public abstract class AbstractContainerType implements ContainerType {
 	protected TypeExpression contentType;

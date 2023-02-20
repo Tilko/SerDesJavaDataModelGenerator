@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.ConstructorParameter;
 import org.gmart.codeGen.javaGen.model.EnumSpecification;
 import org.gmart.codeGen.javaGen.model.OneOfSpecification;
@@ -78,7 +79,6 @@ import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParse
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.QualifiedNameContext;
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.TypeExpressionContext;
 import org.gmart.codeGen.javaGen.modelExtraction.parserGeneration.generatedParser.DataTypeHierarchyParser.TypeNamePartContext;
-import org.javatuples.Pair;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.Mark;

@@ -4,12 +4,13 @@ import java.lang.Integer;
 import java.lang.Object;
 import java.util.List;
 import javax.annotation.processing.Generated;
+
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.OneOfInstance;
 import org.gmart.codeGen.javaGen.model.OneOfSpecification;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor;
-import org.javatuples.Pair;
 
 @Generated("")
 public class A implements OneOfInstance, OneOfSpecification.DependentOneOfInstance, OneOfSpecification.DependentInstanceSourceOneOf {

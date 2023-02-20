@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.gmart.base.data.storage.property.immutable.lazyinit.LazyInit;
 import org.gmart.codeGen.javaGen.modelExtraction.YamlToModel;
-import org.gmart.util.functionalProg.LazySupplier;
 
 import lombok.Getter;
 
@@ -36,7 +36,7 @@ public class PackageDefinition {
 	@Getter private final String rootPackage;
 	@Getter private final String relativePackage;
 	@Getter private final String packageName;
-	public final LazySupplier<String> packageNameForStubs = new LazySupplier<>(()-> getPackageName(true));
+	public final LazyInit<String> packageNameForStubs = new LazyInit<>(()-> getPackageName(true));
 	public PackageDefinition(String rootPackage, String relativePackage) {
 		super();
 		this.rootPackage = rootPackage;

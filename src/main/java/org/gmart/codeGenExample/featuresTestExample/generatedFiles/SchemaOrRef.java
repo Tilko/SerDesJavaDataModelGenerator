@@ -2,12 +2,13 @@ package org.gmart.codeGenExample.featuresTestExample.generatedFiles;
 
 import java.lang.Object;
 import javax.annotation.processing.Generated;
+
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.OneOfInstance;
 import org.gmart.codeGen.javaGen.model.OneOfSpecification;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGenExample.featuresTestExample.generatedFilesCustomizationStubs.Schema;
-import org.javatuples.Pair;
 
 @Generated("")
 public class SchemaOrRef implements OneOfInstance {

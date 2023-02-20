@@ -34,10 +34,10 @@ import java.util.stream.Stream;
 import javax.json.Json;
 import javax.json.JsonReader;
 
+import org.gmart.base.FromStream;
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.generateJavaDataClass.JavaDataClassGenerator;
-import org.gmart.codeGen.javaLang.JavaPrimitives;
-import org.gmart.util.functionalProg.StreamUtil;
-import org.javatuples.Pair;
+import org.gmart.lang.java.JavaPrimitives;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -98,7 +98,7 @@ public class PackageSetSpec {
 	public PackageSetSpec(List<PackageDefinition> packages) {
 		super();
 		//this.packages = packages.stream().collect(Collectors.toMap(PackageDefinition::getPackageName, v->v, (a,b)->b, LinkedHashMap::new));
-		this.packages = StreamUtil.toMap(packages.stream(), PackageDefinition::getPackageName, LinkedHashMap::new);
+		this.packages = FromStream.toMap(packages.stream(), PackageDefinition::getPackageName, LinkedHashMap::new);
 		simpleNameToClassSpec = new HashMap<>();
 		qualifiedNameToClassSpec = new HashMap<>();
 		simpleNameInMultiplePackagesOfThisSet = new HashSet<>();

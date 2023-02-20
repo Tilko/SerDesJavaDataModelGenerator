@@ -22,6 +22,7 @@ import java.util.function.Function;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
 import org.gmart.codeGen.javaGen.model.referenceResolution.AccessPathKeyAndOutputTypes;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
+import org.gmart.lang.java.FormalGroup;
 
 import com.squareup.javapoet.TypeName;
 

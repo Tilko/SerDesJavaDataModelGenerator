@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.javatuples.Pair;
+import org.gmart.base.data.structure.tuple.Pair;
 
 public interface DependentInstance {
 	public final static String parentContextId = "parentContext";

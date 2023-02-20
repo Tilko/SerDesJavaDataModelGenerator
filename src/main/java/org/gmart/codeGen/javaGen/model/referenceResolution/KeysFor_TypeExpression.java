@@ -24,8 +24,8 @@ import java.util.stream.Stream;
 
 import javax.json.JsonString;
 
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
-import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.StringToValueConverter;
 import org.gmart.codeGen.javaGen.model.StringTypeSpec;
 import org.gmart.codeGen.javaGen.model.TypeDefinitionForPrimitives;
@@ -35,7 +35,7 @@ import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.AbstractKeysF
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.KeysFor_Object_Impl;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
-import org.javatuples.Pair;
+import org.gmart.lang.java.FormalGroup;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;

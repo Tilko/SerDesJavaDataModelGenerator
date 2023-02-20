@@ -32,6 +32,7 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.lang.model.element.Modifier;
 
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
@@ -51,7 +52,7 @@ import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaGen.model.typeRecognition.oneOf.ClassRecognition;
 import org.gmart.codeGen.javaGen.model.typeRecognition.oneOf.TypeRecognizer;
 import org.gmart.codeGen.javaLang.JPoetUtil;
-import org.javatuples.Pair;
+import org.gmart.lang.java.FormalGroup;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;

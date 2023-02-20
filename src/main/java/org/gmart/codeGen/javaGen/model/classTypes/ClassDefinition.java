@@ -19,12 +19,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.ConstructorParameter;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.PackageDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
-import org.javatuples.Pair;
 
 public class ClassDefinition extends AbstractClassDefinition  {
 
@@ -50,5 +50,4 @@ public class ClassDefinition extends AbstractClassDefinition  {
 		return makeSerializableValue_abstract(provider, toSerialize);
 	}
 	
-
 }

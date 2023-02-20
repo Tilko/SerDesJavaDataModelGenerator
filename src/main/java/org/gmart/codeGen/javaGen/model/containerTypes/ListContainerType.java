@@ -23,12 +23,12 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.gmart.codeGen.javaGen.model.DeserialContext;
-import org.gmart.codeGen.javaGen.model.FormalGroup;
 import org.gmart.codeGen.javaGen.model.PackageSetSpec;
 import org.gmart.codeGen.javaGen.model.TypeExpression;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ArrayListD;
 import org.gmart.codeGen.javaGen.model.referenceResolution.runtime.ListD;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
+import org.gmart.lang.java.FormalGroup;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;

@@ -17,8 +17,9 @@ package org.gmart.codeGen.javaGen.model;
 
 import javax.json.JsonString;
 
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
-import org.javatuples.Pair;
+import org.gmart.lang.java.FormalGroup;
 
 public class StringTypeSpec extends TypeDefinitionForPrimitives implements StringToValueConverter {
 

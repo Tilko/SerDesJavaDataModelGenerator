@@ -25,7 +25,7 @@ import javax.json.JsonValue;
 
 import org.gmart.codeGen.javaGen.model.serialization.SerializableObjectBuilder;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
-import org.gmart.codeGen.javaLang.JavaPrimitives;
+import org.gmart.lang.java.JavaPrimitives;
 
 public class JsonSerializerProvider implements SerializerProvider<JsonValue> {
 	public static class JsonSerializableObjectBuilder implements SerializableObjectBuilder<JsonValue> {

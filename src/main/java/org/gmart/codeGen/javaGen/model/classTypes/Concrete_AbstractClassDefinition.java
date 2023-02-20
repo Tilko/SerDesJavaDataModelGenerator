@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import javax.json.JsonString;
 
+import org.gmart.base.data.structure.tuple.Pair;
 import org.gmart.codeGen.javaGen.model.ConstructorParameter;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.EnumSpecification;
@@ -33,7 +34,6 @@ import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.ClassAbstractEnumField;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
-import org.javatuples.Pair;
 
 import api_global.strUtil.StringFunctions;
 
