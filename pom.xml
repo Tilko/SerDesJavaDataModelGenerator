@@ -13,8 +13,8 @@
 	<artifactId>codeGen</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-		<maven.compiler.source>13</maven.compiler.source>
-		<maven.compiler.target>13</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
@@ -53,17 +53,21 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>4.4</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.javatuples/javatuples -->
+		<!--<dependency> <groupId>com.fasterxml.jackson.dataformat</groupId> <artifactId>jackson-dataformat-yaml</artifactId> 
+			<version>2.11.1</version> </dependency> -->
 		<dependency>
-			<groupId>org.javatuples</groupId>
-			<artifactId>javatuples</artifactId>
-			<version>1.2</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.4.2</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.gmart</groupId>
-			<artifactId>stringUtility</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.4.2</version>
+			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.gmart</groupId>
 			<artifactId>base</artifactId>
@@ -78,20 +82,6 @@
 			<groupId>org.gmart</groupId>
 			<artifactId>lang</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<!--<dependency> <groupId>com.fasterxml.jackson.dataformat</groupId> <artifactId>jackson-dataformat-yaml</artifactId> 
-			<version>2.11.1</version> </dependency> -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.4.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.4.2</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

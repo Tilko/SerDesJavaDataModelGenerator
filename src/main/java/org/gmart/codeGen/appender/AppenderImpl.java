@@ -15,7 +15,7 @@
  ******************************************************************************/
 package org.gmart.codeGen.appender;
 
-import api_global.strUtil.StringGen;
+import org.apache.commons.lang3.StringUtils;
 
 public class AppenderImpl implements Appender {
 	String singleIndent;
@@ -58,6 +58,6 @@ public class AppenderImpl implements Appender {
 
 	@Override
 	public String getCurrentIndentation() {
-		return StringGen.makeStrConcating(indentDepth, singleIndent);
+		return StringUtils.repeat(singleIndent, indentDepth);
 	}
 }

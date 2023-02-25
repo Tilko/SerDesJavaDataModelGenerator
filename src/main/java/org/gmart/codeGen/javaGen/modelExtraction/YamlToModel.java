@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.gmart.base.data.structure.tuple.Pair;
+import org.gmart.base.data.transform.string.StrUnaryOps;
 import org.gmart.codeGen.javaGen.model.ConstructorParameter;
 import org.gmart.codeGen.javaGen.model.EnumSpecification;
 import org.gmart.codeGen.javaGen.model.OneOfSpecification;
@@ -85,8 +86,6 @@ import org.yaml.snakeyaml.error.Mark;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 import org.yaml.snakeyaml.nodes.Tag;
-
-import api_global.strUtil.StringFunctions;
 
 
 public class YamlToModel {
@@ -406,7 +405,7 @@ public class YamlToModel {
 	}
 	private AbstractTypedField makeAnonymousEnumField(AnonymousEnumFieldContext anonymousEnumField, String typeName, String propertyName, boolean isOptional, boolean isAbstract) {
 		AbstractTypedField classFieldDefinition = isAbstract ? new ClassAbstractEnumField(propertyName, isOptional) : new ConcreteFieldDefinition(propertyName, isOptional);
-		EnumSpecification enumSpecification = makeEnumSpecification(typeName + StringFunctions.capitalize(propertyName), anonymousEnumField.identifierList());
+		EnumSpecification enumSpecification = makeEnumSpecification(typeName + StrUnaryOps.capitalize(propertyName), anonymousEnumField.identifierList());
 		classFieldDefinition.setTypeExpression(enumSpecification);
 		currentPackage.addTypeDefs(enumSpecification);
 		return classFieldDefinition;

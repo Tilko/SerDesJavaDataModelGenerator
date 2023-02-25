@@ -24,6 +24,9 @@ import java.util.stream.Stream;
 
 import javax.lang.model.element.Modifier;
 
+import org.gmart.base.data.transform.string.StrFunct;
+import org.gmart.base.data.transform.string.StrUnaryOps;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -32,8 +35,6 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-
-import api_global.strUtil.StringFunctions;
 
 @SuppressWarnings("rawtypes")
 public class JPoetUtil {
@@ -73,7 +74,7 @@ public class JPoetUtil {
 	}
 	
 	public static MethodSpec.Builder initGetterWithoutReturnType(String fieldName){
-		return MethodSpec.methodBuilder("get" + StringFunctions.capitalize(fieldName)).addModifiers(Modifier.PUBLIC);
+		return MethodSpec.methodBuilder("get" + StrUnaryOps.capitalize(fieldName)).addModifiers(Modifier.PUBLIC);
 	}
 	public static MethodSpec.Builder initGetter(Class typeName, String fieldName){
 		return initGetter(TypeName.get(typeName), fieldName);
@@ -90,7 +91,7 @@ public class JPoetUtil {
 		return initGetter;
 	}
 	public static String makeSetterName(String fieldName) {
-		return "set" + StringFunctions.capitalize(fieldName);
+		return "set" + StrUnaryOps.capitalize(fieldName);
 	}
 	public static MethodSpec.Builder initSetter(TypeName type, String fieldName){
 		return addResetPropertyStatement(

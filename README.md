@@ -482,19 +482,17 @@ Here is the type definition:
 Some of the code is not in Maven central, the current gitHub repository:
 ```bash   
 git clone https://github.com/Tilko/SerDesJavaDataModelGenerator.git # and some personal utility code:   
-git clone https://github.com/Tilko/javatuples.git   
-git clone https://github.com/Tilko/stringUtility.git   
-git clone https://github.com/Tilko/functionalStyle.git   
 git clone https://github.com/Tilko/geom1d.git
+git clone https://github.com/Tilko/org.gmart.lang.git
 git clone https://github.com/Tilko/debugLogger.git
 ```
-Performing those 6 git commands in an Eclipse workspace works fine.
+Performing those 4 git commands in an Eclipse workspace works fine.
 
 Then, on Eclipse, import each of those cloned directories by:   
 `File -> Open Projects from File System...  ->  Directory...`
 
 User errors are thrown by Java assertion (`assert` keyword), so, for each `main` function that uses this tool, make sure you enable them by doing:   
-`Run -> Run Configurations... -> Arguments -> VM arguments -> `in the text field, type: `-ea`
+`Run -> Run Configurations... -> Arguments -> VM arguments -> `in the text field, type: `-ea` ("enable assertions").
 
 ## Troubleshooting/Tips:  
 - On eclipse, by default, when the file system is modified, Eclipse won't refresh its package explorer,

@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import javax.json.JsonString;
 
 import org.gmart.base.data.structure.tuple.Pair;
+import org.gmart.base.data.transform.string.StrUnaryOps;
 import org.gmart.codeGen.javaGen.model.ConstructorParameter;
 import org.gmart.codeGen.javaGen.model.DeserialContext;
 import org.gmart.codeGen.javaGen.model.EnumSpecification;
@@ -34,8 +35,6 @@ import org.gmart.codeGen.javaGen.model.classTypes.fields.AbstractTypedField;
 import org.gmart.codeGen.javaGen.model.classTypes.fields.ClassAbstractEnumField;
 import org.gmart.codeGen.javaGen.model.serialization.SerializerProvider;
 import org.gmart.codeGen.javaGen.model.typeRecognition.isA.EnumSubSpace;
-
-import api_global.strUtil.StringFunctions;
 
 public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 	private List<AbstractClassDefinition> children = new ArrayList<>();
@@ -182,7 +181,7 @@ public class Concrete_AbstractClassDefinition extends AbstractClassDefinition {
 			Object objectEnumValue = yamlOrJsonObjectCopy.get(abstractEnumField.getName());
 			if(objectEnumValue instanceof JsonString)
 				objectEnumValue = ((JsonString)objectEnumValue).getString();
-			assert objectEnumValue != null  &&  objectEnumValue instanceof String  : "No property with name " + StringFunctions.guil(abstractEnumField.getName()) + " has been found.";
+			assert objectEnumValue != null  &&  objectEnumValue instanceof String  : "No property with name " + StrUnaryOps.guil(abstractEnumField.getName()) + " has been found.";
 			return abstractEnumField.getTypeExpression().getIndexOfValue((String) objectEnumValue);
 		}).collect(Collectors.toCollection(ArrayList::new));
 	}

@@ -33,6 +33,7 @@ import javax.json.JsonValue;
 import javax.lang.model.element.Modifier;
 
 import org.gmart.base.data.structure.tuple.Pair;
+import org.gmart.base.data.transform.string.StrUnaryOps;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition;
 import org.gmart.codeGen.javaGen.model.classTypes.AbstractClassDefinition.ReferenceCheckResult;
 import org.gmart.codeGen.javaGen.model.classTypes.ClassSerializationToYamlDefaultImpl;
@@ -62,8 +63,6 @@ import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-
-import api_global.strUtil.StringFunctions;
 
 public class OneOfSpecification extends TypeDefinitionForStubbable implements AccessorBuilderFactory {
 
@@ -231,7 +230,7 @@ public class OneOfSpecification extends TypeDefinitionForStubbable implements Ac
 	}
 
 	private static void addConverterMethod(TypeSpec.Builder classBuilder, String typeNameInMethodName, TypeName returnType) {
-		MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("as" + StringFunctions.capitalize(typeNameInMethodName));
+		MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("as" + StrUnaryOps.capitalize(typeNameInMethodName));
 		addStmt(methodBuilder, returnType);
 		methodBuilder.addModifiers(Modifier.PUBLIC);
 		classBuilder.addMethod(methodBuilder.build());
