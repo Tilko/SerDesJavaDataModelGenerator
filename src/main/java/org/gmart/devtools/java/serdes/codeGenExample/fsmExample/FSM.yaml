@@ -1,0 +1,36 @@
+.:
+  FiniteStateMachine:
+    initialState: keysFor(states.?)
+    states: Dict<Transition(states.?)*>
+    states2: Dict<Transition2*>
+  Transition(Accessor<String, Transition*> states):
+    condition: String
+    target: keysFor(states)
+  Transition2:
+    condition: String
+    target: keysFor(FiniteStateMachine.states2.?)
+    # implications: the current "Transition2" is dependent of the "FiniteStateMachine" type that must be found among its structural ancestors,
+    # the "Transition2" type that contains that "keysFor" must be used in the same file in order to attach a type of reference to that "keysFor" type,
+    # it must be used as the type of a structural child (deeply) of a "FiniteStateMachine":
+    # if it is not used directly as a structural child of "FiniteStateMachine", the dependency requirement is propagated to that host
+    # a consequence of that implicit dependency is that such types are usable only in this file because they are strongly coupled with the "FiniteStateMachine" type.
+    
+    # 
+    # algo de validation: 
+    # Posons la multimap suivante, la map qui permet de trouver toutes les utilisations d'une classe/oneOf en tant que type de membre de classe ou d'alternative:
+    # useMap : MultiMap<className : TypeExprForStubbable, hosts: List<TypeExprForStubbable>>
+    # La validation consiste à vérifier que le parcours de tous chemins du graphe acyclique construit en récurrant sur useMap passent par la classe source.
+    # Le graphe est rendu acyclique en ne récurrant pas sur les noeuds déjà rencontrés.
+    # Si un "hosts" de useMap ne contient que des noeuds déjà rencontrés mais qu'il n'y a pas le noeud source requis alors KO.
+    # 
+    # pour chaque implicitlyDependentType: il faut vérifier que chaque 
+    # a model extraction result: 
+    #     useMap : MultiMap<className : AbstractClassDefinition, hosts: List<AbstractClassDefinition>>
+    #   and 
+    #     implicitDependentHosts : List<implicitEntry:<dependent: AbstractClassDefinition, requiredSource: AbstractClassDefinition>>
+    #
+    # Set<AbstractClassDefinition> alreadyTreated = new HashSet<>();
+    # forEach implicitEntry in implicitDependentHosts:
+    #   alreadyTreated.add(implicitEntry.dependent);
+    #   if(implicitEntry.dependent == )
+    #   useMap.get(implicitDependentHost)

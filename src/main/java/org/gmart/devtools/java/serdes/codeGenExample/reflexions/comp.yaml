@@ -1,0 +1,140 @@
+
+
+FSM:
+  states: Dict<Transition(states.?)*>
+Transition(Accessor<String, Transition*> states):
+  condition: String
+  target: keysFor(states)
+  
+  
+  
+ComponentA(In in0, In<Number> in1, In<Number> in2):
+  out0: Out<Number>(adder1)
+  
+  adder0: Adder(in1, in2)
+  adder1: Adder(adder0.out, in1)
+
+Adder(In<Number> in0, In<Number> in1):
+  out: Out<Number>(addition)
+  addition: Function(in0, in1)
+Addition: Function<Number, Number, Number>
+
+Adder(In<Number> in0, In<Number> in1):
+  out: Out<Number>
+
+
+Out(In in): noProp
+
+
+SchmittTrigger(In<Number> in):
+  out: Out<Number>
+  threshold0: int
+  threshold1: int
+  
+SchmittTrigger:
+  in:  Number
+  threshold0: Number
+  threshold1: Number
+  out: out Number
+
+SchmittTrigger_spe0 is SchmittTrigger:
+  with:
+    threshold0: 10
+    threshold1: 20
+
+Comp0:
+  in0: Number
+  in1: Number
+  out: boolean
+  impl: Comparator()
+
+Comparator:
+  in0: Number
+  in1: Number
+  out: boolean
+  inverted: false
+  
+Adder:
+  in0: Number
+  in1: Number
+  result: out Number
+Adder2:
+  in: Number*
+  result: out Number
+
+AdderUseContainerExample:
+  k: int = 5
+  
+  myAdder: Adder 
+  with:
+    in0: 4
+    in1: myAdder2.out
+    in2: k
+    in3: k
+    propK:
+      subPropN: 5
+  
+  myAdder2: Adder2
+  with:
+    in: [4, 3, 7, 9, 78] 
+  
+  myPrimitiveOut0: out(k, myAdder) int
+  
+  p0: X**
+  # on peut vouloir que chaque élément d'un container soient initialisé avec des éléments spécifié ici,
+  # on peut aussi vouloir que chaque élément d'un container soient mergé avec un élément "par défaut" spécifié ici
+  # dans le cas des containers à plusieurs niveau (arbres de containers) 
+  with:
+    - - a: 1
+        b: 2
+      - a: 3
+        b: 4
+    - - a: 5
+        b: 6
+      - a: 7
+        b: 8
+  with:
+    - - a: 1
+        b: 2
+      - a: 3
+        b: 4
+
+CompB:
+  in0: Number
+  in1: Number
+  in2: Number
+  adder0: Adder(in0, in1)
+  adder1: out Adder(adder0.out | adder0, in2)
+  #out: adder1.out
+  
+  trigger: SchmittTrigger(in0, 4, 10)
+  conf0 inputsForNext:
+    in: _
+    threshold0: 4
+    threshold1: 10
+  trigger: SchmittTrigger(conf0)
+  
+  trigger: SchmittTrigger 
+  with inputs:
+    in0: _
+    threshold0: 4
+    threshold1: 10
+	
+  trigger: "SchmittTrigger(
+      in0: _
+      threshold0: 4
+      threshold1: 10
+    )"
+  
+class ComponentA {
+    Adder adder0;
+    ComponentA(){
+	    adder0 = new Adder(); 
+		adder1 = new Adder();
+	}
+}
+class Adder extends ... {
+	public int getResult(){
+		return getIn0() + getIn1();
+	}
+}

@@ -1,0 +1,127 @@
+rootPackage: org.gmart.codeGenExample.fsmExample
+.:
+  Fsm:
+    initialState: in 0/states #ref(states)
+    states: Dict<Transition*>
+    states2: Dict<Transition2(this)*>
+    states3: Dict<Transition3(states3)*>
+    specialState0: Transition*
+    states1: Dict<Dict<Transition*>>
+    #$repos:
+    #  - states
+  Transition2(Fsm fsm):
+    condition: String
+    target: keysFor fsm.states.?
+  Transition3(Dict<Transition*> states):
+    condition: String
+    target: keysFor states.?
+  Transition:
+    condition: String
+    target: hereOrIn Fsm.states  ou: in 2    #ref(ancestor:states)# Ref<Transition*>   TODO
+                #condition to be able to infer the type of "target" from "in 2": 
+                #     if, from anywhere "Transition" is referenced, all 2nd ancestors have the same type "Ta", then "in 2" is valid and the type of the referenced object is this type "Ta".
+                #     more generally, "in <a relative json pointer>" works the same ...
+                #     a consequence of this relative type pointer definition: the "Transition" type (that is defined with this relative pointer) is not usable anywhere: the way to use (to express a type of a member ...)
+                #     is constrained by this use in Fsm (that determines the type of "target" (here a "Transition*" but it could be anything else, a "String" for example ...)), so this use must be  
+                #condition to be able to infer the type of "target" from "in Fsm.states" that is written in the "Transition" type def: 
+                #     "Transition" is a type of an element in a Fsm tree (else "Fsm" has no meaning), and from that tree root (an instance of Fsm) the type of target is infered following the path.
+                #     consequence: the Transition type is strongly coupled with the Fsm type: 
+                #         - "Transition" has no meaning without "Fsm", this is manifested by the Fsm reference in the Transition definition,
+                #         - the Transition type cant be used outside a context that have a Fsm among the ancestor of a Transition
+                #          
+                #     
+    target0: at root.specialState0
+    target1: in root.states1.?
+  
+  
+  RootType:
+    a: C
+    a_eq: Ceq(this)
+    a2: A2(bs2)
+    bs: Dict<B>
+    bs2: Dict<B>
+    bs3: Dict<Dict<B>>
+    bs4: Dict<Dict<BC>>
+  BC:
+    bc: Dict<B>
+  BC2:
+    bc: Map<x,B>
+  x: x0 x1
+  A:
+    b: in RootType.bs
+  Aeq(RootType root):
+    b: keysFor(root.bs.?)
+  A2(Dict<B> repo):
+    b: in repo
+  A3(Dict<Dict<B>> repo):
+    b: in repo.?
+  A4(Dict<Dict<BC>> repo):
+    b: in repo.?.bc
+  A5(Dict<Dict<BC2>> repo):
+    b: in repo.?.bc.x0
+  B: ...
+  C:
+    a: A
+  Ceq(RootType root):
+    a: Aeq(root)
+  
+  # When a A is instantiated, the context must give access to a RootType instance (currently in the current ancestor stack), 
+  # When b is modified, the previous RootType
+  # If we want the possibility to access to the referenced object from an A.b instance, then the RootType instance should be injected at the A instance construction
+  
+R:
+  rer: Rer(red.a.?.?)
+  red: Red
+  rer2: keysFor(this.red.a.?.?.b.?.?)
+  rer22: Rer2(this.red.a.?.?.b.?.?)
+  
+Red:
+  a: Dict<Dict<B>>
+  
+Rer(Function<String,String, B> bAccessor):
+  a: keysFor(bAccessor.then(b.?.?))
+  a: keysFor(bAccessor.b.?.?)
+  r2: Rer2(bAccessor.b.?.?)
+Rer2(Function<String,String,String,Integer, String> bAccessor):
+  a: keysFor(bAccessor)
+B:
+  b: Dict<String*>
+
+
+A:
+  am1:Dict<String>
+  a0: Dict<keysFor(am1)>
+  
+  a00:Dict<keysFor(a00)>
+  a000:Dict<Dict<keysFor(a000)>>
+  
+  a1:Dict<keysFor(a2)>
+  a2:Dict<keysFor(a1)>
+  
+  a:  Dict<K0>
+  b:  keysFor(a)
+  c:  keysFor()
+
+
+a00:
+  x0: x1
+  x1: x0
+  x2: x1
+a000:
+  x0: 
+    x00: x1/x10
+  x1:
+    x10: x0/x00
+  
+a1:
+  a1k0: a2k0
+a2:
+  a2k0: a1k0  
+  
+  
+  
+A(a): oneOf(B(a.b));
+B(b): oneOf(C(b.c), D(b.d, b.j));
+D(e, g): oneOf(E(e.f, g.h));
+
+A'(a): oneOf(C(a.b.c), E(a.b.d.f, a.b.j.h)); 
